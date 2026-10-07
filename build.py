@@ -156,7 +156,7 @@ def main():
     args = ap.parse_args()
     cfg = load_config()
     now = dt.datetime.now(JST)
-    day, updated = now.strftime("%Y-%m-%d"), now.strftime("%Y-%m-%d %H:%M")
+    day, updated = now.strftime("%Y-%m-%d"), f"{now.year}年{now.month}月{now.day}日"
 
     if not args.demo:
         missing = [k for k in ("RAKUTEN_APP_ID", "RAKUTEN_ACCESS_KEY") if not os.environ.get(k)]
