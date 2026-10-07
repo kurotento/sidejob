@@ -1,8 +1,1 @@
-2026-10-08 model=openai/gpt-4.1-mini 新規0件 / 対象60件
-rakutenoriginal-daily:10000001: 応答の形式が想定外: OK
-
-kumamoto-food:10002669: 応答の形式が想定外: OK
-
-pierrot:10014126: 応答の形式が想定外: OK
-
-連続で失敗したため中断
+2026-10-08 model=gemini-3.5-flash-lite 新規40件 / 対象60件
