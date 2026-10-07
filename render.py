@@ -192,7 +192,7 @@ def page(cfg, title, body, path, demo, updated, active=None, hero="", extra_css=
 </body></html>"""
 
 
-def render(cfg, results, demo, day, updated, out_dir, budget=None, series=None):
+def render(cfg, results, demo, day, updated, out_dir, budget=None, series=None, descs=None):
     if out_dir.exists():
         shutil.rmtree(out_dir)
     out_dir.mkdir(parents=True)
@@ -242,7 +242,7 @@ def render(cfg, results, demo, day, updated, out_dir, budget=None, series=None):
     if budget:
         import articles
         extra_css = articles.CSS
-        extra_paths = articles.render_budget(cfg, budget, series or {}, demo, day, updated, write)
+        extra_paths = articles.render_budget(cfg, budget, series or {}, descs or {}, demo, day, updated, write)
         body += articles.banner(cfg, budget)
     if not (risers or cheaper):
         body += '<div class="notice"{}>'.format(' style="margin-top:16px"' if budget else '') + '📈 順位の急上昇・値下がり情報は、明日から掲載します。</div>'

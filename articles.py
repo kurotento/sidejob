@@ -43,6 +43,10 @@ CSS = """
 .big-yen{font-size:1.5rem;font-weight:900;color:var(--red)}.big-yen small{font-size:.8rem}
 .points{background:#f3fbf6;border:1px solid #cdebd8;border-radius:12px;padding:12px 16px;margin:12px 0;font-size:.88rem}
 .points b{color:var(--good)}.points ul{margin:.3em 0 0;padding-left:1.3em}
+.feat{background:#fff8ec;border:1px solid #f3e2c0;border-radius:12px;padding:12px 16px;margin:12px 0;font-size:.9rem}
+.feat b{color:#9a5b00}.feat ul{margin:.3em 0 0;padding-left:1.3em}.feat li{margin:.15em 0}
+.forwho{font-size:.88rem;margin:.6em 0}.forwho b{display:inline-block;background:var(--ink);color:#fff;font-size:.72rem;border-radius:6px;padding:1px 8px;margin-right:6px}
+.forwho.chk b{background:#5b6b7d}
 .btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
 .btns .cta{margin:0}
 .spec{width:100%;border-collapse:collapse;font-size:.86rem;margin:.6em 0}
@@ -148,14 +152,32 @@ def facts(it):
 <li><span>総合順位</span>{it['rank']}位</li></ul>"""
 
 
-def product_block(pos, it):
+def desc_html(desc, heading="特徴"):
+    """AIが商品説明から作った紹介（特徴・向いている人・確認点）."""
+    if not desc:
+        return ""
+    feats = "".join(f"<li>{e(f)}</li>" for f in desc["features"])
+    out = f'<div class="feat"><b>{heading}</b><ul>{feats}</ul></div>'
+    if desc.get("for_whom"):
+        out += f'<p class="forwho"><b>こんな人に</b>{e(desc["for_whom"])}</p>'
+    if desc.get("check"):
+        out += f'<p class="forwho chk"><b>購入前に確認</b>{e(desc["check"])}</p>'
+    return out
+
+
+def intro(it, desc):
+    return talk(e(desc["intro"])) if desc else talk(e(comment(it)))
+
+
+def product_block(pos, it, desc=None):
     n = f" n{pos}" if pos <= 3 else ""
     pts = "".join(f"<li>{p}</li>" for p in point_list(it))
     return f"""<section class="pitem" id="p{pos}" data-rating="{it['rating']}" data-reviews="{it['reviews']}" data-pt="{it['point_rate']}" data-price="{it['price']}">
 <h3><span class="no{n}">{pos}</span>{e(short_name(it['name']))}</h3>
 <div class="pbox"><a class="pic" {link_attrs(it)}>{thumb(it)}<span class="flags">{flags(it)}</span></a><div>{facts(it)}</div></div>
-<div class="points"><b>ここがポイント</b><ul>{pts}</ul></div>
-{talk(e(comment(it)))}
+{intro(it, desc)}
+{desc_html(desc)}
+<div class="points"><b>売れ筋データ</b><ul>{pts}</ul></div>
 <div class="btns"><a class="cta" {link_attrs(it)}>楽天で詳細を見る</a><a class="cta ghost" href="{slug_of(it['code'])}">この商品をくわしく</a></div></section>"""
 
 
@@ -188,7 +210,7 @@ def trend_svg(points):
             f'<path d="{path}" fill="none" stroke="#bf0000" stroke-width="2.5"/>{dots}{labels}</svg>')
 
 
-def render_budget(cfg, items, series, demo, day, updated, write):
+def render_budget(cfg, items, series, descs, demo, day, updated, write):
     b = cfg["budget"]
     m, d = int(day[5:7]), int(day[8:10])
     slug = b["slug"] + ".html"
@@ -211,23 +233,23 @@ def render_budget(cfg, items, series, demo, day, updated, write):
 <p>楽天総合ランキングの順位が高い順に並べています。ボタンで絞り込めます。</p>
 <div class="filters"><button type="button" data-k="r" aria-pressed="false">★4以上</button><button type="button" data-k="p" aria-pressed="false">ポイント2倍以上</button>
 <button type="button" data-k="l" aria-pressed="false">1,500円未満</button><span class="count"></span></div>
-{"".join(product_block(i + 1, it) for i, it in enumerate(items))}
+{"".join(product_block(i + 1, it, descs.get(it["code"])) for i, it in enumerate(items))}
 <h2 id="matome">まとめ</h2>
 <p>{m}月{d}日時点で、楽天の売れ筋ランキングに入っている1000円台・送料無料の商品は{n}点でした。価格やポイント倍率は日々変わるため、気になる商品は早めにリンク先で最新の情報を確認してください。</p>
 {talk("このページは毎日新しいランキングに入れ替えているよ。買い回りの前にまたのぞいてみてね！")}
-<p class="note">掲載情報は{e(updated)}時点のものです。価格・送料・在庫・ポイント倍率は変動する場合があります。</p>
+<p class="note">商品の紹介文は、各ショップの商品説明をもとに作成しています。掲載情報は{e(updated)}時点のものです。価格・送料・在庫・ポイント倍率は変動する場合があります。</p>
 </article>{FILTER_JS}"""
     write(slug, page(cfg, title, body, slug, demo, updated, active="budget", hero=hero, extra_css=CSS))
 
     paths = [slug]
     for i, it in enumerate(items):
         path = slug_of(it["code"])
-        write(path, render_item(cfg, it, i + 1, items, series.get(it["code"], []), demo, day, updated))
+        write(path, render_item(cfg, it, i + 1, items, series.get(it["code"], []), descs.get(it["code"]), demo, day, updated))
         paths.append(path)
     return paths
 
 
-def render_item(cfg, it, pos, items, points, demo, day, updated):
+def render_item(cfg, it, pos, items, points, desc, demo, day, updated):
     b = cfg["budget"]
     name = short_name(it["name"], 60)
     m, d = int(day[5:7]), int(day[8:10])
@@ -248,9 +270,10 @@ def render_item(cfg, it, pos, items, points, demo, day, updated):
     related = "".join(f'<li><a href="{slug_of(x["code"])}">{e(short_name(x["name"], 36))}</a>（{x["price"]:,}円）</li>' for x in near)
     body = f"""<article class="post">
 <a class="hero-img" {link_attrs(it)}>{thumb(it)}</a>
-{talk(e(comment(it)))}
+{intro(it, desc)}
 {catch}
-<div class="points"><b>ここがポイント</b><ul>{pts}</ul></div>
+{('<h2>どんな商品？</h2>' + desc_html(desc, "主な特徴")) if desc else ''}
+<div class="points"><b>売れ筋データ</b><ul>{pts}</ul></div>
 <div class="btns"><a class="cta" {link_attrs(it)}>楽天で詳細・口コミを見る</a><a class="cta ghost" href="{b['slug']}.html">1000円台の売れ筋一覧へ</a></div>
 <h2>基本情報</h2>
 <table class="spec"><tr><th>商品名</th><td>{e(it['name'])}</td></tr>
@@ -259,10 +282,10 @@ def render_item(cfg, it, pos, items, points, demo, day, updated):
 <tr><th>ショップ</th><td>{e(it['shop'])}</td></tr><tr><th>総合順位</th><td>{it['rank']}位</td></tr></table>
 {caption}
 {trend}
-{talk("実際の使い心地は、リンク先の楽天レビューで購入者の声をチェックしてみてね。")}
+{talk("購入した人の感想は、楽天の商品ページのレビュー欄で読めるよ。")}
 <a class="cta" {link_attrs(it)}>楽天で詳細・口コミを見る</a>
 <h2>ほかの1000円台の売れ筋</h2><ul>{related}</ul>
-<p class="note">掲載情報は{e(updated)}時点のものです。価格・送料・在庫・ポイント倍率は変動する場合があります。</p>
+<p class="note">商品の紹介文は、各ショップの商品説明をもとに作成しています。掲載情報は{e(updated)}時点のものです。価格・送料・在庫・ポイント倍率は変動する場合があります。</p>
 </article>"""
     path = slug_of(it["code"])
     return page(cfg, title, body, path, demo, updated, active="budget", hero=hero, extra_css=CSS)
