@@ -67,8 +67,15 @@ def call_model(item, token):
         "Content-Type": "application/json", "Authorization": f"Bearer {token}",
         "Accept": "application/vnd.github+json"})
     with urllib.request.urlopen(req, timeout=60) as res:
-        data = json.load(res)
-    return json.loads(data["choices"][0]["message"]["content"])
+        raw = res.read().decode("utf-8", "replace")
+    try:
+        content = json.loads(raw)["choices"][0]["message"]["content"] or ""
+    except (ValueError, KeyError, IndexError) as ex:
+        raise ValueError(f"応答の形式が想定外: {raw[:300]}") from ex
+    m = re.search(r"\{.*\}", content, re.S)  # ```json などの囲みを外す
+    if not m:
+        raise ValueError(f"JSONが見つからない: {content[:300]}")
+    return json.loads(m.group(0))
 
 
 def validate(d):
@@ -91,17 +98,22 @@ def describe(items, day, limit=40):
     log = []
     todo = [it for it in items if it["code"] not in cache and (it.get("caption") or it.get("catch"))]
     if token and todo:
-        done = 0
+        done = fails = 0
         for it in todo[:limit]:
+            if fails >= 3 and done == 0:  # 最初から連続で失敗するなら設定の問題。無料枠を無駄にしない
+                log.append("連続で失敗したため中断")
+                break
             try:
                 d = validate(call_model(it, token))
             except urllib.error.HTTPError as ex:
-                log.append(f"{it['code']}: HTTP {ex.code} {ex.read().decode('utf-8', 'replace')[:200]}")
+                log.append(f"{it['code']}: HTTP {ex.code} {ex.read().decode('utf-8', 'replace')[:300]}")
+                fails += 1
                 if ex.code == 429:  # 無料枠の上限。残りは翌日
                     break
                 continue
             except Exception as ex:  # noqa: BLE001
                 log.append(f"{it['code']}: {ex}")
+                fails += 1
                 continue
             if d:
                 cache[it["code"]] = {**d, "created": day}
