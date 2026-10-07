@@ -60,7 +60,8 @@ def fetch_ranking(genre_id, base_url):
     for raw in data.get("Items", []):
         it = raw.get("Item", raw)  # formatVersion 1/2 両対応
         items.append(normalize_item(it))
-    return items
+    # 2026年版APIは下位から返ってくることがあるため順位で並べ直す
+    return sorted(items, key=lambda x: x["rank"])
 
 
 def normalize_item(it):
