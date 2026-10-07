@@ -32,7 +32,7 @@ SYSTEM = """あなたは楽天市場の商品紹介サイトのライターで�
 - 商品名のキーワードの羅列をそのまま書き写さず、自然な文章にする
 
 次のJSONだけを出力してください:
-{"intro": "案内役のクマ『らんくま』の口調（〜だよ、〜だね）で、何の商品で、どんな特徴があるかを2〜3文・120〜180字で",
+{"intro": "案内役のクマ『らんくま』の口調（〜だよ、〜だね）で、4文・160〜230字の紹介文。起承転結で書く。起＝何の商品か。承＝主な特徴や中身。転＝選ぶときのポイントや、この商品ならではの良さ。結＝どんな場面・どんな人にちょうどいいかで締めくくる（最後の文は必ずこの結論にする）",
  "features": ["主な特徴を3つ。各35字以内の普通の文体"],
  "for_whom": "こんな人に向いている、を1文・50字以内",
  "check": "購入前に確認したほうがよい点（サイズ・容量・色の選択、賞味期限、対応機種など）を1文・60字以内。特になければ空文字"}"""
@@ -96,7 +96,7 @@ def validate(d):
     out = {"intro": intro, "features": feats,
            "for_whom": str(d.get("for_whom", "")).strip(), "check": str(d.get("check", "")).strip()}
     text = " ".join([intro, out["for_whom"], out["check"], *feats])
-    if len(intro) < 40 or len(feats) < 2 or BANNED.search(text):
+    if len(intro) < 100 or len(feats) < 2 or BANNED.search(text):
         return None
     return out
 
