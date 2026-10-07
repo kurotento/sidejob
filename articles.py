@@ -129,7 +129,7 @@ def comment(it):
                         f"ぐんぐん順位アップ中（前日比+{mv}位）。売り切れる前に在庫を確認しておこう。"])
     if it["reviews"] >= 1000 and it["rating"] >= 4.3:
         return pick(c, [f"レビュー{it['reviews']:,}件で平均★{it['rating']:.2f}。たくさんの人が評価している定番だから、迷ったときの候補に◎。",
-                        f"★{it['rating']:.2f}・{it['reviews']:,}件のレビューがある人気者だよ。口コミはリンク先でじっくり読めるよ。"])
+                        f"★{it['rating']:.2f}・{it['reviews']:,}件のレビューが集まっている人気商品だよ。"])
     if it["point_rate"] >= 5:
         return pick(c, [f"ポイント{it['point_rate']}倍がついてるよ！買い回りと組み合わせるとさらにおトク。",
                         f"今はポイント{it['point_rate']}倍。期間限定のことが多いから早めにチェックしてね。"])
