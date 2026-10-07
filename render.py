@@ -164,8 +164,10 @@ def section(title, icon, note, inner, more=""):
             f'<p>{e(note)}</p></div>{more}</div>{inner}</section>')
 
 
-def page(cfg, title, body, path, demo, updated, active=None, hero=""):
+def page(cfg, title, body, path, demo, updated, active=None, hero="", extra_css=""):
     tabs = '<a href="index.html" class="{}">🏠 総合</a>'.format("on" if active is None else "")
+    if cfg.get("budget"):
+        tabs += '<a href="{}.html" class="{}">💰 1000円台</a>'.format(cfg["budget"]["slug"], "on" if active == "budget" else "")
     tabs += "".join(f'<a href="{g["slug"]}.html" class="{"on" if active == g["slug"] else ""}">{e(g["icon"])} {e(g["title"])}</a>'
                     for g in cfg["genres"])
     canonical = cfg["base_url"].rstrip("/") + "/" + path
@@ -180,7 +182,7 @@ def page(cfg, title, body, path, demo, updated, active=None, hero=""):
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%23bf0000'/%3E%3Cpath fill='white' d='M4 8l4 3.5L12 5l4 6.5L20 8l-1.6 10H5.6z'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
-<style>{CSS}</style></head><body>{banner}
+<style>{CSS}{extra_css}</style></head><body>{banner}
 <header class="top"><div class="wrap bar"><a class="logo" href="index.html"><span class="mark">{CROWN}</span>{e(cfg['site_name'])}</a>
 <span class="prtag">PR・楽天アフィリエイト参加中</span></div><nav class="tabs">{tabs}</nav></header>
 {hero}<main class="wrap">{body}</main>
@@ -190,7 +192,7 @@ def page(cfg, title, body, path, demo, updated, active=None, hero=""):
 </body></html>"""
 
 
-def render(cfg, results, demo, day, updated, out_dir):
+def render(cfg, results, demo, day, updated, out_dir, budget=None, series=None):
     if out_dir.exists():
         shutil.rmtree(out_dir)
     out_dir.mkdir(parents=True)
@@ -236,8 +238,14 @@ def render(cfg, results, demo, day, updated, out_dir):
 <p>{e(cfg['site_description'])}</p>
 <div class="stats"><div><b>{len(genres)}</b>ジャンル</div><div><b>{total}</b>商品を掲載</div><div><b>毎日</b>更新</div></div></div></section>"""
     body = ""
+    extra_css, extra_paths = "", []
+    if budget:
+        import articles
+        extra_css = articles.CSS
+        extra_paths = articles.render_budget(cfg, budget, series or {}, demo, day, updated, write)
+        body += articles.banner(cfg, budget)
     if not (risers or cheaper):
-        body += '<div class="notice">📈 順位の急上昇・値下がり情報は、明日から掲載します。</div>'
+        body += '<div class="notice"{}>'.format(' style="margin-top:16px"' if budget else '') + '📈 順位の急上昇・値下がり情報は、明日から掲載します。</div>'
     champs = "".join(card(results[g["slug"]][0], genre=g, cta="ランキングを見る").replace(
         f'class="cta" {link_attrs(results[g["slug"]][0])}', f'class="cta ghost" href="{g["slug"]}.html"', 1) for g in genres)
     body += section("ジャンル別 いまの1位", "🏆", "各ジャンルで今日いちばん売れている商品", f'<div class="grid">{champs}</div>')
@@ -250,7 +258,7 @@ def render(cfg, results, demo, day, updated, out_dir):
     tiles = "".join(f'<a class="tile" href="{g["slug"]}.html"><span class="ico">{e(g["icon"])}</span><span>{e(g["title"])}<small>TOP{len(results[g["slug"]])}を見る</small></span></a>'
                     for g in genres)
     body += section("ジャンルから探す", "🗂", "ジャンルごとの売れ筋TOP30", f'<div class="tiles">{tiles}</div>')
-    write("index.html", page(cfg, cfg["site_name"], body, "", demo, updated, hero=hero))
+    write("index.html", page(cfg, cfg["site_name"], body, "", demo, updated, hero=hero, extra_css=extra_css))
 
     about = """<div class="about"><h2>運営者情報・免責事項</h2>
 <p>当サイトは、楽天市場で今売れている商品をジャンル別にご紹介するサイトです。ランキング情報は楽天ウェブサービスの提供データをもとに掲載しています。</p>
@@ -260,7 +268,7 @@ def render(cfg, results, demo, day, updated, out_dir):
     write("about.html", page(cfg, "運営者情報・免責事項", about, "about.html", demo, updated, active="about"))
 
     base = cfg["base_url"].rstrip("/")
-    urls = ["", "about.html"] + [f"{g['slug']}.html" for g in genres]
+    urls = ["", "about.html"] + [f"{g['slug']}.html" for g in genres] + extra_paths
     write("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
           + "".join(f"<url><loc>{e(base)}/{u}</loc><lastmod>{day}</lastmod></url>" for u in urls) + "</urlset>\n")
     write("robots.txt", ("User-agent: *\nDisallow: /\n" if demo else f"User-agent: *\nAllow: /\nSitemap: {base}/sitemap.xml\n"))

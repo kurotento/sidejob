@@ -40,5 +40,12 @@
       "genreId": 100533,
       "icon": "🧸"
     }
-  ]
+  ],
+  "budget": {
+    "slug": "kaimawari-1000yen",
+    "pages": 20,
+    "min_price": 1000,
+    "max_price": 1999,
+    "max_items": 60
+  }
 }
