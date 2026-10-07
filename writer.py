@@ -1,6 +1,6 @@
-"""GitHub Models で商品ごとの紹介文を作り、data/descriptions.json に保存する.
+"""Gemini API（無料枠）で商品ごとの紹介文を作り、data/descriptions.json に保存する.
 
-GitHub Actions 上では GITHUB_TOKEN（permissions: models: read）で無料枠を使う。
+APIキーは環境変数 GEMINI_API_KEY（GitHub の Secrets）から読む。
 紹介文はショップの商品説明に書かれた事実だけから作る。体験談・効果の断定は禁止。
 """
 import datetime as dt
@@ -13,8 +13,9 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-ENDPOINT = "https://models.github.ai/inference/chat/completions"
-MODEL = os.environ.get("DESC_MODEL", "openai/gpt-4.1-mini")
+ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+# 新規プロジェクト向けの推奨モデル。前者が使えない場合は後者を試す
+MODELS = [m for m in os.environ.get("DESC_MODEL", "gemini-3.5-flash-lite,gemini-3.8-flash").split(",") if m]
 CACHE = Path(__file__).resolve().parent / "data" / "descriptions.json"
 LOG = Path(__file__).resolve().parent / "data" / "descriptions_log.txt"
 
@@ -53,23 +54,21 @@ def save_cache(cache, day, keep_days=60):
         json.dump(cache, f, ensure_ascii=False, indent=0, sort_keys=True)
 
 
-def call_model(item, token):
+def call_model(item, key, model):
     user = (f"商品名: {item['name']}\nキャッチコピー: {item.get('catch', '')}\n"
             f"ショップの商品説明: {item.get('caption_long') or item.get('caption', '')}")
     body = json.dumps({
-        "model": MODEL,
-        "messages": [{"role": "system", "content": SYSTEM}, {"role": "user", "content": user}],
-        "temperature": 0.4,
-        "max_tokens": 600,
-        "response_format": {"type": "json_object"},
+        "systemInstruction": {"parts": [{"text": SYSTEM}]},
+        "contents": [{"role": "user", "parts": [{"text": user}]}],
+        "generationConfig": {"temperature": 0.4, "maxOutputTokens": 2048, "responseMimeType": "application/json"},
     }).encode()
-    req = urllib.request.Request(ENDPOINT, data=body, headers={
-        "Content-Type": "application/json", "Authorization": f"Bearer {token}",
-        "Accept": "application/vnd.github+json"})
-    with urllib.request.urlopen(req, timeout=60) as res:
+    req = urllib.request.Request(ENDPOINT.format(model=model), data=body, headers={
+        "Content-Type": "application/json", "x-goog-api-key": key})
+    with urllib.request.urlopen(req, timeout=90) as res:
         raw = res.read().decode("utf-8", "replace")
     try:
-        content = json.loads(raw)["choices"][0]["message"]["content"] or ""
+        parts = json.loads(raw)["candidates"][0]["content"]["parts"]
+        content = "".join(p.get("text", "") for p in parts if not p.get("thought"))
     except (ValueError, KeyError, IndexError) as ex:
         raise ValueError(f"応答の形式が想定外: {raw[:300]}") from ex
     m = re.search(r"\{.*\}", content, re.S)  # ```json などの囲みを外す
@@ -94,7 +93,8 @@ def validate(d):
 def describe(items, day, limit=40):
     """未作成の商品について紹介文を作る。返り値は {itemCode: 紹介文dict}."""
     cache = load_cache()
-    token = os.environ.get("GITHUB_TOKEN")
+    token = os.environ.get("GEMINI_API_KEY")
+    model = MODELS[0]
     log = []
     todo = [it for it in items if it["code"] not in cache and (it.get("caption") or it.get("catch"))]
     if token and todo:
@@ -104,8 +104,12 @@ def describe(items, day, limit=40):
                 log.append("連続で失敗したため中断")
                 break
             try:
-                d = validate(call_model(it, token))
+                d = validate(call_model(it, token, model))
             except urllib.error.HTTPError as ex:
+                if ex.code == 404 and model != MODELS[-1]:  # モデルが使えなければ次の候補へ
+                    model = MODELS[MODELS.index(model) + 1]
+                    log.append(f"モデルが見つからないため {model} に切り替え")
+                    continue
                 log.append(f"{it['code']}: HTTP {ex.code} {ex.read().decode('utf-8', 'replace')[:300]}")
                 fails += 1
                 if ex.code == 429:  # 無料枠の上限。残りは翌日
@@ -120,10 +124,10 @@ def describe(items, day, limit=40):
                 done += 1
             else:
                 log.append(f"{it['code']}: ルール違反または不完全な出力のため不採用")
-            time.sleep(4.5)  # 無料枠の毎分上限を避ける
-        log.insert(0, f"{day} model={MODEL} 新規{done}件 / 対象{len(todo)}件")
+            time.sleep(7)  # 無料枠の毎分上限を避ける
+        log.insert(0, f"{day} model={model} 新規{done}件 / 対象{len(todo)}件")
     elif not token:
-        log.append(f"{day} GITHUB_TOKEN がないため紹介文の作成をスキップ")
+        log.append(f"{day} GEMINI_API_KEY がないため紹介文の作成をスキップ")
     for it in items:
         if it["code"] in cache:
             cache[it["code"]]["last_seen"] = day
