@@ -64,15 +64,26 @@ def slug_of(code):
     return "item-" + re.sub(r"[^A-Za-z0-9_-]", "-", code) + ".html"
 
 
-PROMO = re.compile(r"セール|SALE|限定|OFF|オフ|クーポン|ポイント|送料無料|予定|期間|マラソン|スーパー|半額|最大|\d+%|\d+％|円|お得|先着|まで|迄")
+# 含まれていたら区間ごと捨てる宣伝文句
+PROMO = re.compile(r"エントリー|SALE|セール|OFF|[%％円]オフ|クーポン|限定|予定|期間|マラソン|最大|半額|先着|まで|迄|\d+[%％]|"
+                   r"ランキング|\d+位|連続|常連|当店|お得|ぽっきり|TV|放送|\d+/\d+|\d+:\d+|今だけ|本日|楽券|[\d,]+円")
+# 区間の中から取り除くだけでよい語
+SOFT = re.compile(r"送料無料|ポイント\d+倍|P\d+倍|まとめ買い|お得用|【|】|公式")
 
 
 def short_name(name, limit=42):
     """商品名から宣伝文句を除き、商品そのものを表す部分を取り出す."""
-    parts = re.split(r"[【】\[\]＼／★☆※●■◆♪!！]", name)
-    parts = [re.sub(r"\s+", " ", x).strip() for x in parts]
-    good = [x for x in parts if len(x) >= 8 and not PROMO.search(x)]
-    n = good[0] if good else max(parts, key=len)
+    parts = re.split(r"[【】\[\]［］≪≫＜＞<>＼／★☆※●■◆♪!！]", name)
+    parts = [re.sub(r"\s+", " ", SOFT.sub(" ", x)).strip(" 　/・") for x in parts]
+    good = [x for x in parts if len(x) >= 6 and not PROMO.search(x)]
+    # 先頭側の十分な長さの区間を優先し、なければ最長の区間（キーワードの羅列）を使う
+    first = [x for x in good if len(x) >= 10]
+    if first:
+        n = first[0]
+    elif good:
+        n = max(good, key=len)
+    else:
+        n = re.sub(r"\s+", " ", PROMO.sub(" ", max(parts, key=len))).strip()
     return n if len(n) <= limit else n[:limit].rstrip() + "…"
 
 
