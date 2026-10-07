@@ -39,13 +39,16 @@ def load_config():
 
 # ---------- 取得 ----------
 
-def fetch_ranking(genre_id, base_url):
+def fetch_ranking(genre_id, base_url, page=1):
+    """genre_id が None なら総合ランキング。page は 1〜34（1ページ30件）."""
     params = {
         "applicationId": os.environ["RAKUTEN_APP_ID"],
         "accessKey": os.environ["RAKUTEN_ACCESS_KEY"],
-        "genreId": genre_id,
         "formatVersion": 2,
+        "page": page,
     }
+    if genre_id:
+        params["genreId"] = genre_id
     if os.environ.get("RAKUTEN_AFFILIATE_ID"):
         params["affiliateId"] = os.environ["RAKUTEN_AFFILIATE_ID"]
     url = RANKING_ENDPOINT + "?" + urllib.parse.urlencode(params)
@@ -82,7 +85,18 @@ def normalize_item(it):
         "reviews": int(it.get("reviewCount", 0) or 0),
         "rating": float(it.get("reviewAverage", 0) or 0),
         "point_rate": int(it.get("pointRate", 1) or 1),
+        "postage_free": str(it.get("postageFlag", "")) == "0",
+        "in_stock": str(it.get("availability", "1")) == "1",
+        "has_range": bool(it.get("hasPriceRange")),
+        "catch": (it.get("catchcopy") or "")[:120],
+        "caption": clean_caption(it.get("itemCaption") or ""),
     }
+
+
+def clean_caption(text, limit=400):
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = re.sub(r"\s+", " ", text).strip()
+    return text[:limit]
 
 
 def demo_items(genre, n):
@@ -96,6 +110,7 @@ def demo_items(genre, n):
             "price": rnd.randrange(980, 29800, 10), "url": "#", "shop": "デモショップ",
             "image": "", "reviews": rnd.randint(0, 5000),
             "rating": round(rnd.uniform(3.2, 4.9), 2), "point_rate": rnd.choice([1, 1, 2, 5, 10]),
+            "postage_free": rnd.random() < .7, "in_stock": True, "has_range": rnd.random() < .2,
         })
     # 同じコードの重複を除去して順位を振り直す
     seen, uniq = set(), []
@@ -106,6 +121,35 @@ def demo_items(genre, n):
     for i, it in enumerate(uniq):
         it["rank"] = i + 1
     return uniq
+
+
+def fetch_budget(cfg, demo):
+    """総合ランキング上位から、価格帯・送料無料・在庫ありで絞り込む."""
+    b = cfg["budget"]
+    pool = []
+    if demo:
+        pool = demo_items({"slug": "budget", "title": "総合"}, 300)
+        for it in pool:
+            it["price"] = 700 + (it["price"] % 1600)
+    else:
+        for page in range(1, b["pages"] + 1):
+            try:
+                items = fetch_ranking(None, cfg["base_url"], page=page)
+            except urllib.error.HTTPError as ex:
+                print(f"[budget] page {page}: HTTP {ex.code}", file=sys.stderr)
+                break
+            time.sleep(1.1)
+            if not items:
+                break
+            pool += items
+    seen, picked = set(), []
+    for it in sorted(pool, key=lambda x: x["rank"]):
+        if (b["min_price"] <= it["price"] <= b["max_price"] and it.get("postage_free") and it.get("in_stock")
+                and it["code"] not in seen):
+            seen.add(it["code"])
+            picked.append(it)
+    print(f"[budget] 総合{len(pool)}件中 {len(picked)}件が条件に一致")
+    return picked[: b["max_items"]]
 
 
 # ---------- 履歴 ----------
@@ -140,6 +184,22 @@ def annotate(items, prev):
             it["move"] = p["rank"] - it["rank"]
             it["price_diff"] = it["price"] - p["price"]
     return items
+
+
+def load_series(slug, codes, days=30):
+    """商品ごとの [(日付, 順位, 価格), ...] を古い順に返す."""
+    series = {c: [] for c in codes}
+    if not HISTORY_DIR.exists():
+        return series
+    for d in sorted(p for p in HISTORY_DIR.iterdir() if p.is_dir())[-days:]:
+        f = d / f"{slug}.json"
+        if not f.exists():
+            continue
+        with open(f, encoding="utf-8") as fp:
+            for it in json.load(fp):
+                if it["code"] in series:
+                    series[it["code"]].append((d.name, it["rank"], it["price"]))
+    return series
 
 
 def prune_history(keep_days=60):
@@ -193,9 +253,22 @@ def main():
 
     if not results:
         sys.exit("全ジャンルの取得に失敗しました")
+
+    budget = None
+    if cfg.get("budget"):
+        try:
+            budget = fetch_budget(cfg, args.demo)
+        except Exception as ex:  # noqa: BLE001
+            print(f"[budget] 取得失敗: {ex}", file=sys.stderr)
+        if budget:
+            prev = None if args.demo else load_previous(day, "budget")
+            if not args.demo:
+                save_snapshot(day, "budget", budget)
+            annotate(budget, prev)
+    series = load_series("budget", [it["code"] for it in budget]) if budget and not args.demo else {}
     if not args.demo:
         prune_history()
-    render(cfg, results, args.demo, day, updated, OUT_DIR)
+    render(cfg, results, args.demo, day, updated, OUT_DIR, budget=budget, series=series)
     print(f"生成完了: {OUT_DIR}（失敗ジャンル {errors}件）")
 
 
