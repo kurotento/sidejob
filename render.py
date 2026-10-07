@@ -184,7 +184,7 @@ def page(cfg, title, body, path, demo, updated, active=None, hero=""):
 <header class="top"><div class="wrap bar"><a class="logo" href="index.html"><span class="mark">{CROWN}</span>{e(cfg['site_name'])}</a>
 <span class="prtag">PR・楽天アフィリエイト参加中</span></div><nav class="tabs">{tabs}</nav></header>
 {hero}<main class="wrap">{body}</main>
-<footer><div class="wrap"><p>最終更新：{e(updated)}（日本時間）。価格・在庫・ポイント倍率・レビューは取得時点の情報です。ご購入前に必ず販売ページでご確認ください。</p>
+<footer><div class="wrap"><p>掲載している価格・在庫・ポイント倍率・レビューは{e(updated)}時点の情報です。ご購入前に必ず販売ページでご確認ください。</p>
 <p>当サイトは楽天アフィリエイトを利用しており、リンク経由のご購入で運営者に紹介料が支払われる場合があります。</p>
 <p><a href="about.html">運営者情報・免責事項</a> ／ Supported by <a href="https://webservice.rakuten.co.jp/" rel="noopener">Rakuten Developers</a></p></div></footer>
 </body></html>"""
@@ -207,11 +207,11 @@ def render(cfg, results, demo, day, updated, out_dir):
         items = results[g["slug"]]
         hero = f"""<section class="hero sm"><div class="wrap"><div class="crumb"><a href="index.html">総合</a> › {e(g['title'])}</div>
 <h1>{e(g['icon'])} {e(g['title'])}<br>売れ筋ランキング TOP{len(items)}</h1>
-<p>{m}月{d}日 更新。楽天市場で今いちばん売れている{e(g['title'])}を、順位変動つきでチェック。</p></div></section>"""
+<p>{m}月{d}日時点、楽天市場で今いちばん売れている{e(g['title'])}を、順位変動つきでチェック。</p></div></section>"""
         top3 = "".join(card(it) for it in items[:3])
         body = section("TOP3", "👑", f"{m}月{d}日時点で最も売れている3商品", f'<div class="podium">{top3}</div>')
         if len(items) > 3:
-            body += section(f"4位〜{len(items)}位", "📋", "▲▼は前回の更新からの順位変動です",
+            body += section(f"4位〜{len(items)}位", "📋", "▲▼は前日からの順位変動です",
                             f'<div class="rows">{"".join(row(it) for it in items[3:])}</div>')
         others = "".join(f'<a class="tile" href="{o["slug"]}.html"><span class="ico">{e(o["icon"])}</span><span>{e(o["title"])}<small>TOP{len(results[o["slug"]])}を見る</small></span></a>'
                          for o in genres if o is not g)
@@ -231,20 +231,20 @@ def render(cfg, results, demo, day, updated, out_dir):
     def grid(rows):
         return f'<div class="grid">{"".join(card(it, genre=g) for g, it in rows)}</div>'
 
-    hero = f"""<section class="hero"><div class="wrap"><span class="kicker">{m}月{d}日 朝 更新</span>
+    hero = f"""<section class="hero"><div class="wrap"><span class="kicker">{m}月{d}日のランキング</span>
 <h1>今日、楽天で<br>本当に売れているもの。</h1>
 <p>{e(cfg['site_description'])}</p>
-<div class="stats"><div><b>{len(genres)}</b>ジャンル</div><div><b>{total}</b>商品を集計</div><div><b>毎朝7時</b>自動更新</div></div></div></section>"""
+<div class="stats"><div><b>{len(genres)}</b>ジャンル</div><div><b>{total}</b>商品を掲載</div><div><b>毎日</b>更新</div></div></div></section>"""
     body = ""
     if not (risers or cheaper):
-        body += '<div class="notice">📈 順位の急上昇・値下がり情報は、明日の更新から表示されます。</div>'
+        body += '<div class="notice">📈 順位の急上昇・値下がり情報は、明日から掲載します。</div>'
     champs = "".join(card(results[g["slug"]][0], genre=g, cta="ランキングを見る").replace(
         f'class="cta" {link_attrs(results[g["slug"]][0])}', f'class="cta ghost" href="{g["slug"]}.html"', 1) for g in genres)
     body += section("ジャンル別 いまの1位", "🏆", "各ジャンルで今日いちばん売れている商品", f'<div class="grid">{champs}</div>')
     if risers:
-        body += section("今日の急上昇", "🚀", "前回から大きく順位を上げた注目商品", grid(risers))
+        body += section("今日の急上昇", "🚀", "前日から大きく順位を上げた注目商品", grid(risers))
     if cheaper:
-        body += section("値下がり中", "💸", "前回の更新より価格が下がった商品", grid(cheaper))
+        body += section("値下がり中", "💸", "前日より価格が下がった商品", grid(cheaper))
     if rated:
         body += section("高評価の売れ筋", "⭐", "レビュー100件以上・平均★4.5以上の安心アイテム", grid(rated))
     tiles = "".join(f'<a class="tile" href="{g["slug"]}.html"><span class="ico">{e(g["icon"])}</span><span>{e(g["title"])}<small>TOP{len(results[g["slug"]])}を見る</small></span></a>'
@@ -253,7 +253,7 @@ def render(cfg, results, demo, day, updated, out_dir):
     write("index.html", page(cfg, cfg["site_name"], body, "", demo, updated, hero=hero))
 
     about = """<div class="about"><h2>運営者情報・免責事項</h2>
-<p>当サイトは楽天ウェブサービスのAPIを利用して、楽天市場のランキング情報を自動で集計・掲載しています。</p>
+<p>当サイトは、楽天市場で今売れている商品をジャンル別にご紹介するサイトです。ランキング情報は楽天ウェブサービスの提供データをもとに掲載しています。</p>
 <p>当サイトは楽天アフィリエイトに参加しており、掲載リンクから商品が購入されると運営者に紹介料が支払われる場合があります（広告／PR）。</p>
 <p>価格・在庫・ポイント倍率・レビュー等は取得時点の情報であり、正確性を保証するものではありません。最新情報は必ずリンク先の販売ページでご確認ください。</p>
 <p>当サイトはアクセス解析ツール等による個人情報の収集を行っていません。</p></div>"""

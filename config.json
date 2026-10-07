@@ -1,6 +1,6 @@
 {
   "site_name": "毎日更新 楽天ランキング速報",
-  "site_description": "楽天市場のジャンル別ランキングを毎日自動で集計。順位の上がった商品・値下がりした商品がひと目でわかります。",
+  "site_description": "楽天市場で今売れている商品をジャンル別にまとめてご紹介。順位の上がった商品や値下がりした商品もひと目でわかります。",
   "base_url": "https://kurotento.github.io/sidejob",
   "items_per_genre": 30,
   "genres": [
