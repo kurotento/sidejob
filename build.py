@@ -23,6 +23,7 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
+import writer
 from render import render
 
 ROOT = Path(__file__).resolve().parent
@@ -90,6 +91,7 @@ def normalize_item(it):
         "has_range": bool(it.get("hasPriceRange")),
         "catch": (it.get("catchcopy") or "")[:120],
         "caption": clean_caption(it.get("itemCaption") or ""),
+        "caption_long": clean_caption(it.get("itemCaption") or "", 1500),
     }
 
 
@@ -158,7 +160,9 @@ def save_snapshot(day, slug, items):
     d = HISTORY_DIR / day
     d.mkdir(parents=True, exist_ok=True)
     with open(d / f"{slug}.json", "w", encoding="utf-8") as f:
-        json.dump(items, f, ensure_ascii=False, separators=(",", ":"))
+        # 説明文は容量が大きいので履歴には残さない
+        slim = [{k: v for k, v in it.items() if k not in ("caption", "caption_long", "catch")} for it in items]
+        json.dump(slim, f, ensure_ascii=False, separators=(",", ":"))
 
 
 def load_previous(day, slug):
@@ -265,10 +269,16 @@ def main():
             if not args.demo:
                 save_snapshot(day, "budget", budget)
             annotate(budget, prev)
+    descs = {}
+    if budget and not args.demo:
+        try:
+            descs = writer.describe(budget, day, limit=cfg["budget"].get("describe_per_day", 40))
+        except Exception as ex:  # noqa: BLE001 - 紹介文が作れなくてもサイトは出す
+            print(f"[describe] 失敗: {ex}", file=sys.stderr)
     series = load_series("budget", [it["code"] for it in budget]) if budget and not args.demo else {}
     if not args.demo:
         prune_history()
-    render(cfg, results, args.demo, day, updated, OUT_DIR, budget=budget, series=series)
+    render(cfg, results, args.demo, day, updated, OUT_DIR, budget=budget, series=series, descs=descs)
     print(f"生成完了: {OUT_DIR}（失敗ジャンル {errors}件）")
 
 
