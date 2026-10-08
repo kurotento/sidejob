@@ -14,7 +14,7 @@
 [furusato:sweets] 30件
 [furusato:daily] 30件
 [furusato] 69ページ
-[room] 投稿リスト 25件
+[room] 投稿リスト 27件
 [replies] 質問 13件
 生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
 [shorts] shorts/2026-10-08-1.mp4 32秒 1000円台・送料無料
