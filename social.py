@@ -10,11 +10,12 @@ import io
 import json
 import os
 import re
+import time
 import unicodedata
 import urllib.request
 from pathlib import Path
 
-from articles import short_name
+from articles import short_name, slug_of
 
 API = "https://api.buffer.com"
 ROOT = Path(__file__).resolve().parent
@@ -22,8 +23,8 @@ DATA = ROOT / "data"
 POSTED = DATA / "posted.json"
 LOG = DATA / "social_log.txt"
 JST = dt.timezone(dt.timedelta(hours=9))
-NORMAL_SLOTS = [(12, 0)]
-SALE_SLOTS = [(12, 0), (20, 30)]
+# 1日10件（Buffer無料プランの予約上限＝同時10件）
+SLOTS = [(8, 0), (9, 30), (11, 0), (12, 15), (13, 30), (15, 0), (17, 0), (18, 30), (20, 0), (21, 30)]
 MAX_TAGS = 5
 FONTS = ["/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc", "C:/Windows/Fonts/YuGothB.ttc"]
 STOP = {"送料無料", "セット", "公式", "まとめ買い", "大容量", "ギフト", "プレゼント", "選べる", "人気", "おしゃれ",
@@ -90,23 +91,78 @@ def build_tags(items, sale, descs=None):
 
 # ---------- 投稿の中身 ----------
 
-def candidates(cfg, results, budget, recent):
-    """投稿の種類ごとにTOP3を作る。返り値は [(種類, 見出し, [(商品, 補足)], リンク先)]."""
+def candidates(cfg, results, budget, recent, descs=None, day="2000-01-01"):
+    """1日分の投稿候補を、種類がばらけるように並べて返す.
+
+    返り値は [(種類, 見出し, [(商品, 補足)], リンク先)]。単品紹介は rows が1件。
+    同じ商品は同じ日に2回出さない。直近7日に投稿した商品は TOP3 からは除く。
+    """
     base = cfg["base_url"].rstrip("/")
-    allg = [(g, it) for g in cfg["genres"] for it in results.get(g["slug"], []) if it["code"] not in recent]
+    used = set(recent)
+    fresh = lambda it: it["code"] not in used  # noqa: E731
+
+    def take(pairs, n=3):
+        got = [p for p in pairs if fresh(p[0])][:n]
+        if len(got) == n:
+            used.update(p[0]["code"] for p in got)
+            return got
+        return None
+
+    allg = [it for g in cfg["genres"] for it in results.get(g["slug"], [])]
+    tops = []
+    cheaper = take([(it, f"{-it['price_diff']:,}円↓") for it in sorted(
+        (x for x in allg if x.get("price_diff", 0) < 0), key=lambda x: x["price_diff"])])
+    if cheaper:
+        tops.append(("cheaper", "今日の値下がりTOP3", cheaper, base + "/"))
+    risers = take([(it, f"{it['move']}位UP") for it in sorted(
+        (x for x in allg if isinstance(x.get("move"), int) and x["move"] >= 3), key=lambda x: -x["move"])])
+    if risers:
+        tops.append(("risers", "今日の急上昇TOP3", risers, base + "/"))
+    picks = take([(it, "送料無料") for it in budget or []])
+    if picks:
+        tops.append(("budget", "1000円台の売れ筋TOP3", picks, f"{base}/{cfg['budget']['slug']}.html"))
+    # ジャンル別TOP3（日替わりで並び順を回す）
+    gs = cfg["genres"]
+    k = dt.date.fromisoformat(day).toordinal() % len(gs)
+    for g in gs[k:] + gs[:k]:
+        rows = take([(it, f"{it['rank']}位") for it in results.get(g["slug"], [])])
+        if rows:
+            tops.append((f"genre-{g['slug']}", f"{g['title']}の売れ筋TOP3", rows, f"{base}/{g['slug']}.html"))
+    # 単品紹介（紹介文がある1000円台の商品）
+    singles = []
+    for it in budget or []:
+        if fresh(it) and (descs or {}).get(it["code"]):
+            used.add(it["code"])
+            singles.append(("single", "1000円台の注目商品", [(it, "送料無料")], f"{base}/{slug_of(it['code'])}"))
+    # TOP3 と単品を交互に並べる
     out = []
-    cheaper = sorted((x for x in allg if x[1].get("price_diff", 0) < 0), key=lambda x: x[1]["price_diff"])[:3]
-    if len(cheaper) == 3:
-        out.append(("cheaper", "今日の値下がりTOP3", [(it, f"{-it['price_diff']:,}円↓") for _, it in cheaper], base + "/"))
-    risers = sorted((x for x in allg if isinstance(x[1].get("move"), int) and x[1]["move"] >= 3),
-                    key=lambda x: -x[1]["move"])[:3]
-    if len(risers) == 3:
-        out.append(("risers", "今日の急上昇TOP3", [(it, f"{it['move']}位UP") for _, it in risers], base + "/"))
-    picks = [it for it in budget or [] if it["code"] not in recent][:3]
-    if len(picks) == 3:
-        out.append(("budget", "1000円台の売れ筋TOP3", [(it, "送料無料") for it in picks],
-                    f"{base}/{cfg['budget']['slug']}.html"))
+    while tops or singles:
+        if tops:
+            out.append(tops.pop(0))
+        if singles:
+            out.append(singles.pop(0))
     return out
+
+
+def compose_single(it, desc, url, tags, day):
+    m, d = int(day[5:7]), int(day[8:10])
+    stars = f" ★{it['rating']:.2f}（{it['reviews']:,}件）" if it["reviews"] else ""
+    lead = re.split(r"(?<=[。！!])", desc["intro"])[0] if desc else ""
+    limit = 40
+    while True:
+        lines = [f"【1000円台の注目商品】{m}/{d}", short_name(it["name"], limit),
+                 f"{it['price']:,}円・送料無料{stars}"]
+        if lead:
+            lines.append(lead)
+        text = "\n".join(lines + ["▼くわしくはこちら", url, tags])
+        if x_len(text) <= 280:
+            return text
+        if lead:
+            lead = ""
+            continue
+        if limit <= 10:
+            return text
+        limit -= 4
 
 
 def compose_text(title, rows, url, tags, day):
@@ -223,53 +279,100 @@ CREATE = """mutation { createPost(input: {text: %s, channelId: %s, schedulingTyp
   ... on MutationError { message } } }"""
 
 
-def schedule(cfg, results, budget, descs, day, out_dir):
-    key = os.environ.get("BUFFER_API_KEY")
-    if not key:
-        LOG.write_text(f"{day} BUFFER_API_KEY がないため投稿の予約をスキップ\n", encoding="utf-8")
-        return
+PLAN = DATA / "social_plan.json"
+
+
+def plan(cfg, results, budget, descs, day, out_dir):
+    """投稿の計画（本文・画像・時刻）を作り、画像をサイト内に置く。予約はサイト公開後に run_plan で行う."""
     posted = json.loads(POSTED.read_text(encoding="utf-8")) if POSTED.exists() else {}
     if posted.get("_scheduled") == day:
         LOG.write_text(f"{day} 本日分は予約済み\n", encoding="utf-8")
         return
     cutoff = (dt.date.fromisoformat(day) - dt.timedelta(days=7)).isoformat()
-    posted = {k: v for k, v in posted.items() if k.startswith("_") or v >= cutoff}
-    recent = {k for k in posted if not k.startswith("_")}
-
+    recent = {k for k, v in posted.items() if not k.startswith("_") and v >= cutoff}
     names = [it["name"] for it in budget or []] + [it["name"] for v in results.values() for it in v]
     sale = sale_tags(names)
     d = dt.date.fromisoformat(day)
-    now = dt.datetime.now(JST) + dt.timedelta(minutes=10)
-    slots = [(h, m) for h, m in (SALE_SLOTS if sale else NORMAL_SLOTS)
-             if dt.datetime(d.year, d.month, d.day, h, m, tzinfo=JST) > now]
-    cands = candidates(cfg, results, budget, recent)
-    if not slots or not cands:
-        LOG.write_text(f"{day} 予約なし（残りの投稿枠 {len(slots)} / 候補 {len(cands)}）\n", encoding="utf-8")
+    now = dt.datetime.now(JST) + dt.timedelta(minutes=20)  # 公開と予約にかかる時間を見込む
+    slots = [(h, m) for h, m in SLOTS if dt.datetime(d.year, d.month, d.day, h, m, tzinfo=JST) > now]
+    cands = candidates(cfg, results, budget, recent, descs, day)
+    base = cfg["base_url"].rstrip("/")
+    items = []
+    for n, ((h, m), (kind, title, rows, url)) in enumerate(zip(slots, cands)):
+        tags = build_tags([it for it, _ in rows], sale, descs)
+        if kind == "single":
+            it = rows[0][0]
+            text = compose_single(it, (descs or {}).get(it["code"]), url, tags, day)
+            image = re.sub(r"_ex=\d+x\d+", "_ex=600x600", it.get("image", ""))
+        else:
+            img_name = f"social/{day}-{n:02d}-{kind}.png"
+            make_image(title, rows, day, out_dir / img_name)
+            text = compose_text(title, rows, url, tags, day)
+            image = f"{base}/{img_name}"
+        while x_len(text) > 280 and tags.count("#") > 1:  # 長すぎるときは長いタグから外す（#PRは残す）
+            tl = tags.split()
+            gen = [t for t in ("#楽天", "#買い回り", "#お買い物マラソン") if t in tl]
+            tl.remove(gen[0] if gen else max((t for t in tl if t != "#PR"), key=len))
+            old, tags = tags, " ".join(tl)
+            text = text.replace(old, tags)
+        due = dt.datetime(d.year, d.month, d.day, h, m, tzinfo=JST).astimezone(dt.timezone.utc)
+        items.append({"kind": kind, "time": f"{h:02d}:{m:02d}", "due": due.strftime("%Y-%m-%dT%H:%M:%S.000Z"),
+                      "text": text, "image": image, "codes": [it["code"] for it, _ in rows]})
+    PLAN.write_text(json.dumps({"day": day, "sale": sale, "posts": items}, ensure_ascii=False, indent=1), encoding="utf-8")
+    LOG.write_text(f"{day} 計画 {len(items)}件（セール判定: {sale or 'なし'} / 残り枠 {len(slots)} / 候補 {len(cands)}）\n",
+                   encoding="utf-8")
+
+
+def wait_until_live(url, tries=20):
+    for _ in range(tries):
+        try:
+            with urllib.request.urlopen(url, timeout=20) as r:
+                if r.status == 200:
+                    return True
+        except Exception:  # noqa: BLE001
+            pass
+        time.sleep(15)
+    return False
+
+
+def run_plan():
+    """サイト公開後に実行。計画どおり Buffer に予約する."""
+    key = os.environ.get("BUFFER_API_KEY")
+    if not PLAN.exists():
+        return
+    p = json.loads(PLAN.read_text(encoding="utf-8"))
+    day = p["day"]
+    posted = json.loads(POSTED.read_text(encoding="utf-8")) if POSTED.exists() else {}
+    if not key:
+        LOG.write_text(f"{day} BUFFER_API_KEY がないため投稿の予約をスキップ\n", encoding="utf-8")
+        return
+    if posted.get("_scheduled") == day or not p["posts"]:
         return
     channel = find_channel(key)
-    log, base = [f"{day} セール判定: {sale or 'なし'}"], cfg["base_url"].rstrip("/")
-    k = d.toordinal() % len(cands)  # 日替わりで種類を回す
-    ordered = cands[k:] + cands[:k]
-    ok = False
-    for (h, m), (kind, title, rows, url) in zip(slots, ordered):
-        img_name = f"social/{day}-{kind}.png"
-        make_image(title, rows, day, out_dir / img_name)
-        text = compose_text(title, rows, url, build_tags([it for it, _ in rows], sale, descs), day)
-        due = dt.datetime(d.year, d.month, d.day, h, m, tzinfo=JST).astimezone(dt.timezone.utc)
-        q = CREATE % (json.dumps(text), json.dumps(channel), json.dumps(due.strftime("%Y-%m-%dT%H:%M:%S.000Z")),
-                      json.dumps(f"{base}/{img_name}"))
+    log, ok = [f"{day} セール判定: {p['sale'] or 'なし'}"], False
+    for post in p["posts"]:
+        if not wait_until_live(post["image"]):
+            log.append(f"{post['kind']}: 失敗 画像が公開されていない {post['image']}")
+            continue
+        q = CREATE % (json.dumps(post["text"]), json.dumps(channel), json.dumps(post["due"]), json.dumps(post["image"]))
         try:
             r = gql(key, q)["createPost"]
             if r.get("message"):
-                log.append(f"{kind}: 失敗 {r['message']}")
+                log.append(f"{post['kind']}: 失敗 {r['message']}")
                 continue
-            for it, _ in rows:
-                posted[it["code"]] = day
+            for c in post["codes"]:
+                posted[c] = day
             ok = True
-            log.append(f"{kind}: {h:02d}:{m:02d} に予約 / {x_len(text)}文字 / 画像 {base}/{img_name}\n{text}")
+            log.append(f"{post['kind']}: {post['time']} に予約 / {x_len(post['text'])}文字 / 画像 {post['image']}\n{post['text']}")
         except Exception as ex:  # noqa: BLE001
-            log.append(f"{kind}: 失敗 {ex}")
+            log.append(f"{post['kind']}: 失敗 {ex}")
     if ok:
         posted["_scheduled"] = day
+    cutoff = (dt.date.fromisoformat(day) - dt.timedelta(days=7)).isoformat()
+    posted = {k: v for k, v in posted.items() if k.startswith("_") or v >= cutoff}
     POSTED.write_text(json.dumps(posted, ensure_ascii=False, indent=0), encoding="utf-8")
     LOG.write_text("\n---\n".join(log) + "\n", encoding="utf-8")
+
+
+if __name__ == "__main__":
+    run_plan()
