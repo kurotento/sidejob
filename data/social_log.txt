@@ -1,1 +1,3 @@
-2026-10-08 本日分は予約済み
+2026-10-08 セール判定: ['お買い物マラソン', '買い回り']
+---
+budget: 失敗 Invalid post: Image could not be read from its URL.
