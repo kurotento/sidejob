@@ -1,0 +1,86 @@
+"""Threads・Instagram の投稿計画（data/sns_plan.json）を作る。予約は social.run_plan がまとめて行う.
+
+- Threads : threads.py が作った「悩み別・採点つき」の投稿から点の高い順に1日3本
+- Instagram: ショート動画をリールで1本・ストーリーに全部＋TOP3画像をフィードに1枚（キャプションのリンクは押せないのでプロフィールへ誘導）
+"""
+import datetime as dt
+import json
+import re
+from pathlib import Path
+
+DATA = Path(__file__).resolve().parent / "data"
+SNS_PLAN = DATA / "sns_plan.json"
+JST = dt.timezone(dt.timedelta(hours=9))
+
+THREADS_TIMES = [(12, 15), (19, 0), (21, 30)]  # 新しいアカウントなので最初は1日3本
+INSTA_REEL_TIME = (20, 0)
+INSTA_FEED_TIME = (12, 0)
+INSTA_STORY_TIMES = [(18, 0), (21, 15)]  # ストーリーは24時間で消えるので、夕方と夜に1本ずつ
+
+INSTA_TAGS = {
+    "red": "#楽天 #楽天市場 #楽天お買い物マラソン #買い回り #1000円台 #送料無料 #楽天購入品 #プチプラ #暮らしを整える #PR",
+    "green": "#ふるさと納税 #楽天ふるさと納税 #ふるさと納税返礼品 #返礼品 #ふるさと納税おすすめ #お取り寄せ #節約 #PR",
+}
+
+
+def item(service, kind, t, text, image="", video=""):
+    return {"service": service, "kind": kind, "time": t.strftime("%m/%d %H:%M"),
+            "due": t.astimezone(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z"),
+            "text": text, "image": image, "video": video, "codes": []}
+
+
+def threads_posts(day, at):
+    cache = json.loads((DATA / "threads_posts.json").read_text(encoding="utf-8")) if (DATA / "threads_posts.json").exists() else {}
+    todays = sorted(((k, v) for k, v in cache.items() if k.startswith(day + ":") and v.get("patterns")),
+                    key=lambda kv: -kv[1]["patterns"][0]["total"])
+    out = []
+    for (h, m), (k, v) in zip(THREADS_TIMES, todays):
+        url = v.get("url")
+        if not url:
+            continue
+        text = f"{v['patterns'][0]['text']}\n\n{v['reply_lead']}👇\n{url}\n#PR"
+        out.append(item("threads", "threads", at(h, m), text))
+    return out
+
+
+def insta_posts(cfg, day, videos, at):
+    base = cfg["base_url"].rstrip("/")
+    out = []
+    for v in (videos or [])[:1]:
+        title = re.sub(r"\s*#\S+", "", v["title"]).strip()
+        cap = (f"{title}\n\nらんくまが30秒で紹介するよ🧸\n商品はプロフィールのリンク（楽天ROOM）からまとめて見られます\n\n"
+               f"{INSTA_TAGS.get(v.get('theme'), INSTA_TAGS['red'])}")
+        out.append(item("instagram", "reel", at(*INSTA_REEL_TIME), cap, video=f"{base}/{v['file']}"))
+    for (h, m), v in zip(INSTA_STORY_TIMES, videos or []):
+        out.append(item("instagram", "story", at(h, m), "", video=f"{base}/{v['file']}"))
+    plan = DATA / "social_plan.json"
+    if plan.exists():
+        p = json.loads(plan.read_text(encoding="utf-8"))
+        if p.get("day") == day:
+            img = next((x for x in p["posts"] if x["kind"] == "budget" and x.get("image")), None)
+            if img:
+                lines = [ln for ln in img["text"].split("\n") if re.match(r"^[1-3]️⃣", ln)]
+                cap = ("【1000円台・送料無料 売れ筋TOP3】\n買い回りのあと1店舗に💡\n\n" + "\n".join(lines) +
+                       "\n\n商品はプロフィールのリンク（楽天ROOM）から見られます\n保存しておくと、買い回りのときに便利だよ\n\n"
+                       + INSTA_TAGS["red"])
+                out.append(item("instagram", "feed", at(*INSTA_FEED_TIME), cap, image=img["image"]))
+    return out
+
+
+def build(cfg, day, videos):
+    d = dt.date.fromisoformat(day)
+    now = dt.datetime.now(JST) + dt.timedelta(minutes=20)
+    at = lambda h, m: dt.datetime(d.year, d.month, d.day, h, m, tzinfo=JST)  # noqa: E731
+    old = json.loads(SNS_PLAN.read_text(encoding="utf-8")) if SNS_PLAN.exists() else {}
+    if old.get("day") == day:  # 予約済みの状態を残したまま、足りない分だけ足す
+        posts = old["posts"]
+    else:
+        posts = []
+    have = {(x["service"], x["kind"], x["time"]) for x in posts}
+    for x in threads_posts(day, at) + insta_posts(cfg, day, videos, at):
+        if (x["service"], x["kind"], x["time"]) not in have and dt.datetime.strptime(
+                x["due"], "%Y-%m-%dT%H:%M:%S.000Z").replace(tzinfo=dt.timezone.utc) > now:
+            posts.append(x)
+    posts.sort(key=lambda x: x["due"])
+    SNS_PLAN.write_text(json.dumps({"day": day, "posts": posts}, ensure_ascii=False, indent=1), encoding="utf-8")
+    return len(posts)

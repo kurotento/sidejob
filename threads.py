@@ -108,7 +108,10 @@ def write(picks, descs, day):
     model = MODELS[0]
     for label, who, it in picks:
         ck = f"{day}:{it['code']}"
-        if ck in cache or not key:
+        if ck in cache:
+            cache[ck].setdefault("url", it["url"])
+            continue
+        if not key:
             continue
         d = descs.get(it["code"]) or {"intro": it.get("caption", "")[:400]}
         prompt = (f"ターゲットの悩み: {who}\n商品名: {short_name(it['name'], 60)}\n価格: {it['price']:,}円\n"
@@ -130,7 +133,7 @@ def write(picks, descs, day):
             if r or not key:
                 break
         if r:
-            cache[ck] = r
+            cache[ck] = {**r, "url": it["url"]}
     cutoff = (dt.date.fromisoformat(day) - dt.timedelta(days=14)).isoformat()
     cache = {k: v for k, v in cache.items() if k[:10] >= cutoff}
     CACHE.write_text(json.dumps(cache, ensure_ascii=False, indent=0), encoding="utf-8")
