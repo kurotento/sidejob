@@ -8,6 +8,9 @@
     RAKUTEN_APP_ID        楽天ウェブサービスのアプリID (applicationId)
     RAKUTEN_ACCESS_KEY    楽天ウェブサービスのアクセスキー (accessKey)
     RAKUTEN_AFFILIATE_ID  楽天アフィリエイトID (無いと報酬が発生しません)
+
+楽天ウェブサービスのアプリは「Web application」、Allowed websites に kurotento.github.io を登録する
+（Referer/Origin で照合されるため）。有効期限は 2027-10-08。
 """
 import argparse
 import datetime as dt
