@@ -11,6 +11,13 @@ e = html.escape
 RAW = "https://raw.githubusercontent.com/kurotento/sidejob/main/data/"
 
 
+CFG = {}
+
+
+def cfg_flag(key, value):
+    return CFG.get(key) == value
+
+
 def tasks(day, videos):
     """今日やること（時間の目安つき）. 返り値は [(時間, 作業, URL, 補足)]."""
     d = dt.date.fromisoformat(day)
@@ -24,6 +31,9 @@ def tasks(day, videos):
         out.append(("週1（月曜）", "楽天アフィリエイトの成果レポートを見る", "https://affiliate.rakuten.co.jp/report/",
                     "クリック数と売れた商品をチェック"))
         out.append(("週1（月曜）", "Search Console で検索からの表示回数を見る", "https://search.google.com/search-console", ""))
+    if dt.date(2026, 10, 9) <= d <= dt.date(2026, 10, 14) and not cfg_flag("instagram_via", "sheet"):
+        out.append(("いつでも", "Meta の開発者画面に「Instagram ログインによる API 設定」が出たか確認",
+                    "https://developers.facebook.com/apps/", "出ていたらトークンを作って GitHub の IG_TOKEN に入れる"))
     if dt.date(2027, 1, 8) <= d <= dt.date(2027, 2, 28) and d.weekday() == 0:
         out.append(("期限つき", "26tyama で Facebook 登録 → Meta 開発者アプリの持ち主を移す", "https://developers.facebook.com/apps/",
                     "仮のアカウントで作ったアプリを 26tyama に移す（accounts.md 参照）"))
@@ -67,6 +77,7 @@ LINKS = [
 
 
 def build(cfg, day, videos, out_dir):
+    CFG.update(cfg)
     m, d = int(day[5:7]), int(day[8:10])
     week = "月火水木金土日"[dt.date.fromisoformat(day).weekday()]
     rows = "".join(f"""<li><label><input type="checkbox" data-k="{n}"><span class="t">{e(t)}</span>
