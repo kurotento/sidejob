@@ -25,6 +25,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Install image tools
+        run: |
+          pip install --quiet Pillow
+          sudo apt-get install -y -qq fonts-noto-cjk > /dev/null
       - name: Build site
         env:
           RAKUTEN_APP_ID: ${{ secrets.RAKUTEN_APP_ID }}
