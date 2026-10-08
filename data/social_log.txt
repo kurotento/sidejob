@@ -66,3 +66,4 @@ https://kurotento.github.io/sidejob/item-rakutenoriginal-daily-10000000.html
 --- 14:26 予約処理: 空き枠 1 / 未予約 0
 --- 14:37 予約処理: 空き枠 1 / 未予約 0
 --- 14:44 予約処理: 空き枠 1 / 未予約 0
+--- 15:31 予約処理: 空き枠 2 / 未予約 0
