@@ -79,8 +79,16 @@ def sale_tags(names):
 
 
 def build_tags(items, sale, descs=None):
-    """参考アカウントにならい、タグは最小限（PR表記は先頭の「楽天 #PR」で行う）."""
-    return "#お買い物マラソン" if "お買い物マラソン" in sale else ""
+    """新規の人に見つけてもらうためのタグ。商品名から最大3つ＋セール中のタグ.
+
+    PR表記は投稿の先頭（「楽天 #PR」）で行うので、ここには含めない。
+    """
+    tags = []
+    for it in items:
+        t = product_tag(it["name"], (descs or {}).get(it["code"]))
+        if t and t not in tags:
+            tags.append(t)
+    return " ".join("#" + t for t in tags[:3] + sale)
 
 
 # ---------- 投稿の中身 ----------
@@ -362,8 +370,12 @@ def plan(cfg, results, budget, descs, day, out_dir):
             make_image(title, rows, day, out_dir / img_name)
             text = compose_text(title, rows, url, tags, day, kind)
             image = f"{base}/{img_name}"
-        if x_len(text) > 280 and tags:  # 長すぎるときはタグを外す（PR表記は先頭にあるので残る）
-            text = text.replace("\n" + tags, "")
+        while x_len(text) > 280 and tags:  # 長すぎるときは一般的なタグ→長いタグの順に外す（PR表記は先頭に残る）
+            tl = tags.split()
+            gen = [t for t in ("#買い回り", "#お買い物マラソン") if t in tl]
+            tl.remove(gen[0] if gen else max(tl, key=len))
+            old, tags = tags, " ".join(tl)
+            text = text.replace("\n" + old, "\n" + tags if tags else "")
         due = dt.datetime(d.year, d.month, d.day, h, m, tzinfo=JST).astimezone(dt.timezone.utc)
         items.append({"kind": kind, "time": f"{h:02d}:{m:02d}", "due": due.strftime("%Y-%m-%dT%H:%M:%S.000Z"),
                       "text": text, "image": image, "codes": [it["code"] for it, _ in rows]})
