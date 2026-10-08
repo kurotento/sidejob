@@ -281,6 +281,12 @@ def main():
     if not args.demo:
         prune_history()
     render(cfg, results, args.demo, day, updated, OUT_DIR, budget=budget, series=series, descs=descs)
+    if not args.demo:
+        try:  # ふるさと納税サイトの準備：取得できるかの確認（一時的）
+            import furusato
+            furusato.probe(cfg["base_url"])
+        except Exception as ex:  # noqa: BLE001
+            print(f"[furusato] 失敗: {ex}", file=sys.stderr)
     if budget:
         try:
             n = room.build(cfg, budget, descs, day, OUT_DIR, save=not args.demo)
