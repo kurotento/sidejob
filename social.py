@@ -680,7 +680,7 @@ def wait_until_live(url, tries=20):
     return False
 
 
-def create(key, post, channel, meta=""):
+def create(key, post, channel, meta="", notify=False):
     args = (json.dumps(post["text"]), json.dumps(channel), json.dumps(post["due"]))
     if post.get("video"):
         q = CREATE_VIDEO % (*args, json.dumps(post["video"]))
@@ -690,6 +690,8 @@ def create(key, post, channel, meta=""):
         q = CREATE_NOIMG % args
     if meta:
         q = q.replace(", schedulingType:", f", metadata: {meta}, schedulingType:", 1)
+    if notify:  # 個人アカウントの Instagram は自動公開できず、時間になるとスマホに通知が来る方式
+        q = q.replace("schedulingType: automatic", "schedulingType: notification", 1)
     return gql(key, q)["createPost"]
 
 
@@ -704,16 +706,29 @@ SCHEMA = DATA / "buffer_schema.txt"
 
 def log_schema(key):
     """Buffer の投稿APIの項目を一度だけ記録する（Threads の返信や Instagram の種類指定の調整用）."""
-    if SCHEMA.exists():
+    if SCHEMA.exists() and "v2" in SCHEMA.read_text(encoding="utf-8")[:10]:
         return
-    out = []
-    for name in ("CreatePostInput", "PostInputMetaData", "InstagramPostMetadataInput", "ThreadsPostMetadataInput"):
+    out, seen = ["v2"], set()
+    todo = ["ThreadsPostMetadataInput", "InstagramPostMetadataInput", "PostType", "SchedulingType"]
+    q = '{ __type(name: "%s") { kind inputFields { name type { name kind ofType { name kind ofType { name kind ofType { name } } } } } enumValues { name } } }'
+    while todo and len(seen) < 12:
+        name = todo.pop(0)
+        if name in seen:
+            continue
+        seen.add(name)
         try:
-            t = gql(key, '{ __type(name: "%s") { inputFields { name type { name kind ofType { name kind } } } enumValues { name } } }' % name)
-            out.append(f"{name}: {json.dumps(t['__type'], ensure_ascii=False)}")
+            t = gql(key, q % name)["__type"]
         except Exception as ex:  # noqa: BLE001
             out.append(f"{name}: {ex}")
-    SCHEMA.write_text("\n".join(out) + "\n", encoding="utf-8")
+            continue
+        out.append(f"{name}: {json.dumps(t, ensure_ascii=False)}")
+        for f in (t or {}).get("inputFields") or []:
+            ty = f["type"]
+            while ty and not ty.get("name"):
+                ty = ty.get("ofType")
+            if ty and ty.get("name") and ty["name"] not in ("String", "Boolean", "Int", "Float", "ID", "DateTime"):
+                todo.append(ty["name"])
+    SCHEMA.write_text(chr(10).join(out) + chr(10), encoding="utf-8")
 
 
 def schedule(key, posts, service, log, posted, day):
@@ -745,13 +760,17 @@ def schedule(key, posts, service, log, posted, day):
                     raise
                 log.append(f"{post['time']} {post['kind']}: 種類指定でエラー（{str(ex)[:120]}）→ 指定なしで再試行")
                 r = create(key, post, channel)
+            how = ""
+            if "notification scheduling" in (r.get("message") or ""):
+                r = create(key, post, channel, meta, notify=True)
+                how = "（通知で投稿）"
             if r.get("message"):
                 log.append(f"{post['time']} {post['kind']}: 失敗 {r['message']}")
                 continue
             post["scheduled"] = True
             for c in post["codes"]:
                 posted[c] = day
-            log.append(f"{post['time']} {post['kind']}: 予約 / {x_len(post['text'])}文字")
+            log.append(f"{post['time']} {post['kind']}: 予約{how} / {x_len(post['text'])}文字")
         except Exception as ex:  # noqa: BLE001
             log.append(f"{post['time']} {post['kind']}: 失敗 {ex}")
 
