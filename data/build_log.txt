@@ -6,7 +6,7 @@
 [interior] 30件
 [daily] 30件
 [baby] 30件
-[budget] 総合600件中 76件が条件に一致
+[budget] 総合599件中 76件が条件に一致
 [gemini] キーの確認: OK（gemini-3.5-flash-lite）
 [furusato:meat] 30件
 [furusato:seafood] 30件
@@ -19,9 +19,9 @@
 [replies] 質問 13件
 [threads] 投稿 5本
 生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
-[shorts] shorts/2026-10-08-1.mp4 32秒 1000円台・送料無料
+[shorts] shorts/2026-10-09-1.mp4 32秒 1000円台・送料無料
 売れ筋TOP3
-[shorts] shorts/2026-10-08-2.mp4 40秒 ふるさと納税
-海鮮・魚介の人気TOP3
+[shorts] shorts/2026-10-09-2.mp4 39秒 ふるさと納税
+お米の人気TOP3
 [shorts] 動画 2本
-[sns] Threads・Instagram 計画 4件
+[sns] Threads・Instagram 計画 7件
