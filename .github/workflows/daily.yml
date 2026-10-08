@@ -20,6 +20,11 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    services:
+      voicevox:  # ずんだもんの音声合成（YouTube ショート用）
+        image: voicevox/voicevox_engine:cpu-latest
+        ports:
+          - 50021:50021
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -28,7 +33,7 @@ jobs:
       - name: Install image tools
         run: |
           pip install --quiet Pillow
-          sudo apt-get install -y -qq fonts-noto-cjk > /dev/null
+          sudo apt-get install -y -qq fonts-noto-cjk ffmpeg > /dev/null
       - name: Build site
         env:
           RAKUTEN_APP_ID: ${{ secrets.RAKUTEN_APP_ID }}
