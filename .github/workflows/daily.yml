@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04  # 10/19 からの ubuntu-latest 切り替えに備えて固定
     services:
       voicevox:  # ずんだもんの音声合成（YouTube ショート用）
         image: voicevox/voicevox_engine:cpu-latest
@@ -52,14 +52,15 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data
           git diff --cached --quiet || git commit -m "data: $(date -u +%F) ranking snapshot"
-          git push
+          # 実行中に main が進んでいたら取り込んでから再度 push（最大3回）
+          for i in 1 2 3; do git pull --rebase -q origin main && git push && break; sleep 5; done
       - uses: actions/upload-pages-artifact@v3
         with:
           path: public
 
   deploy:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04  # 10/19 からの ubuntu-latest 切り替えに備えて固定
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -69,7 +70,7 @@ jobs:
 
   social:
     needs: deploy
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04  # 10/19 からの ubuntu-latest 切り替えに備えて固定
     steps:
       - uses: actions/checkout@v4
         with:
@@ -87,4 +88,4 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data
           git diff --cached --quiet || git commit -m "data: X posting record"
-          git pull --rebase -q && git push
+          for i in 1 2 3; do git pull --rebase -q origin main && git push && break; sleep 5; done
