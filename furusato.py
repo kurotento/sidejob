@@ -145,8 +145,9 @@ def render_site(cfg, cats, descs, demo, day, updated, out_dir):
         html_text = html_text.replace('<span class="yen">', '<span class="yen"><small>寄付額 </small>')
         return html_text.replace("楽天で詳細を見る", "返礼品を見る").replace("楽天で見る", "返礼品を見る")
 
-    fcard = lambda it, cat=None: localize(card(it, genre=cat), it)  # noqa: E731
-    frow = lambda it: localize(row(it), it)  # noqa: E731
+    clean = lambda it: {**it, "name": short_name(it["name"], 50)}  # noqa: E731 - 宣伝文句を除いた名前で表示
+    fcard = lambda it, cat=None: localize(card(clean(it), genre=cat), it)  # noqa: E731
+    frow = lambda it: localize(row(clean(it)), it)  # noqa: E731
 
     paths = []
     for cat in cats:
