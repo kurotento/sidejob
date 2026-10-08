@@ -138,7 +138,13 @@ def schedule(cfg, results, budget, descs, day):
         LOG.write_text(f"{day} チャンネル取得失敗: {ex}\n", encoding="utf-8")
         return
     d = dt.date.fromisoformat(day)
-    for (code, text), (h, m) in zip(posts, SLOTS):
+    now = dt.datetime.now(JST) + dt.timedelta(minutes=10)
+    slots = [(h, m) for h, m in SLOTS if dt.datetime(d.year, d.month, d.day, h, m, tzinfo=JST) > now]
+    if not slots:
+        LOG.write_text(f"{day} 本日の投稿枠はすべて過ぎています
+", encoding="utf-8")
+        return
+    for (code, text), (h, m) in zip(posts, slots):
         due = dt.datetime(d.year, d.month, d.day, h, m, tzinfo=JST).astimezone(dt.timezone.utc)
         q = CREATE % (json.dumps(text), json.dumps(channel), json.dumps(due.strftime("%Y-%m-%dT%H:%M:%S.000Z")))
         try:
