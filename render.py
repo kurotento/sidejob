@@ -194,6 +194,7 @@ def page(cfg, title, body, path, demo, updated, active=None, hero="", extra_css=
 <footer><div class="wrap"><p>{e(cfg.get("footer_note", "掲載している価格・在庫・ポイント倍率・レビューは{updated}時点の情報です。ご購入前に必ず販売ページでご確認ください。").format(updated=updated))}</p>
 <p>当サイトは楽天アフィリエイトを利用しており、リンク経由のご購入で運営者に紹介料が支払われる場合があります。</p>
 {('<p><a href="' + e(cfg["x_url"]) + '" rel="noopener" target="_blank">𝕏 毎日の値下がり・セール速報は X でも発信中（フォローする）</a></p>') if cfg.get("x_url") else ''}
+{('<p><a href="' + e(cfg["room_url"]) + '" rel="noopener" target="_blank">🛍 売れ筋とふるさと納税の返礼品は楽天ROOMにもまとめています</a></p>') if cfg.get("room_url") else ''}
 <p><a href="about.html">運営者情報・免責事項</a> ／ Supported by <a href="https://webservice.rakuten.co.jp/" rel="noopener">Rakuten Developers</a></p></div></footer>
 </body></html>"""
 

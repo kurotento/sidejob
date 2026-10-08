@@ -118,6 +118,7 @@ def site_cfg(cfg):
         "genres": CATEGORIES,
         "home_label": "🏠 トップ",
         "x_url": cfg.get("x_url", ""),
+        "room_url": cfg.get("room_url", ""),
         "extra_tabs": [("price.html", "💴 寄付金額から探す", "price"), ("../", "🏆 楽天ランキング", "main")],
         "footer_note": "掲載している寄付額・在庫・レビューは{updated}時点の情報です。お申し込み前に必ず楽天ふるさと納税の返礼品ページでご確認ください。",
     }
