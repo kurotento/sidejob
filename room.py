@@ -14,6 +14,7 @@ import urllib.parse
 from pathlib import Path
 
 from articles import short_name
+import roomtext
 
 DATA = Path(__file__).resolve().parent / "data"
 HISTORY = DATA / "room_list.json"
@@ -29,28 +30,55 @@ def room_url(code):
     return f"https://room.rakuten.co.jp/mix?itemcode={code}"
 
 
-def room_comment(it, desc, tag, furusato=False, budget=False):
+def plain(text):
+    """らんくま口調の「〜だよ」「〜だね」を普通の文末にする（ROOM では投稿者本人の言葉に見せたいため）."""
+    text = re.sub(r"(なん)?だ[よね]([。！!]|$)", r"です\2", text.strip())
+    text = re.sub(r"を?(取り上げる|紹介する)よ?[。！!]?$", "です。", text)
+    text = re.sub(r"(る|た)よ([。！!]|$)", r"\1\2", text)
+    text = re.sub(r"いよ([。！!]|$)", r"いです\1", text)
+    return re.sub(r"^(これは|こちらは)[、,]?\s*", "", text.strip())
+
+
+EMOJI = ["✔", "・", "🔸", "▶", "◎"]
+
+
+def fallback_body(desc, n):
+    """AIの本文がないときの本文。商品ごとに形を変える."""
+    first = plain(re.split(r"(?<=[。！!])", desc["intro"])[0])
+    feats = [plain(f).rstrip("。") for f in desc["features"][:3]]
+    who = plain(desc.get("for_whom", "")).rstrip("。")
+    who = re.sub(r"(に向いている|に向いています|におすすめ)$", "", who)
+    style = n % 4
+    if style == 0:
+        mark = EMOJI[n % len(EMOJI)]
+        return "\n".join([first] + [f"{mark} {f}" for f in feats])
+    if style == 1:
+        return f"{who}に。\n{first}\n{feats[0]}のもポイント。" if who and feats else first
+    if style == 2:
+        return f"{first}\n\n" + "／".join(feats[:2])
+    return f"{feats[0]}。\n{first}" + (f"\n{who}によさそう。" if who else "") if feats else first
+
+
+def room_comment(it, desc, tag, furusato=False, budget=False, body=None, n=0):
     """ROOM用のおすすめコメント。商品の事実と特徴だけを書く（使ったふりの体験談は書かない）.
 
-    ROOM では「ひとこと＋箇条書きの推しポイント＋どんな人向けか」の形がよく読まれる。
+    本文は Gemini が型を変えて書いたもの（body）を使い、なければ紹介文から形を変えて組み立てる。
     """
-    head = "＼ふるさと納税で人気／" if furusato else ("＼1000円台・送料無料／" if budget else "＼楽天で売れてる／")
-    parts = [head]
-    if desc:
-        first = re.split(r"(?<=[。！!])", desc["intro"])[0].strip()
-        first = re.sub(r"^(これは|こちらは)[、,]?\s*", "", first)
-        parts.append(first)
-        parts.append("\n".join(f"✔ {f}" for f in desc["features"][:3]))
-        if desc.get("for_whom"):
-            parts.append("👉 " + desc["for_whom"])
-    stars = f"★{it['rating']:.1f}（レビュー{it['reviews']:,}件）" if it["reviews"] >= 10 else ""
+    if not body and desc:
+        body = fallback_body(desc, n)
+    parts = [body or ""]
+    stars = f"★{it['rating']:.1f}（{it['reviews']:,}件）" if it["reviews"] >= 10 else ""
     if furusato:
         parts.append(f"寄付額{it['price']:,}円｜{it['shop']} {stars}".strip())
         tags = ["#ふるさと納税", "#楽天ふるさと納税", "#返礼品"] + ([f"#{tag}"] if tag and tag != "ふるさと納税" else [])
     else:
-        ship = "・送料無料" if budget else ""
-        parts.append(f"{it['price']:,}円{ship} {stars}".strip())
-        tags = (["#1000円台", "#送料無料", "#買い回り"] if budget else ["#楽天ランキング"]) + ([f"#{tag}"] if tag else [])
+        price = [f"{it['price']:,}円{'・送料無料' if budget else ''} {stars}",
+                 f"💰{it['price']:,}円{'（送料無料）' if budget else ''} {stars}",
+                 f"{stars} / {it['price']:,}円{'・送料込み' if budget else ''}"][n % 3]
+        parts.append(price.strip(" /"))
+        base = [["#1000円台", "#送料無料", "#買い回り"], ["#買い回り", "#プチプラ", "#送料無料"],
+                ["#お買い物マラソン", "#楽天お買い物", "#送料無料"]][n % 3] if budget else ["#楽天ランキング"]
+        tags = base + ([f"#{tag}"] if tag else [])
     parts.append(" ".join(tags))
     return "\n".join(p for p in parts if p)
 
@@ -122,11 +150,13 @@ def build(cfg, budget, descs, day, out_dir, save=True, fcats=None, fdescs=None, 
     if save:
         HISTORY.write_text(json.dumps(hist, ensure_ascii=False, indent=0), encoding="utf-8")
 
+    tags = {it["code"]: product_tag(it["name"], descs.get(it["code"])) for it in picks}
+    bodies = roomtext.write(picks, descs, day, tags) if save else {}
     rows = []
-    for it in picks:
-        tag = product_tag(it["name"], descs.get(it["code"]))
+    for n, it in enumerate(picks):
+        tag = tags[it["code"]]
         rows.append({"it": it, "tag": tag, "comment": room_comment(it, descs.get(it["code"]), tag, it["code"] in furusato_codes,
-                                                   it["code"] in budget_codes)})
+                                                                   it["code"] in budget_codes, bodies.get(it["code"]), n)})
 
     # スプレッドシート用CSV（改行は IMPORTDATA で崩れるので「 / 」に置き換える）
     buf = io.StringIO()
