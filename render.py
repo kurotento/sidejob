@@ -80,7 +80,7 @@ main{padding-bottom:40px}
 .row{display:grid;grid-template-columns:44px 104px 1fr auto;gap:14px;align-items:center;background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:12px 16px}
 .rnum{font-size:1.35rem;font-weight:900;text-align:center;color:#555}.rnum small{font-size:.65rem}
 .row .pic{width:104px;height:104px;background:#fff;display:grid;place-items:center;position:relative}
-.row .pic img{max-width:100%;max-height:100%;object-fit:contain}
+.row .pic img{width:100%;height:100%;object-fit:contain}
 .row .nm{min-height:0;-webkit-line-clamp:2;font-size:.9rem}
 .row .meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .row .flag{display:inline-block}
