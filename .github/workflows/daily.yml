@@ -32,8 +32,12 @@ jobs:
           RAKUTEN_AFFILIATE_ID: ${{ secrets.RAKUTEN_AFFILIATE_ID }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
-        run: python build.py
+        shell: bash
+        run: |
+          set -o pipefail
+          python build.py 2>&1 | tee data/build_log.txt
       - name: Commit ranking history
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
