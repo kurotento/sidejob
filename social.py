@@ -127,7 +127,7 @@ def build_tags(items, sale, descs=None):
 
 # ---------- 投稿の中身 ----------
 
-def candidates(cfg, results, budget, recent, descs=None, day="2000-01-01"):
+def candidates(cfg, results, budget, recent, descs=None, day="2000-01-01", fcats=None):
     """1日分の投稿候補を、種類がばらけるように並べて返す.
 
     返り値は [(種類, 見出し, [(商品, 補足)], リンク先)]。単品紹介は rows が1件。
@@ -177,7 +177,20 @@ def candidates(cfg, results, budget, recent, descs=None, day="2000-01-01"):
             out.append(tops.pop(0))
         if singles:
             out.append(singles.pop(0))
-    return out
+    # ふるさと納税を3件ごとに1件差し込む
+    ftops, fsingles = furusato_candidates(cfg, fcats, used, descs or {}, day)
+    fq = []
+    while ftops or fsingles:
+        if ftops:
+            fq.append(ftops.pop(0))
+        if fsingles:
+            fq.append(fsingles.pop(0))
+    mixed = []
+    for i, x in enumerate(out):
+        mixed.append(x)
+        if (i + 1) % 3 == 0 and fq:
+            mixed.append(fq.pop(0))
+    return mixed + fq
 
 
 HOOKS = {
@@ -262,6 +275,81 @@ def event_posts(day, url, sale):
     if sale:
         out.append("お買い物マラソン開催中！\n1ショップ1,000円以上の買い回りでポイント倍率が上がるやつ\n送料無料の1000円台、まとめてます")
     return [finish([t], url, "#お買い物マラソン" if sale and "マラソン" in t else "") for t in out[:2]]
+
+
+# ---------- ふるさと納税 ----------
+
+FURUSATO_HOOKS = ["ふるさと納税、{g}ならこのへんが人気", "{g}の返礼品、レビューが多いのはこの3つ",
+                  "今年のふるさと納税に。{g}の定番返礼品"]
+FURUSATO_TAGS = "#ふるさと納税 #楽天ふるさと納税"
+
+
+def furusato_candidates(cfg, fcats, used, descs, day):
+    """ふるさと納税のTOP3（2ジャンル）と返礼品紹介（最大4件）."""
+    from furusato import item_path
+    if not fcats:
+        return [], []
+    base = cfg["base_url"].rstrip("/") + "/furusato"
+    k = dt.date.fromisoformat(day).toordinal() % len(fcats)
+    rotated = fcats[k:] + fcats[:k]
+    tops, singles = [], []
+    for c in rotated:
+        if len(tops) >= 2:
+            break
+        rows = [(it, it["shop"]) for it in c["items"] if it["code"] not in used][:3]
+        if len(rows) == 3:
+            used.update(it["code"] for it, _ in rows)
+            tops.append(("furusato-top", c["title"], rows, f"{base}/{c['slug']}.html"))
+    for c in rotated:
+        for it in c["items"][:10]:
+            if len(singles) >= 4:
+                break
+            if it["code"] not in used and descs.get(it["code"]):
+                used.add(it["code"])
+                singles.append(("furusato-single", c["title"], [(it, it["shop"])], f"{base}/{item_path(it)}"))
+    return tops, singles
+
+
+def furusato_tags(items, descs):
+    tags = []
+    for it in items:
+        t = product_tag(it["name"], descs.get(it["code"]))
+        if t and t not in tags and t != "ふるさと納税":
+            tags.append(t)
+    return " ".join(["#" + t for t in tags[:2]] + [FURUSATO_TAGS])
+
+
+def compose_furusato_top(genre, rows, url, tags, day):
+    hook = pick(day + genre, FURUSATO_HOOKS).format(g=genre)
+    nums = ["1️⃣", "2️⃣", "3️⃣"]
+    limit = 22
+    while True:
+        lines = [hook] + [f"{nums[i]}{short_name(it['name'], limit)} 寄付{it['price']:,}円（{muni}）"
+                          for i, (it, muni) in enumerate(rows)]
+        text = finish(lines, url, tags)
+        if x_len(text) <= 280 or limit <= 8:
+            return text
+        limit -= 2
+
+
+def compose_furusato_single(it, desc, url, tags, day):
+    hook = pick(day + it["code"], ["ふるさと納税の定番返礼品", f"📍{it['shop']}の人気返礼品",
+                                   f"レビュー{it['reviews'] // 100 * 100:,}件超えの返礼品" if it["reviews"] >= 100 else "人気の返礼品"])
+    lead = re.split(r"(?<=[。！!])", desc["intro"])[0] if desc else ""
+    limit = 40
+    while True:
+        lines = [hook, "", short_name(it["name"], limit), f"寄付額{it['price']:,}円｜{it['shop']}"]
+        if lead:
+            lines.append(lead)
+        text = finish(lines, url, tags)
+        if x_len(text) <= 280:
+            return text
+        if lead:
+            lead = ""
+            continue
+        if limit <= 10:
+            return text
+        limit -= 4
 
 
 # ---------- 画像 ----------
@@ -374,7 +462,7 @@ PLAN = DATA / "social_plan.json"
 IMG_DIR = DATA / "social_img"
 
 
-def plan(cfg, results, budget, descs, day, out_dir):
+def plan(cfg, results, budget, descs, day, out_dir, fcats=None):
     """投稿の計画（本文・画像・時刻）を作り、画像をサイト内に置く。予約はサイト公開後に run_plan で行う."""
     if PLAN.exists() and json.loads(PLAN.read_text(encoding="utf-8")).get("day") == day:
         return  # 本日の計画は作成済み（予約状況を保持する）
@@ -386,7 +474,7 @@ def plan(cfg, results, budget, descs, day, out_dir):
     d = dt.date.fromisoformat(day)
     now = dt.datetime.now(JST) + dt.timedelta(minutes=20)  # 公開と予約にかかる時間を見込む
     slots = [(h, m) for h, m in SLOTS if dt.datetime(d.year, d.month, d.day, h, m, tzinfo=JST) > now]
-    cands = candidates(cfg, results, budget, recent, descs, day)
+    cands = candidates(cfg, results, budget, recent, descs, day, fcats)
     events = event_posts(day, f"{cfg['base_url'].rstrip('/')}/{cfg['budget']['slug']}.html", sale)
     for n, t in enumerate(events):  # 朝いちばんと夕方にお知らせを入れる
         cands.insert(min(n * 10, len(cands)), ("event", t, [], ""))
@@ -396,6 +484,19 @@ def plan(cfg, results, budget, descs, day, out_dir):
         tags = build_tags([it for it, _ in rows], sale, descs)
         if kind == "event":
             text, image = title, ""
+        elif kind == "furusato-single":
+            it = rows[0][0]
+            tags = furusato_tags([it], descs or {})
+            text = compose_furusato_single(it, (descs or {}).get(it["code"]), url, tags, day)
+            image = re.sub(r"_ex=\d+x\d+", "_ex=600x600", it.get("image", ""))
+        elif kind == "furusato-top":
+            img_name = f"social/{day}-{n:02d}-{kind}.png"
+            make_image(f"ふるさと納税 {title}の人気TOP3", rows, day, IMG_DIR / Path(img_name).name)
+            (out_dir / "social").mkdir(parents=True, exist_ok=True)
+            shutil.copy(IMG_DIR / Path(img_name).name, out_dir / img_name)
+            tags = furusato_tags([it for it, _ in rows], descs or {})
+            text = compose_furusato_top(title, rows, url, tags, day)
+            image = f"{base}/{img_name}"
         elif kind == "single":
             it = rows[0][0]
             text = compose_single(it, (descs or {}).get(it["code"]), url, tags, day)
@@ -410,7 +511,7 @@ def plan(cfg, results, budget, descs, day, out_dir):
             image = f"{base}/{img_name}"
         while x_len(text) > 280 and tags:  # 長すぎるときは一般的なタグ→長いタグの順に外す（PR表記は先頭に残る）
             tl = tags.split()
-            gen = [t for t in ("#買い回り", "#お買い物マラソン") if t in tl]
+            gen = [t for t in ("#買い回り", "#お買い物マラソン", "#楽天ふるさと納税") if t in tl]
             tl.remove(gen[0] if gen else max(tl, key=len))
             old, tags = tags, " ".join(tl)
             text = text.replace("\n" + old, "\n" + tags if tags else "")

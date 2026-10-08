@@ -289,6 +289,7 @@ def main():
     if not args.demo:
         prune_history()
     render(cfg, results, args.demo, day, updated, OUT_DIR, budget=budget, series=series, descs=descs)
+    cats, fdescs = [], {}
     try:  # ふるさと納税サイト（/furusato/）
         cats = furusato.demo_cats() if args.demo else furusato.fetch_all(cfg)
         fdescs = {}
@@ -302,14 +303,14 @@ def main():
         print(f"[furusato] 失敗: {ex}", file=sys.stderr)
     if budget:
         try:
-            n = room.build(cfg, budget, descs, day, OUT_DIR, save=not args.demo)
+            n = room.build(cfg, budget, descs, day, OUT_DIR, save=not args.demo, fcats=cats, fdescs=fdescs)
             print(f"[room] 投稿リスト {n}件")
         except Exception as ex:  # noqa: BLE001
             print(f"[room] 失敗: {ex}", file=sys.stderr)
     print(f"生成完了: {OUT_DIR}（失敗ジャンル {errors}件）")
     if not args.demo:
         try:
-            social.plan(cfg, results, budget, descs, day, OUT_DIR)
+            social.plan(cfg, results, budget, {**descs, **fdescs}, day, OUT_DIR, cats)
         except Exception as ex:  # noqa: BLE001 - 投稿の失敗でサイト更新は止めない
             print(f"[social] 失敗: {ex}", file=sys.stderr)
 

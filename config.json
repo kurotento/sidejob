@@ -49,5 +49,12 @@
     "max_items": 60,
     "describe_per_day": 60
   },
-  "google_site_verification": ""
+  "google_site_verification": "",
+  "extra_tabs": [
+    [
+      "furusato/",
+      "🎁 ふるさと納税",
+      "furusato"
+    ]
+  ]
 }
