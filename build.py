@@ -23,6 +23,7 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
+import furusato
 import room
 import social
 import writer
@@ -216,6 +217,13 @@ def prune_history(keep_days=60):
         shutil.rmtree(d)
 
 
+def add_to_sitemap(cfg, paths, day):
+    sm = OUT_DIR / "sitemap.xml"
+    base = cfg["base_url"].rstrip("/")
+    extra = "".join(f"<url><loc>{base}/{p}</loc><lastmod>{day}</lastmod></url>" for p in paths)
+    sm.write_text(sm.read_text(encoding="utf-8").replace("</urlset>", extra + "</urlset>"), encoding="utf-8")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--demo", action="store_true", help="APIを使わずダミーデータで生成")
@@ -281,12 +289,17 @@ def main():
     if not args.demo:
         prune_history()
     render(cfg, results, args.demo, day, updated, OUT_DIR, budget=budget, series=series, descs=descs)
-    if not args.demo:
-        try:  # ふるさと納税サイトの準備：取得できるかの確認（一時的）
-            import furusato
-            furusato.probe(cfg["base_url"])
-        except Exception as ex:  # noqa: BLE001
-            print(f"[furusato] 失敗: {ex}", file=sys.stderr)
+    try:  # ふるさと納税サイト（/furusato/）
+        cats = furusato.demo_cats() if args.demo else furusato.fetch_all(cfg)
+        fdescs = {}
+        if not args.demo:
+            top = [it for c in cats for it in c["items"][:10]]
+            fdescs = writer.describe(top, day, limit=cfg.get("furusato_describe_per_day", 30))
+        fpaths = furusato.render_site(cfg, cats, fdescs, args.demo, day, updated, OUT_DIR)
+        add_to_sitemap(cfg, fpaths, day)
+        print(f"[furusato] {len(fpaths)}ページ")
+    except Exception as ex:  # noqa: BLE001 - ふるさと納税側の失敗でメインサイトは止めない
+        print(f"[furusato] 失敗: {ex}", file=sys.stderr)
     if budget:
         try:
             n = room.build(cfg, budget, descs, day, OUT_DIR, save=not args.demo)
