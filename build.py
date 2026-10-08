@@ -340,7 +340,7 @@ def main():
             print(f"[social] 失敗: {ex}", file=sys.stderr)
         try:  # Threads・Instagram（予約は social.run_plan で X と一緒に行う）
             import sns
-            print(f"[sns] Threads・Instagram 計画 {sns.build(cfg, day, videos)}件")
+            print(f"[sns] Threads・Instagram 計画 {sns.build(cfg, day, videos, OUT_DIR)}件")
         except Exception as ex:  # noqa: BLE001
             print(f"[sns] 失敗: {ex}", file=sys.stderr)
     try:  # 自分用のポータル（手作業のチェックリスト・自動投稿の状態・管理画面のリンク）

@@ -32,7 +32,7 @@ jobs:
           python-version: "3.12"
       - name: Install image tools
         run: |
-          pip install --quiet Pillow numpy
+          pip install --quiet Pillow numpy gspread
           sudo apt-get install -y -qq fonts-noto-cjk ffmpeg > /dev/null
       - name: Build site
         env:
@@ -41,6 +41,7 @@ jobs:
           RAKUTEN_AFFILIATE_ID: ${{ secrets.RAKUTEN_AFFILIATE_ID }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
         shell: bash
         run: |
           set -o pipefail
