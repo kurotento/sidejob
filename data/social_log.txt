@@ -84,3 +84,10 @@ https://kurotento.github.io/sidejob/item-rakutenoriginal-daily-10000000.html
 --- 17:31 予約処理: 空き枠 2 / 未予約 0
 --- 17:45 予約処理: 空き枠 2 / 未予約 0
 --- 17:56 予約処理: 空き枠 2 / 未予約 0
+--- 18:02 予約処理[x]: 空き枠 2 / 未予約 0
+--- 18:02 予約処理[threads]: 空き枠 10 / 未予約 2
+10/08 19:00 threads: 予約 / 283文字
+10/08 21:30 threads: 予約 / 312文字
+--- 18:02 予約処理[instagram]: 空き枠 10 / 未予約 2
+10/08 20:00 reel: 失敗 Instagram personal profile channels require notification scheduling. Use notification scheduling instead.
+10/08 21:15 story: 失敗 Instagram personal profile channels require notification scheduling. Use notification scheduling instead.
