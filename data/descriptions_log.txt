@@ -1,5 +1,5 @@
-2026-10-08 model=gemini-3.5-flash-lite 新規3件 / 対象6件
-darkangel:10033494: HTTP 503 {
+2026-10-08 model=gemini-3.5-flash-lite 新規56件 / 対象60件
+darkangel:10036320: HTTP 503 {
   "error": {
     "code": 503,
     "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
@@ -7,19 +7,6 @@ darkangel:10033494: HTTP 503 {
   }
 }
 
-buono-buono:10002496: HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-meikou-corp:10000058: HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
+darkangel:10034443: ルール違反または不完全な出力のため不採用
+meikou-corp:10000058: ルール違反または不完全な出力のため不採用
+superpack:10000747: ルール違反または不完全な出力のため不採用
