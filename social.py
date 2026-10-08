@@ -119,6 +119,27 @@ CREATE = """mutation { createPost(input: {text: %s, channelId: %s, schedulingTyp
   ... on MutationError { message } } }"""
 
 
+def post_now(key, cfg, results, budget, descs, day, posted):
+    """config の post_now_once に今日の日付があるとき、1件だけ数分後に投稿する（手動指示用）."""
+    recent = {k for k in posted if not k.startswith("_")}
+    posts = compose(cfg, results, budget, descs, recent)
+    if not posts:
+        LOG.write_text(f"{day} 今すぐ投稿：候補なし\n", encoding="utf-8")
+        return
+    code, text = posts[0]
+    due = (dt.datetime.now(dt.timezone.utc) + dt.timedelta(minutes=3)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+    try:
+        r = gql(key, CREATE % (json.dumps(text), json.dumps(find_channel(key)), json.dumps(due)))["createPost"]
+        msg = f"失敗 {r['message']}" if r.get("message") else f"{due} に投稿予約（今すぐ投稿）\n{text}"
+        if not r.get("message"):
+            posted[code] = day
+            posted["_now"] = day
+    except Exception as ex:  # noqa: BLE001
+        msg = f"失敗 {ex}"
+    POSTED.write_text(json.dumps(posted, ensure_ascii=False, indent=0), encoding="utf-8")
+    LOG.write_text(f"{day} {code}: {msg}\n", encoding="utf-8")
+
+
 def schedule(cfg, results, budget, descs, day):
     key = os.environ.get("BUFFER_API_KEY")
     log = []
@@ -126,6 +147,9 @@ def schedule(cfg, results, budget, descs, day):
         LOG.write_text(f"{day} BUFFER_API_KEY がないため投稿の予約をスキップ\n", encoding="utf-8")
         return
     posted = json.loads(POSTED.read_text(encoding="utf-8")) if POSTED.exists() else {}
+    if cfg.get("post_now_once") == day and posted.get("_now") != day:
+        post_now(key, cfg, results, budget, descs, day, posted)
+        return
     if day in posted.values():
         LOG.write_text(f"{day} 本日分は予約済み\n", encoding="utf-8")
         return
