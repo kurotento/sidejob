@@ -284,7 +284,7 @@ def make_bgm(seconds, path, seed=0):
 def caption(d, text, y0=150, size=56):
     """読み上げの字幕。白文字＋黒縁で、画面上部（YouTubeの表示と重ならない位置）に出す."""
     f = font(size)
-    lines = wrap(d, text, f, W - 120, 3)
+    lines = wrap(d, text, f, W - 200, 3)
     y = y0
     for line in lines:
         d.text((W // 2, y), line, font=f, fill=(255, 255, 255), anchor="ma", stroke_width=8, stroke_fill=(20, 20, 20))
@@ -313,7 +313,7 @@ def make_video(slides, out_path, work, seed=0):
         dur = sec + 0.35
         frames = int(dur * 30)
         seg = work / f"seg{i}.mp4"
-        vf = (f"scale=1296:2304,zoompan=z='min(zoom+0.0008,1.12)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)'"
+        vf = (f"scale=1296:2304,zoompan=z='min(zoom+0.0005,1.05)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)'"
               f":d={frames}:s={W}x{H}:fps=30,fade=t=in:st=0:d=0.18:color=white,format=yuv420p")
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-loop", "1", "-i", str(img), "-i", str(wav),
                         "-vf", vf, "-c:v", "libx264", "-preset", "veryfast", "-r", "30",
