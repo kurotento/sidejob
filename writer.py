@@ -89,6 +89,25 @@ def call_model(item, key, model):
     return json.loads(m.group(0))
 
 
+def ping():
+    """APIキーが使えるかを1回だけ確かめる（キーを差し替えたときの確認用）。返り値は短い結果の文字列."""
+    key = os.environ.get("GEMINI_API_KEY")
+    if not key:
+        return "キーなし"
+    for model in MODELS:
+        body = json.dumps({"contents": [{"role": "user", "parts": [{"text": "OKとだけ返して"}]}],
+                           "generationConfig": {"maxOutputTokens": 16}}).encode()
+        req = urllib.request.Request(ENDPOINT.format(model=model), data=body, headers={
+            "Content-Type": "application/json", "x-goog-api-key": key})
+        try:
+            with urllib.request.urlopen(req, timeout=60):
+                return f"OK（{model}）"
+        except urllib.error.HTTPError as ex:
+            if ex.code != 404:
+                return f"HTTP {ex.code}: {ex.read().decode('utf-8', 'replace')[:200]}"
+    return "使えるモデルなし"
+
+
 REPEATABLE = ("便利", "重宝", "魅力", "おすすめ", "安心", "手軽", "活躍")
 
 

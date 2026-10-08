@@ -284,6 +284,7 @@ def main():
             annotate(budget, prev)
     descs = {}
     if budget and not args.demo:
+        print(f"[gemini] キーの確認: {writer.ping()}")
         try:
             descs = writer.describe(budget, day, limit=cfg["budget"].get("describe_per_day", 40))
         except Exception as ex:  # noqa: BLE001 - 紹介文が作れなくてもサイトは出す
