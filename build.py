@@ -323,8 +323,8 @@ def main():
         except Exception as ex:  # noqa: BLE001
             print(f"[threads] 失敗: {ex}", file=sys.stderr)
     print(f"生成完了: {OUT_DIR}（失敗ジャンル {errors}件）")
+    videos = []
     if not args.demo:
-        videos = []
         try:  # YouTube ショート動画（YouTube へのアップロードは手動。X には Buffer 経由で投稿）
             import shorts
             slog = []
@@ -343,6 +343,11 @@ def main():
             print(f"[sns] Threads・Instagram 計画 {sns.build(cfg, day, videos)}件")
         except Exception as ex:  # noqa: BLE001
             print(f"[sns] 失敗: {ex}", file=sys.stderr)
+    try:  # 自分用のポータル（手作業のチェックリスト・自動投稿の状態・管理画面のリンク）
+        import portal
+        portal.build(cfg, day, videos, OUT_DIR)
+    except Exception as ex:  # noqa: BLE001
+        print(f"[portal] 失敗: {ex}", file=sys.stderr)
 
 
 if __name__ == "__main__":
