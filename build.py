@@ -312,6 +312,12 @@ def main():
         print(f"[replies] 質問 {replies.build(cfg, budget, cats, day, OUT_DIR)}件")
     except Exception as ex:  # noqa: BLE001
         print(f"[replies] 失敗: {ex}", file=sys.stderr)
+    if not args.demo:
+        try:  # Threads 用の投稿（悩み別・3案から採点で選ぶ）
+            import threads
+            print(f"[threads] 投稿 {threads.build(cfg, results, budget, cats, {**descs, **fdescs}, day, OUT_DIR)}本")
+        except Exception as ex:  # noqa: BLE001
+            print(f"[threads] 失敗: {ex}", file=sys.stderr)
     print(f"生成完了: {OUT_DIR}（失敗ジャンル {errors}件）")
     if not args.demo:
         videos = []
