@@ -447,6 +447,11 @@ def find_channel(key):
     raise RuntimeError("Buffer に X のチャンネルが接続されていません")
 
 
+CREATE_VIDEO = """mutation { createPost(input: {text: %s, channelId: %s, schedulingType: automatic, mode: customScheduled,
+  dueAt: %s, assets: [{video: {url: %s}}]}) {
+  ... on PostActionSuccess { post { id dueAt } }
+  ... on MutationError { message } } }"""
+
 CREATE_NOIMG = """mutation { createPost(input: {text: %s, channelId: %s, schedulingType: automatic, mode: customScheduled,
   dueAt: %s}) {
   ... on PostActionSuccess { post { id dueAt } }
@@ -462,7 +467,106 @@ PLAN = DATA / "social_plan.json"
 IMG_DIR = DATA / "social_img"
 
 
-def plan(cfg, results, budget, descs, day, out_dir, fcats=None):
+# ---------- 追加の投稿（セール速報・週1回のまとめ・ショート動画） ----------
+
+def sale_alerts(names, d, url):
+    """商品名から読み取ったセールの開始・終了時刻にあわせた速報投稿。返り値は [(日時JST, 本文)]."""
+    now = dt.datetime.now(JST)
+    out = []
+    for label, pat, tags in (("お買い物マラソン", r"マラソン", "#お買い物マラソン #買い回り"),
+                             ("楽天スーパーSALE", r"スーパーSALE|スーパーセール", "#楽天スーパーSALE #買い回り")):
+        hits = [n for n in names if re.search(pat, n)]
+        if len(hits) < 5:
+            continue
+        start, end = sale_period(hits, now)
+        day0 = dt.datetime(d.year, d.month, d.day, tzinfo=JST)
+        if start and day0 <= start < day0 + dt.timedelta(days=1):
+            hh = f"{start.hour}時" + (f"{start.minute}分" if start.minute else "")
+            out.append((start - dt.timedelta(hours=3), f"今夜{hh}から{label}スタート！\n1000円台・送料無料の買い回り候補、先にチェックしておこう", tags))
+            out.append((start - dt.timedelta(minutes=10), f"まもなく{label}スタート⏰\n{hh}になったらエントリーを忘れずに✍️", tags))
+        if end and day0 < end <= day0 + dt.timedelta(hours=30):
+            for before, msg in ((5, "残り5時間"), (2, "残り2時間"), (0.5, "ラスト30分")):
+                out.append((end - dt.timedelta(hours=before), f"{label}、{msg}！⏰\n買い回りのあと1店舗、まだ間に合う", tags))
+    return [(t, finish([txt], url, tg)) for t, txt, tg in out]
+
+
+def make_top10_image(title, items, day, path, price_prefix=""):
+    """10商品を2列×5段に並べた保存版まとめ画像（1200x1500）."""
+    from PIL import Image, ImageDraw
+    Wd, Hd = 1200, 1500
+    img = Image.new("RGB", (Wd, Hd), (246, 244, 240))
+    d = ImageDraw.Draw(img)
+    for y in range(150):
+        k = y / 150
+        d.line([(0, y), (Wd, y)], fill=(int(165 + 50 * k), 0, int(47 * k)))
+    m, dd = int(day[5:7]), int(day[8:10])
+    d.text((40, 40), title, font=font(58), fill=(255, 255, 255))
+    d.text((Wd - 40, 110), f"{m}月{dd}日時点 ｜ 保存版", font=font(26), fill=(255, 230, 230), anchor="rs")
+    for i, it in enumerate(items[:10]):
+        col, row = i % 2, i // 2
+        x, y = 30 + col * 590, 175 + row * 262
+        d.rounded_rectangle([x, y, x + 560, y + 245], radius=18, fill=(255, 255, 255))
+        pic = fetch_image(it.get("image"))
+        if pic:
+            pic.thumbnail((210, 210))
+            img.paste(pic, (x + 15 + (210 - pic.width) // 2, y + 18 + (210 - pic.height) // 2))
+        badge = (217, 164, 0) if i == 0 else (154, 165, 177) if i == 1 else (185, 114, 46) if i == 2 else (60, 60, 65)
+        d.ellipse([x + 8, y + 8, x + 62, y + 62], fill=badge)
+        d.text((x + 35, y + 35), str(i + 1), font=font(30), fill=(255, 255, 255), anchor="mm")
+        for j, line in enumerate(wrap(d, short_name(it["name"], 40), font(24), 310, 3)):
+            d.text((x + 240, y + 22 + j * 34), line, font=font(24), fill=(29, 29, 31))
+        d.text((x + 240, y + 150), f"{price_prefix}{it['price']:,}円", font=font(44), fill=(191, 0, 0))
+        if price_prefix:
+            d.text((x + 240, y + 205), f"📍{it.get('shop', '')}"[:16], font=font(22), fill=(6, 92, 56))
+    d.text((Wd - 30, Hd - 18), "楽天ランキング速報 ｜ #PR", font=font(22), fill=(110, 110, 115), anchor="rb")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    img.save(path, optimize=True)
+
+
+def weekly_posts(cfg, budget, fcats, day, out_dir):
+    """毎週日曜：保存版TOP10（1000円台・ふるさと納税1万円以下）。返り値は [(日時JST, 本文, 画像URL)]."""
+    d = dt.date.fromisoformat(day)
+    if d.weekday() != 6:
+        return []
+    base = cfg["base_url"].rstrip("/")
+    out = []
+    if budget and len(budget) >= 10:
+        name = f"social/{day}-weekly-budget.png"
+        make_top10_image("今週の1000円台 売れ筋TOP10", budget[:10], day, IMG_DIR / Path(name).name)
+        text = finish(["保存版📌 今週の1000円台・送料無料 売れ筋TOP10", "買い回りの候補に使ってね"],
+                      f"{base}/{cfg['budget']['slug']}.html", "#楽天 #楽天市場 #1000円台 #買い回り")
+        out.append((dt.datetime(d.year, d.month, d.day, 19, 10, tzinfo=JST), text, f"{base}/{name}"))
+    pool = sorted({it["code"]: it for c in fcats or [] for it in c["items"] if it["price"] <= 10000}.values(),
+                  key=lambda x: -x["reviews"])
+    if len(pool) >= 10:
+        name = f"social/{day}-weekly-furusato.png"
+        make_top10_image("ふるさと納税 寄付1万円以下 人気TOP10", pool[:10], day, IMG_DIR / Path(name).name, "寄付")
+        text = finish(["保存版📌 ふるさと納税 寄付1万円以下の人気返礼品TOP10", "レビューの多い定番から選べるよ"],
+                      f"{base}/furusato/price.html", "#ふるさと納税 #楽天ふるさと納税 #返礼品")
+        out.append((dt.datetime(d.year, d.month, d.day, 21, 10, tzinfo=JST), text, f"{base}/{name}"))
+    for _, _, img in out:
+        (out_dir / "social").mkdir(parents=True, exist_ok=True)
+        fname = img.rsplit("/", 1)[1]
+        shutil.copy(IMG_DIR / fname, out_dir / "social" / fname)
+    return out
+
+
+def video_posts(cfg, videos, day):
+    """その日のショート動画を X にも投稿する（昼と夜に1本ずつ）。返り値は [(日時JST, 本文, 動画URL)]."""
+    d = dt.date.fromisoformat(day)
+    base = cfg["base_url"].rstrip("/")
+    out = []
+    for (h, m), v in zip(((12, 30), (19, 45)), videos or []):
+        title = re.sub(r"\s*#\S+", "", v["title"]).strip()
+        green = v.get("theme") == "green"
+        url = f"{base}/furusato/" if green else f"{base}/{cfg['budget']['slug']}.html"
+        tags = "#ふるさと納税 #楽天ふるさと納税" if green else "#楽天 #楽天市場 #買い回り"
+        text = finish([f"🎬{title}", "らんくまが30秒で紹介するよ"], url, tags)
+        out.append((dt.datetime(d.year, d.month, d.day, h, m, tzinfo=JST), text, f"{base}/{v['file']}"))
+    return out
+
+
+def plan(cfg, results, budget, descs, day, out_dir, fcats=None, videos=None):
     """投稿の計画（本文・画像・時刻）を作り、画像をサイト内に置く。予約はサイト公開後に run_plan で行う."""
     if PLAN.exists() and json.loads(PLAN.read_text(encoding="utf-8")).get("day") == day:
         return  # 本日の計画は作成済み（予約状況を保持する）
@@ -518,6 +622,25 @@ def plan(cfg, results, budget, descs, day, out_dir, fcats=None):
         due = dt.datetime(d.year, d.month, d.day, h, m, tzinfo=JST).astimezone(dt.timezone.utc)
         items.append({"kind": kind, "time": f"{h:02d}:{m:02d}", "due": due.strftime("%Y-%m-%dT%H:%M:%S.000Z"),
                       "text": text, "image": image, "codes": [it["code"] for it, _ in rows]})
+    # 1) TOP3 系の投稿は1つおきにリンクなしにする（X は外部リンク付きの投稿の表示を抑えがちなため）
+    alt = 0
+    for it_, (kind, _, _, url) in zip(items, cands):
+        if kind in ("cheaper", "risers", "budget", "furusato-top") or kind.startswith("genre"):
+            alt += 1
+            if alt % 2 == 0 and url:
+                it_["text"] = it_["text"].replace("👇\n" + url, "📌くわしくはプロフィールのリンクから")
+    # 2) セール速報・週1回のまとめ・ショート動画（通常の枠とは別に追加）
+    later = now - dt.timedelta(minutes=10)
+    extra = [(t, txt, "", "") for t, txt in sale_alerts(names, d, f"{base}/{cfg['budget']['slug']}.html")]
+    extra += [(t, txt, img, "") for t, txt, img in weekly_posts(cfg, budget, fcats, day, out_dir)]
+    extra += [(t, txt, "", vid) for t, txt, vid in video_posts(cfg, videos, day)]
+    for t, txt, img, vid in extra:
+        if t > later:
+            due = t.astimezone(dt.timezone.utc)
+            items.append({"kind": "video" if vid else ("weekly" if img else "alert"), "time": t.strftime("%m/%d %H:%M"),
+                          "due": due.strftime("%Y-%m-%dT%H:%M:%S.000Z"), "text": txt, "image": img, "video": vid,
+                          "codes": []})
+    items.sort(key=lambda x: x["due"])
     for f in IMG_DIR.glob("*.png"):  # 3日より前の投稿画像は消す（投稿済みのため不要）
         if f.name[:10] < (d - dt.timedelta(days=3)).isoformat():
             f.unlink()
@@ -555,18 +678,24 @@ def run_plan():
     due = lambda post: dt.datetime.strptime(post["due"], "%Y-%m-%dT%H:%M:%S.000Z").replace(tzinfo=dt.timezone.utc)  # noqa: E731
     pending = sum(1 for x in p["posts"] if x.get("scheduled") and due(x) > now)
     room = BUFFER_CAP - pending
-    todo = [x for x in p["posts"] if not x.get("scheduled") and due(x) > now + dt.timedelta(minutes=5)]
+    todo = sorted((x for x in p["posts"] if not x.get("scheduled") and due(x) > now + dt.timedelta(minutes=5)), key=due)
     posted = json.loads(POSTED.read_text(encoding="utf-8")) if POSTED.exists() else {}
     log = LOG.read_text(encoding="utf-8").rstrip("\n").split("\n") if LOG.exists() else []
     log.append(f"--- {dt.datetime.now(JST):%H:%M} 予約処理: 空き枠 {room} / 未予約 {len(todo)}")
     if todo and room > 0:
         channel = find_channel(key)
         for post in todo[:room]:
-            if post["image"] and not wait_until_live(post["image"]):
+            media = post.get("video") or post["image"]
+            if media and not wait_until_live(media):
                 log.append(f"{post['time']} {post['kind']}: 失敗 画像が公開されていない")
                 continue
             args = (json.dumps(post["text"]), json.dumps(channel), json.dumps(post["due"]))
-            q = CREATE % (*args, json.dumps(post["image"])) if post["image"] else CREATE_NOIMG % args
+            if post.get("video"):
+                q = CREATE_VIDEO % (*args, json.dumps(post["video"]))
+            elif post["image"]:
+                q = CREATE % (*args, json.dumps(post["image"]))
+            else:
+                q = CREATE_NOIMG % args
             try:
                 r = gql(key, q)["createPost"]
                 if r.get("message"):
