@@ -713,6 +713,77 @@ def make_video_anim(slides, out_path, work, seed=0):
                     "-movflags", "+faststart", str(out_path)], check=True)
 
 
+# ---------- 読み上げ用の商品名（g を「ジー」と読むなどの誤読を防ぐ） ----------
+
+SPOKEN_CACHE = Path(__file__).resolve().parent / "data" / "spoken.json"
+UNITS = [  # 長いものから順に置き換える
+    (r"(\d)\s*kg", r"\1キログラム"), (r"(\d)\s*mg", r"\1ミリグラム"), (r"(\d)\s*g\b", r"\1グラム"),
+    (r"(\d)\s*[mM][lL]", r"\1ミリリットル"), (r"(\d)\s*[lL]\b", r"\1リットル"), (r"(\d)\s*cm", r"\1センチ"),
+    (r"(\d)\s*mm", r"\1ミリ"), (r"(\d)\s*m\b", r"\1メートル"), (r"(\d)\s*%", r"\1パーセント"),
+    (r"[PＰ](\d+)倍", r"ポイント\1倍"), (r"(\d+)\s*[×xX＊*]\s*(\d+)\s*本", r"\1の\2本入り"),
+    (r"(\d+)\s*[×xX＊*]\s*(\d+)", r"\1かける\2"), (r"(\d)\s*W\b", r"\1ワット"), (r"(\d)\s*V\b", r"\1ボルト"),
+]
+
+SPOKEN_PROMPT = """あなたは日本語の音声合成（読み上げ）用の原稿を作る係です。
+楽天市場の商品名を、ずんだもん（音声合成）が自然に読み上げられる短い商品名に書き直してください。
+
+ルール:
+- 何の商品かがわかる最小限にする（15〜25文字程度）。宣伝文句・型番・色やサイズの羅列は省く
+- 単位は読みをカタカナで書く（g→グラム、kg→キログラム、ml→ミリリットル、L→リットル、cm→センチ、%→パーセント）
+- 英字のブランド名・商品名はカタカナの読みにする（例：Anker→アンカー、WILKINSON→ウィルキンソン）。読みがわからない英字は省く
+- 「×」「/」「|」「【】」「()」などの記号は使わない。「500ml×24本」は「500ミリリットル24本入り」のように書く
+- 数字は算用数字のままでよい
+- 漢字の読みが難しい固有名詞（地名・品種など）はひらがなにする
+- 出力は書き直した商品名だけ（説明や引用符は付けない）"""
+
+
+def normalize_reading(text):
+    """単位・記号を読み上げ向けに置き換える（Gemini が使えないときの予備にもなる）."""
+    for pat, rep in UNITS:
+        text = re.sub(pat, rep, text)
+    text = re.sub(r"\s*[×xX＊*]\s*(\d+)\s*(本|個|袋|枚|缶|パック|食|箱)", r" \1\2入り", text)
+    text = re.sub(r"[／/|｜()（）\[\]【】〈〉<>「」『』～〜~×＊*]", " ", text)
+    text = re.sub(r"\b[A-Za-z][A-Za-z0-9.-]*\b", " ", text)  # 英字はアルファベット読みになるので外す
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def ask_gemini_reading(name):
+    import os
+    key = os.environ.get("GEMINI_API_KEY")
+    if not key:
+        return None
+    from writer import ENDPOINT, MODELS
+    body = json.dumps({
+        "systemInstruction": {"parts": [{"text": SPOKEN_PROMPT}]},
+        "contents": [{"role": "user", "parts": [{"text": name}]}],
+        "generationConfig": {"temperature": 0.2, "maxOutputTokens": 200},
+    }).encode()
+    for model in MODELS:
+        try:
+            req = urllib.request.Request(ENDPOINT.format(model=model), data=body,
+                                         headers={"Content-Type": "application/json", "x-goog-api-key": key})
+            with urllib.request.urlopen(req, timeout=60) as r:
+                parts = json.load(r)["candidates"][0]["content"]["parts"]
+            out = "".join(p.get("text", "") for p in parts if not p.get("thought")).strip().strip("「」\"'")
+            out = out.splitlines()[0].strip() if out else ""
+            if 4 <= len(out) <= 40 and not re.search(r"[A-Za-z]{2,}", out):  # 英字が残っていれば不採用
+                return out
+            return None
+        except Exception:  # noqa: BLE001
+            continue
+    return None
+
+
+def spoken_name(it, cache):
+    """読み上げ用の商品名。作ったものは data/spoken.json に保存して使い回す."""
+    code = it["code"]
+    if code not in cache:
+        got = ask_gemini_reading(short_name(it["name"], 80))
+        if got:
+            cache[code] = normalize_reading(got)
+    return cache.get(code) or normalize_reading(speakable(it["name"]))
+
+
 def topics(cfg, results, budget, fcats, day):
     """その日の動画のテーマ（最大 PER_DAY 本）."""
     allg = [it for g in cfg["genres"] for it in results.get(g["slug"], [])]
@@ -775,6 +846,7 @@ def build(cfg, results, budget, fcats, day, out_dir, log):
         log.append("[shorts] VOICEVOX に接続できないため動画作成をスキップ")
         return []
     spk = zundamon_id()
+    reading = json.loads(SPOKEN_CACHE.read_text(encoding="utf-8")) if SPOKEN_CACHE.exists() else {}
     m, d = int(day[5:7]), int(day[8:10])
     site = cfg["base_url"].rstrip("/") + "/"
     made = []
@@ -791,7 +863,7 @@ def build(cfg, results, budget, fcats, day, out_dir, log):
                 for rank in (3, 2, 1):  # 3位から発表
                     it, note = t["items"][rank - 1]
                     a = work / f"s{rank}.wav"
-                    text = f"{'第' if rank > 1 else '堂々の第'}{rank}位は、{speakable(it['name'])}。{t['say'](it)}"
+                    text = f"{'第' if rank > 1 else '堂々の第'}{rank}位は、{spoken_name(it, reading)}。{t['say'](it)}"
                     sec = synth(text, spk, a) + 0.4
                     ev = anim_item(t["theme"], rank, it, t["label"], note, text, sec, work / f"f{rank}",
                                    seed=n * 10 + rank, mouth=mouth_curve(a, sec))
@@ -809,6 +881,7 @@ def build(cfg, results, budget, fcats, day, out_dir, log):
             log.append(f"[shorts] {name} {made[-1]['sec']}秒 {t['title']}")
         except Exception as ex:  # noqa: BLE001
             log.append(f"[shorts] 失敗 {t['title']}: {ex}")
+    SPOKEN_CACHE.write_text(json.dumps(reading, ensure_ascii=False, indent=0), encoding="utf-8")
     page(made, day, out_dir)
     return made
 
