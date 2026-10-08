@@ -129,9 +129,10 @@ def pr_badge(d):
     d.text((105, 90), "PR", font=font(40), fill=(30, 30, 30), anchor="mm")
 
 
-def bear(d, ox, oy, s):
-    """案内役「らんくま」（64x64 座標系を倍率 s で描く）."""
+def bear(d, ox, oy, s, mouth=0.0, blink=False):
+    """案内役「らんくま」（64x64 座標系を倍率 s で描く）。mouth=口の開き(0〜1)、blink=目を閉じる."""
     P = lambda x, y: (ox + x * s, oy + y * s)  # noqa: E731
+    dark = (43, 27, 16)
 
     def circ(x, y, r, col):
         d.ellipse([*P(x - r, y - r), *P(x + r, y + r)], fill=col)
@@ -143,10 +144,19 @@ def bear(d, ox, oy, s):
     circ(16, 24, 4, (233, 184, 140)); circ(48, 24, 4, (233, 184, 140))  # noqa: E702
     circ(32, 38, 21, (185, 122, 69))
     d.ellipse([*P(22, 37), *P(42, 53)], fill=(241, 211, 179))
-    circ(24, 35, 2.6, (43, 27, 16)); circ(40, 35, 2.6, (43, 27, 16))  # noqa: E702
-    circ(24.9, 34.1, 0.9, (255, 255, 255)); circ(40.9, 34.1, 0.9, (255, 255, 255))  # noqa: E702
-    d.ellipse([*P(28.6, 39.1), *P(35.4, 43.9)], fill=(43, 27, 16))
-    d.arc([*P(28, 44.5), *P(36, 49)], 20, 160, fill=(43, 27, 16), width=max(2, int(1.6 * s)))
+    if blink:
+        for x in (24, 40):
+            d.arc([*P(x - 2.8, 33.5), *P(x + 2.8, 37.5)], 200, 340, fill=dark, width=max(2, int(1.4 * s)))
+    else:
+        circ(24, 35, 2.6, dark); circ(40, 35, 2.6, dark)  # noqa: E702
+        circ(24.9, 34.1, 0.9, (255, 255, 255)); circ(40.9, 34.1, 0.9, (255, 255, 255))  # noqa: E702
+    d.ellipse([*P(28.6, 39.1), *P(35.4, 43.9)], fill=dark)
+    if mouth > 0.12:  # 口を開ける（声の大きさに合わせて縦に開く）
+        h = 1.2 + 4.2 * mouth
+        d.ellipse([*P(29, 45), *P(35, 45 + h)], fill=(120, 30, 40))
+        d.ellipse([*P(30.2, 45 + h * 0.55), *P(33.8, 45 + h)], fill=(230, 110, 120))
+    else:
+        d.arc([*P(28, 44.5), *P(36, 49)], 20, 160, fill=dark, width=max(2, int(1.6 * s)))
     circ(19, 42, 2.6, (240, 138, 138)); circ(45, 42, 2.6, (240, 138, 138))  # noqa: E702
 
 
@@ -277,13 +287,13 @@ def make_bgm(seconds, path, seed=0):
 
 # ---------- 字幕・演出 ----------
 
-def caption(d, text, y0=150, size=56):
+def caption(d, text, y0=150, size=56, cx=W // 2, width=W - 200):
     """読み上げの字幕。白文字＋黒縁で、画面上部（YouTubeの表示と重ならない位置）に出す."""
     f = font(size)
-    lines = wrap(d, text, f, W - 200, 3)
+    lines = wrap(d, text, f, width, 3)
     y = y0
     for line in lines:
-        d.text((W // 2, y), line, font=f, fill=(255, 255, 255), anchor="ma", stroke_width=8, stroke_fill=(20, 20, 20))
+        d.text((cx, y), line, font=f, fill=(255, 255, 255), anchor="ma", stroke_width=8, stroke_fill=(20, 20, 20))
         y += int(size * 1.25)
     return y
 
@@ -438,13 +448,50 @@ def confetti_parts(seed, count=90):
                  c=rnd.choice(cols), round=rnd.random() < 0.35) for _ in range(count)]
 
 
-def anim_title(theme, title, sub, dur, out, seed):
+def mouth_curve(wav_path, seconds):
+    """音声の大きさから、各フレームの口の開き(0〜1)を求める（口パク用）."""
+    import numpy as np
+    with wave.open(str(wav_path)) as w:
+        sr = w.getframerate()
+        data = np.frombuffer(w.readframes(w.getnframes()), dtype=np.int16).astype(float)
+    step = sr / FPS
+    vals = []
+    for f in range(int(seconds * FPS)):
+        seg = data[int(f * step):int((f + 1) * step)]
+        vals.append(float(np.sqrt(np.mean(seg ** 2))) if len(seg) else 0.0)
+    peak = max(max(vals), 1.0)
+    return [min(1.0, v / peak * 1.4) for v in vals]
+
+
+class Talker:
+    """しゃべるらんくまのスプライト（口4段階×まばたき）を作っておき、フレームごとに選んで貼る."""
+
+    def __init__(self, size, ring=True):
+        from PIL import ImageDraw
+        self.size = size
+        self.sprites = {}
+        for blink in (False, True):
+            for lv in range(4):
+                lay = layer((size, size))
+                d = ImageDraw.Draw(lay)
+                if ring:
+                    d.ellipse([4, 4, size - 4, size - 4], fill=(255, 247, 230), outline=(255, 255, 255), width=8)
+                s = size / 80
+                bear(d, size / 2 - 32 * s, size / 2 - 31 * s, s, mouth=lv / 3, blink=blink)
+                self.sprites[(blink, lv)] = lay
+
+    def frame(self, t, mouth):
+        import math
+        blink = (t % 3.2) < 0.12  # 3秒ちょっとごとにまばたき
+        lv = min(3, int(mouth * 3.99))
+        bob = int(6 * math.sin(t * 9) * min(1, mouth * 3)) if mouth > 0.1 else 0  # 話しているときだけゆれる
+        return self.sprites[(blink, lv)], bob
+
+
+def anim_title(theme, title, sub, dur, out, seed, mouth=()):
     from PIL import ImageDraw
     big = stripes_bg(theme)
-    bear_l = layer((400, 400))
-    bd = ImageDraw.Draw(bear_l)
-    bd.ellipse([10, 10, 390, 390], fill=(255, 247, 230))
-    bear(bd, 200 - 32 * 4.6, 200 - 31 * 4.6, 4.6)
+    talker = Talker(400)
     text_l = layer((W, 560))
     td = ImageDraw.Draw(text_l)
     size = 110
@@ -462,7 +509,8 @@ def anim_title(theme, title, sub, dur, out, seed):
     for f in range(int(dur * FPS)):
         t = f / FPS
         img = bg_at(big, t).convert("RGB")
-        paste_scaled(img, bear_l, W // 2, 420, bounce(t / 0.45))
+        sprite, bob = talker.frame(t, mouth[f] if f < len(mouth) else 0)
+        paste_scaled(img, sprite, W // 2, 420 + bob, bounce(t / 0.45))
         dy = int((1 - ease_out((t - 0.2) / 0.35)) * -300)
         if t > 0.2:
             img.paste(text_l, (0, 650 + dy), text_l)
@@ -476,12 +524,14 @@ def anim_title(theme, title, sub, dur, out, seed):
     return [("whoosh", 0.0), ("pop", 0.25)]
 
 
-def anim_item(theme, rank, it, price_label, note, text, dur, out, seed):
+def anim_item(theme, rank, it, price_label, note, text, dur, out, seed, mouth=()):
     from PIL import ImageDraw
     big = stripes_bg(theme)
     cap_l = layer((W, 330))
     cd = ImageDraw.Draw(cap_l)
-    top = max(caption(cd, text, 10, 54) + 150, 360) if text else 200
+    # 右上にしゃべるらんくま、その左に字幕
+    top = max(caption(cd, text, 10, 50, cx=(W - 280) // 2 + 10, width=W - 360) + 150, 410) if text else 410
+    talker = Talker(250)
     # 商品カード（価格・バッジを除く）
     card_h = 1470 - top
     card = layer((W - 100, card_h))
@@ -526,6 +576,8 @@ def anim_item(theme, rank, it, price_label, note, text, dur, out, seed):
             s = 1 + 0.6 * (1 - ease_out((t - 0.6) / 0.25))
             paste_scaled(img, price_l, 90 + 450 * s, 1300, s)
         paste_scaled(img, badge, 160, top + 60, bounce((t - 0.3) / 0.35))
+        sprite, bob = talker.frame(t, mouth[f] if f < len(mouth) else 0)
+        img.paste(sprite, (W - 290, 150 + bob), sprite)
         d = ImageDraw.Draw(img)
         if parts:
             draw_confetti(d, parts, t)
@@ -537,19 +589,17 @@ def anim_item(theme, rank, it, price_label, note, text, dur, out, seed):
     return events
 
 
-def anim_end(theme, line1, dur, out):
+def anim_end(theme, line1, dur, out, mouth=()):
     import math
     from PIL import ImageDraw
     big = stripes_bg(theme)
-    bear_l = layer((360, 360))
-    bd = ImageDraw.Draw(bear_l)
-    bd.ellipse([10, 10, 350, 350], fill=(255, 247, 230))
-    bear(bd, 180 - 32 * 4.2, 180 - 31 * 4.2, 4.2)
+    talker = Talker(360)
     out.mkdir(parents=True, exist_ok=True)
     for f in range(int(dur * FPS)):
         t = f / FPS
         img = bg_at(big, t).convert("RGB")
-        paste_scaled(img, bear_l.rotate(8 * math.sin(t * 6)), W // 2, 430, bounce(t / 0.4))
+        sprite, bob = talker.frame(t, mouth[f] if f < len(mouth) else 0)
+        paste_scaled(img, sprite.rotate(5 * math.sin(t * 5)), W // 2, 430 + bob, bounce(t / 0.4))
         d = ImageDraw.Draw(img)
         s = 1 + 0.05 * math.sin(t * 8)  # 文字が脈打つ
         for y, (txt, sz) in zip((760, 900, 1040), (("くわしくは", 90), ("プロフィールの", 110), ("リンクから！", 110))):
@@ -697,19 +747,21 @@ def build(cfg, results, budget, fcats, day, out_dir, log):
                 slides = []
                 a = work / "s0.wav"
                 sec = synth(t["intro"], spk, a) + 0.4
-                ev = anim_title(t["theme"], t["title"], f"{m}月{d}日時点", sec, work / "f0", seed=n)
+                ev = anim_title(t["theme"], t["title"], f"{m}月{d}日時点", sec, work / "f0", seed=n,
+                                mouth=mouth_curve(a, sec))
                 slides.append((work / "f0", a, sec, ev))
                 for rank in (3, 2, 1):  # 3位から発表
                     it, note = t["items"][rank - 1]
                     a = work / f"s{rank}.wav"
                     text = f"{'第' if rank > 1 else '堂々の第'}{rank}位は、{speakable(it['name'])}。{t['say'](it)}"
                     sec = synth(text, spk, a) + 0.4
-                    ev = anim_item(t["theme"], rank, it, t["label"], note, text, sec, work / f"f{rank}", seed=n * 10 + rank)
+                    ev = anim_item(t["theme"], rank, it, t["label"], note, text, sec, work / f"f{rank}",
+                                   seed=n * 10 + rank, mouth=mouth_curve(a, sec))
                     slides.append((work / f"f{rank}", a, sec, ev))
                 a = work / "s9.wav"
                 sec = synth("気になったら、プロフィールのリンクからチェックするのだ！", spk, a) + 0.4
                 ev = anim_end(t["theme"], "楽天ランキング速報" if t["theme"] == "red" else "ふるさと納税 人気返礼品ランキング",
-                              sec, work / "f9")
+                              sec, work / "f9", mouth=mouth_curve(a, sec))
                 slides.append((work / "f9", a, sec, ev))
                 name = f"shorts/{day}-{n + 1}.mp4"
                 make_video_anim(slides, out_dir / name, work, seed=dt.date.fromisoformat(day).toordinal() + n)
