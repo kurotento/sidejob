@@ -48,6 +48,7 @@ SYSTEM = """あなたはThreadsで暮らしと買い物の情報を発信して�
 - No.1・最安・大人気・話題・完璧・神アイテム などの言葉は使わない
 - 1行目（フック）は25字以内で、続きを読みたくなる言い回しにする
 - 本文は全体で90〜200字。改行を多めに。絵文字は0〜2個。ハッシュタグとURLは書かない
+- 「〜だよ」「〜だね」は1投稿で1回まで。語尾は「〜です」「〜かも」「〜よね」「体言止め」などを混ぜる
 - 最後の1文は、コメントしたくなる問いかけか、保存したくなる一言にする
 
 採点（各20点・合計100点）: フック力 / 具体性 / 共感性 / 意外性 / コメント誘発
@@ -95,6 +96,8 @@ def clean(d):
     for p in d.get("patterns", []):
         text = str(p.get("text", "")).strip()
         if not text or BANNED.search(text) or EXPERIENCE.search(text) or re.search(r"https?://|#", text):
+            continue
+        if len(re.findall(r"だ[よね]", text)) >= 2:  # 「〜だよ」が続くと単調なので落とす
             continue
         if not 60 <= len(re.sub(r"\s", "", text)) <= 240:
             continue
