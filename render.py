@@ -1,6 +1,7 @@
 """サイトのHTML生成（見た目）."""
 import html
 import shutil
+from pathlib import Path
 
 e = html.escape
 
@@ -172,11 +173,13 @@ def page(cfg, title, body, path, demo, updated, active=None, hero="", extra_css=
                     for g in cfg["genres"])
     canonical = cfg["base_url"].rstrip("/") + "/" + path
     full_title = title if title == cfg["site_name"] else f"{title} | {cfg['site_name']}"
+    gsv = cfg.get("google_site_verification", "")
+    verify = f'<meta name="google-site-verification" content="{e(gsv)}">' if gsv and not demo else ""
     banner = '<div class="demo">デモデータ表示中（公開しないでください）</div>' if demo else ""
     return f"""<!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{e(full_title)}</title><meta name="description" content="{e(cfg['site_description'])}">
-<link rel="canonical" href="{e(canonical)}"><meta name="theme-color" content="#bf0000">
+<link rel="canonical" href="{e(canonical)}"><meta name="theme-color" content="#bf0000">{verify}
 <meta property="og:title" content="{e(full_title)}"><meta property="og:description" content="{e(cfg['site_description'])}">
 <meta property="og:type" content="website"><meta property="og:url" content="{e(canonical)}">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%23bf0000'/%3E%3Cpath fill='white' d='M4 8l4 3.5L12 5l4 6.5L20 8l-1.6 10H5.6z'/%3E%3C/svg%3E">
@@ -273,3 +276,9 @@ def render(cfg, results, demo, day, updated, out_dir, budget=None, series=None, 
           + "".join(f"<url><loc>{e(base)}/{u}</loc><lastmod>{day}</lastmod></url>" for u in urls) + "</urlset>\n")
     write("robots.txt", ("User-agent: *\nDisallow: /\n" if demo else f"User-agent: *\nAllow: /\nSitemap: {base}/sitemap.xml\n"))
     write(".nojekyll", "")
+    # 検索エンジンの所有権確認ファイルなど、そのまま置くファイル
+    static = Path(__file__).resolve().parent / "static"
+    if static.exists():
+        for f in static.iterdir():
+            if f.is_file():
+                shutil.copy(f, out_dir / f.name)
