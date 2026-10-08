@@ -54,6 +54,15 @@
    "scheduled": true
   },
   {
+   "kind": "video",
+   "time": "10/08 19:45",
+   "due": "2026-10-08T10:45:00.000Z",
+   "text": "楽天 #PR\n🎬ふるさと納税 海鮮・魚介の人気TOP3【10/8】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/furusato/\n#ふるさと納税 #楽天ふるさと納税",
+   "image": "",
+   "video": "https://kurotento.github.io/sidejob/shorts/2026-10-08-2.mp4",
+   "codes": []
+  },
+  {
    "kind": "genre-appliances",
    "time": "20:00",
    "due": "2026-10-08T11:00:00.000Z",
