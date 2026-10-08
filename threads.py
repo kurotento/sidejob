@@ -21,6 +21,7 @@ from writer import BANNED, ENDPOINT, MODELS
 
 CACHE = Path(__file__).resolve().parent / "data" / "threads_posts.json"
 PER_DAY = 5
+MAX_PRICE = 6000
 e = html.escape
 
 # ターゲット（ROOM・楽天の中心層＝30〜40代女性の悩み）と、商品を選ぶ場所
@@ -65,6 +66,8 @@ def pick_items(results, budget, fcats, descs, used):
     out = []
     for label, who, src in TARGETS:
         for it in pools.get(src, []):
+            if src != "furusato" and it["price"] > MAX_PRICE:  # 暮らしの悩み向けなので、手が届く価格の物だけ
+                continue
             if it["code"] not in used and it["code"] not in {x["code"] for _, _, x in out}:
                 out.append((label, who, it))
                 break
