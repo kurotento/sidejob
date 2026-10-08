@@ -109,7 +109,9 @@ function row(k,v,cls){{return '<b>'+k+'</b><span class="'+(cls||'')+'">'+v+'</sp
   let ok=0,ng=0,notify=0;
   const sec=so.split(/--- \\d\\d:\\d\\d 予約処理/);
   const want=sv==='x'?/^(\\[x\\])?:/:new RegExp('^\\\\['+sv+'\\\\]');
-  for(const part of sec){{if(!want.test(part))continue;for(const l of part.split('\\n').slice(1)){{if(/: 予約/.test(l)){{ok++;if(/通知/.test(l))notify++}}else if(/: 失敗/.test(l))ng++}}}}
+  const last={{}};  // 同じ投稿を何度か試した場合は、最後の結果だけを数える
+  for(const part of sec){{if(!want.test(part))continue;for(const l of part.split('\\n').slice(1)){{const m=l.match(/^(.+?): (予約|失敗)/);if(m)last[m[1]]=l}}}}
+  for(const l of Object.values(last)){{if(/: 予約/.test(l)){{ok++;if(/通知/.test(l))notify++}}else ng++}}
   out.push(row(label,'予約 '+ok+'件'+(notify?'（うち通知 '+notify+'）':'')+(ng?' / 失敗 '+ng+'件':''),ng?'ng':(ok?'ok':'')));
  }}
  document.getElementById('st').innerHTML=out.join('');
