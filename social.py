@@ -165,8 +165,7 @@ def schedule(cfg, results, budget, descs, day):
     now = dt.datetime.now(JST) + dt.timedelta(minutes=10)
     slots = [(h, m) for h, m in SLOTS if dt.datetime(d.year, d.month, d.day, h, m, tzinfo=JST) > now]
     if not slots:
-        LOG.write_text(f"{day} 本日の投稿枠はすべて過ぎています
-", encoding="utf-8")
+        LOG.write_text(f"{day} 本日の投稿枠はすべて過ぎています\n", encoding="utf-8")
         return
     for (code, text), (h, m) in zip(posts, slots):
         due = dt.datetime(d.year, d.month, d.day, h, m, tzinfo=JST).astimezone(dt.timezone.utc)
