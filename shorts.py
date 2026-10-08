@@ -372,6 +372,259 @@ def make_video(slides, out_path, work, seed=0):
                     "-movflags", "+faststart", str(out_path)], check=True)
 
 
+# ---------- アニメーション（全スライドをフレームごとに描く） ----------
+
+FPS = 30
+
+
+def ease_out(x):
+    x = min(max(x, 0.0), 1.0)
+    return 1 - (1 - x) ** 3
+
+
+def bounce(x):
+    """0→1 で、少し行き過ぎてから戻る（ポンッと弾む動き）."""
+    x = min(max(x, 0.0), 1.0)
+    return 1 + 2.70158 * (x - 1) ** 3 + 1.70158 * (x - 1) ** 2
+
+
+def stripes_bg(theme):
+    """斜めストライプ入りの背景（流れて見えるよう少し大きめに作り、毎フレームずらして切り出す）."""
+    from PIL import ImageDraw
+    big = background(theme).resize((W + 240, H + 240))
+    d = ImageDraw.Draw(big, "RGBA")
+    for k in range(-H, W + H, 120):
+        d.polygon([(k, 0), (k + 60, 0), (k + 60 - H - 240, H + 240), (k - H - 240, H + 240)], fill=(255, 255, 255, 22))
+    return big
+
+
+def bg_at(big, t):
+    off = int((t * 90) % 120)
+    return big.crop((off, off, off + W, off + H))
+
+
+def layer(size):
+    from PIL import Image
+    return Image.new("RGBA", size, (0, 0, 0, 0))
+
+
+def paste_scaled(img, lay, cx, cy, s):
+    if s <= 0.02:
+        return
+    w_, h_ = max(1, int(lay.width * s)), max(1, int(lay.height * s))
+    img.paste(lay.resize((w_, h_)), (int(cx - w_ / 2), int(cy - h_ / 2)), lay.resize((w_, h_)))
+
+
+def draw_confetti(d, parts, t):
+    import math
+    for p in parts:
+        y = p["y"] + p["v"] * t
+        if y > H + 50:
+            continue
+        x = p["x"] + p["sway"] * math.sin(p["ph"] + t * 4)
+        w_ = max(3, int(p["w"] * abs(math.cos(p["ph"] + t * 6))))
+        if p["round"]:
+            d.ellipse([x, y, x + p["w"], y + p["w"]], fill=p["c"])
+        else:
+            d.rectangle([x, y, x + w_, y + p["h"]], fill=p["c"])
+
+
+def confetti_parts(seed, count=90):
+    import random
+    rnd = random.Random(seed)
+    cols = [(255, 214, 0), (255, 255, 255), (0, 200, 255), (255, 120, 180), (120, 230, 120)]
+    return [dict(x=rnd.uniform(0, W), y=rnd.uniform(-H * 0.9, -20), v=rnd.uniform(500, 950),
+                 sway=rnd.uniform(20, 60), ph=rnd.uniform(0, 6.3), w=rnd.randint(14, 26), h=rnd.randint(22, 40),
+                 c=rnd.choice(cols), round=rnd.random() < 0.35) for _ in range(count)]
+
+
+def anim_title(theme, title, sub, dur, out, seed):
+    from PIL import ImageDraw
+    big = stripes_bg(theme)
+    bear_l = layer((400, 400))
+    bd = ImageDraw.Draw(bear_l)
+    bd.ellipse([10, 10, 390, 390], fill=(255, 247, 230))
+    bear(bd, 200 - 32 * 4.6, 200 - 31 * 4.6, 4.6)
+    text_l = layer((W, 560))
+    td = ImageDraw.Draw(text_l)
+    size = 110
+    while size > 60 and any(td.textlength(x, font=font(size)) > W - 120 for x in title.split("\n")):
+        size -= 6
+    y = 70
+    for line in wrap(td, title, font(size), W - 120, 3):
+        td.text((W // 2, y), line, font=font(size), fill=(255, 255, 255), anchor="mm", stroke_width=7, stroke_fill=(90, 0, 10))
+        y += int(size * 1.3)
+    td.rounded_rectangle([W // 2 - 300, y + 10, W // 2 + 300, y + 110], radius=50, fill=(255, 255, 255))
+    td.text((W // 2, y + 60), sub, font=font(52), fill=(30, 30, 30), anchor="mm")
+    hook_y = 650 + y + 220
+    parts = confetti_parts(seed)
+    out.mkdir(parents=True, exist_ok=True)
+    for f in range(int(dur * FPS)):
+        t = f / FPS
+        img = bg_at(big, t).convert("RGB")
+        paste_scaled(img, bear_l, W // 2, 420, bounce(t / 0.45))
+        dy = int((1 - ease_out((t - 0.2) / 0.35)) * -300)
+        if t > 0.2:
+            img.paste(text_l, (0, 650 + dy), text_l)
+        d = ImageDraw.Draw(img)
+        if t > 0.7 and int(t * 4) % 2 == 0:  # 「3位から発表！」を点滅
+            d.text((W // 2, hook_y), "3位から発表！", font=font(84), fill=(255, 226, 90), anchor="mm",
+                   stroke_width=7, stroke_fill=(90, 0, 10))
+        draw_confetti(d, parts, t)
+        pr_badge(d)
+        img.save(out / f"f{f:04d}.jpg", quality=88)
+    return [("whoosh", 0.0), ("pop", 0.25)]
+
+
+def anim_item(theme, rank, it, price_label, note, text, dur, out, seed):
+    from PIL import ImageDraw
+    big = stripes_bg(theme)
+    cap_l = layer((W, 330))
+    cd = ImageDraw.Draw(cap_l)
+    top = max(caption(cd, text, 10, 54) + 150, 360) if text else 200
+    # 商品カード（価格・バッジを除く）
+    card_h = 1470 - top
+    card = layer((W - 100, card_h))
+    kd = ImageDraw.Draw(card)
+    kd.rounded_rectangle([0, 0, W - 101, card_h - 1], radius=44, fill=(255, 255, 255))
+    box = min(620, card_h - 470)
+    pic = fetch_image(it.get("image"))
+    if pic:
+        scale = box / max(pic.width, pic.height)
+        pic = pic.resize((int(pic.width * scale), int(pic.height * scale)))
+        card.paste(pic, ((W - 100 - pic.width) // 2, 30 + (box - pic.height) // 2))
+    y = box + 50
+    for line in wrap(kd, short_name(it["name"], 60), font(50), 820, 2):
+        kd.text((40, y), line, font=font(50), fill=(29, 29, 31))
+        y += 66
+    accent = THEMES[theme][1]
+    if price_label:
+        kd.text((40, 1172 - top), price_label, font=font(40), fill=(110, 110, 115))
+    if note:
+        tw = min(kd.textlength(note, font=font(44)), 760)
+        kd.rounded_rectangle([40, 1395 - top, 40 + tw + 52, 1455 - top], radius=16, fill=accent)
+        kd.text((66, 1400 - top), note, font=font(44), fill=(255, 255, 255))
+    medal = {1: (217, 164, 0), 2: (154, 165, 177), 3: (185, 114, 46)}[rank]
+    badge = layer((200, 200))
+    bdg = ImageDraw.Draw(badge)
+    bdg.ellipse([4, 4, 196, 196], fill=medal, outline=(255, 255, 255), width=9)
+    bdg.text((100, 88), f"{rank}", font=font(104), fill=(255, 255, 255), anchor="mm")
+    bdg.text((100, 160), "位", font=font(38), fill=(255, 255, 255), anchor="mm")
+    price_l = layer((900, 170))
+    pd = ImageDraw.Draw(price_l)
+    pd.text((0, 10), f"{it['price']:,}円", font=font(120), fill=accent)
+    parts = confetti_parts(seed) if rank == 1 else []
+    out.mkdir(parents=True, exist_ok=True)
+    for f in range(int(dur * FPS)):
+        t = f / FPS
+        img = bg_at(big, t).convert("RGB")
+        if text:
+            img.paste(cap_l, (0, 130), cap_l)
+        dx = int((1 - ease_out(t / 0.35)) * W)  # 右からスライドイン
+        img.paste(card, (50 + dx, top), card)
+        if t > 0.6:  # 価格がドンッと出る
+            s = 1 + 0.6 * (1 - ease_out((t - 0.6) / 0.25))
+            paste_scaled(img, price_l, 90 + 450 * s, 1300, s)
+        paste_scaled(img, badge, 160, top + 60, bounce((t - 0.3) / 0.35))
+        d = ImageDraw.Draw(img)
+        if parts:
+            draw_confetti(d, parts, t)
+        pr_badge(d)
+        img.save(out / f"f{f:04d}.jpg", quality=88)
+    events = [("whoosh", 0.0), ("pop", 0.35), ("pop", 0.62)]
+    if rank == 1:
+        events.append(("fanfare", 0.3))
+    return events
+
+
+def anim_end(theme, line1, dur, out):
+    import math
+    from PIL import ImageDraw
+    big = stripes_bg(theme)
+    bear_l = layer((360, 360))
+    bd = ImageDraw.Draw(bear_l)
+    bd.ellipse([10, 10, 350, 350], fill=(255, 247, 230))
+    bear(bd, 180 - 32 * 4.2, 180 - 31 * 4.2, 4.2)
+    out.mkdir(parents=True, exist_ok=True)
+    for f in range(int(dur * FPS)):
+        t = f / FPS
+        img = bg_at(big, t).convert("RGB")
+        paste_scaled(img, bear_l.rotate(8 * math.sin(t * 6)), W // 2, 430, bounce(t / 0.4))
+        d = ImageDraw.Draw(img)
+        s = 1 + 0.05 * math.sin(t * 8)  # 文字が脈打つ
+        for y, (txt, sz) in zip((760, 900, 1040), (("くわしくは", 90), ("プロフィールの", 110), ("リンクから！", 110))):
+            d.text((W // 2, y), txt, font=font(int(sz * s)), fill=(255, 255, 255), anchor="mm", stroke_width=7,
+                   stroke_fill=(90, 0, 10))
+        d.text((W // 2, 1200), line1, font=font(48), fill=(255, 240, 240), anchor="mm")
+        d.text((W // 2, 1400), CREDIT, font=font(36), fill=(255, 235, 235), anchor="mm")
+        pr_badge(d)
+        img.save(out / f"f{f:04d}.jpg", quality=88)
+    return [("whoosh", 0.0), ("pop", 0.2)]
+
+
+def make_sfx(events, seconds, path):
+    """効果音（すべて自作）：whoosh＝切り替え、pop＝登場、fanfare＝1位."""
+    import numpy as np
+    sr = 44100
+    n = int(sr * (seconds + 1))
+    out = np.zeros(n)
+    rng = np.random.default_rng(1)
+    for kind, at in events:
+        i0 = int(at * sr)
+        if i0 >= n:
+            continue
+        if kind == "whoosh":
+            ln = int(0.35 * sr)
+            tt = np.arange(ln) / sr
+            noise = rng.standard_normal(ln)
+            sweep = np.convolve(noise, np.ones(8) / 8, mode="same")
+            snd = 0.35 * sweep * np.sin(np.pi * tt / 0.35)
+        elif kind == "pop":
+            ln = int(0.12 * sr)
+            tt = np.arange(ln) / sr
+            snd = 0.5 * np.sin(2 * np.pi * (900 - 3000 * tt) * tt) * np.exp(-tt * 40)
+        else:  # fanfare
+            ln = int(1.0 * sr)
+            tt = np.arange(ln) / sr
+            snd = sum(0.18 * np.sin(2 * np.pi * f0 * tt) for f0 in (523.25, 659.25, 783.99, 1046.5))
+            snd = snd * np.minimum(1, tt * 30) * np.exp(-tt * 2.5)
+        ln = min(len(snd), n - i0)
+        out[i0:i0 + ln] += snd[:ln]
+    out = np.clip(out, -1, 1)
+    with wave.open(str(path), "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(sr)
+        w.writeframes((out * 32767).astype(np.int16).tobytes())
+
+
+def make_video_anim(slides, out_path, work, seed=0):
+    """slides: [(フレームのフォルダ, 音声パス, 秒, 効果音イベント)] を BGM・効果音付きの mp4 にする."""
+    segs, events, t0 = [], [], 0.0
+    for i, (frames, wav, dur, ev) in enumerate(slides):
+        seg = work / f"seg{i}.mp4"
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-framerate", str(FPS), "-i", str(frames / "f%04d.jpg"),
+                        "-i", str(wav), "-c:v", "libx264", "-preset", "veryfast", "-pix_fmt", "yuv420p", "-r", str(FPS),
+                        "-c:a", "aac", "-ar", "44100", "-b:a", "128k", "-t", f"{dur:.2f}", "-af", "apad", str(seg)],
+                       check=True)
+        segs.append(seg)
+        events += [(k, t0 + at) for k, at in ev]
+        t0 += dur
+    lst = work / "list.txt"
+    lst.write_text("".join(f"file '{s.as_posix()}'\n" for s in segs), encoding="utf-8")
+    voice = work / "voice.mp4"
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", str(lst),
+                    "-c", "copy", str(voice)], check=True)
+    bgm, sfx = work / "bgm.wav", work / "sfx.wav"
+    make_bgm(t0, bgm, seed)
+    make_sfx(events, t0, sfx)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(voice), "-i", str(bgm), "-i", str(sfx),
+                    "-filter_complex", "[1:a]volume=0.13[b];[2:a]volume=0.55[s];[0:a][b][s]amix=inputs=3:duration=first:normalize=0[a]",
+                    "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "160k",
+                    "-movflags", "+faststart", str(out_path)], check=True)
+
+
 def topics(cfg, results, budget, fcats, day):
     """その日の動画のテーマ（最大 PER_DAY 本）."""
     allg = [it for g in cfg["genres"] for it in results.get(g["slug"], [])]
@@ -441,24 +694,27 @@ def build(cfg, results, budget, fcats, day, out_dir, log):
         try:
             with tempfile.TemporaryDirectory() as tmp:
                 work = Path(tmp)
-                bg = background(t["theme"])
                 slides = []
-                p, a = work / "s0.png", work / "s0.wav"
-                title_slide(bg, t["title"], f"{m}月{d}日時点", p, seed=n)
-                slides.append((p, a, synth(t["intro"], spk, a), True))
+                a = work / "s0.wav"
+                sec = synth(t["intro"], spk, a) + 0.4
+                ev = anim_title(t["theme"], t["title"], f"{m}月{d}日時点", sec, work / "f0", seed=n)
+                slides.append((work / "f0", a, sec, ev))
                 for rank in (3, 2, 1):  # 3位から発表
                     it, note = t["items"][rank - 1]
-                    p, a = work / f"s{rank}.png", work / f"s{rank}.wav"
+                    a = work / f"s{rank}.wav"
                     text = f"{'第' if rank > 1 else '堂々の第'}{rank}位は、{speakable(it['name'])}。{t['say'](it)}"
-                    item_slide(bg, rank, it, t["label"], note, t["theme"], p, text=text)
-                    slides.append((p, a, synth(text, spk, a), rank == 1))
-                p, a = work / "s9.png", work / "s9.wav"
-                end_slide(bg, "楽天ランキング速報" if t["theme"] == "red" else "ふるさと納税 人気返礼品ランキング", p)
-                slides.append((p, a, synth("気になったら、プロフィールのリンクからチェックするのだ！", spk, a)))
+                    sec = synth(text, spk, a) + 0.4
+                    ev = anim_item(t["theme"], rank, it, t["label"], note, text, sec, work / f"f{rank}", seed=n * 10 + rank)
+                    slides.append((work / f"f{rank}", a, sec, ev))
+                a = work / "s9.wav"
+                sec = synth("気になったら、プロフィールのリンクからチェックするのだ！", spk, a) + 0.4
+                ev = anim_end(t["theme"], "楽天ランキング速報" if t["theme"] == "red" else "ふるさと納税 人気返礼品ランキング",
+                              sec, work / "f9")
+                slides.append((work / "f9", a, sec, ev))
                 name = f"shorts/{day}-{n + 1}.mp4"
-                make_video(slides, out_dir / name, work, seed=dt.date.fromisoformat(day).toordinal() + n)
+                make_video_anim(slides, out_dir / name, work, seed=dt.date.fromisoformat(day).toordinal() + n)
             made.append({"file": name, "title": video_title(t, m, d), "desc": description(t, day, site),
-                         "sec": round(sum(s[2] + 0.35 for s in slides))})
+                         "sec": round(sum(s[2] for s in slides))})
             log.append(f"[shorts] {name} {made[-1]['sec']}秒 {t['title']}")
         except Exception as ex:  # noqa: BLE001
             log.append(f"[shorts] 失敗 {t['title']}: {ex}")
