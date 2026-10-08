@@ -1,0 +1,37 @@
+name: social-afternoon
+
+# 朝に予約した前半の投稿が済んで Buffer の空き枠ができたころに、後半の投稿を予約する
+on:
+  schedule:
+    - cron: "20 5 * * *"   # 14:20 JST
+    - cron: "20 7 * * *"   # 16:20 JST（予備）
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: social
+  cancel-in-progress: false
+
+jobs:
+  social:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Schedule remaining X posts on Buffer
+        env:
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+        run: python social.py
+      - name: Commit posting record
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          git diff --cached --quiet || git commit -m "data: X posting record"
+          git pull --rebase -q && git push
