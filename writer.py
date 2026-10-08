@@ -27,7 +27,8 @@ SYSTEM = """あなたは楽天市場の商品紹介サイトのライターで�
 - 健康・美容・医薬的な効果を断定しない（「治る」「痩せる」「シミが消える」などは禁止）
 - 「No.1」「最安」「日本一」「ランキング1位」などの順位・最上級の表現は書かない
 - 「驚異的」「話題」「大人気」「完璧」などの大げさな言葉は使わない
-- あいさつ（こんにちは等）や自己紹介、「今回は〜を紹介するね」は書かず、いきなり商品の説明から始める
+- あいさつ（こんにちは等）や自己紹介、「紹介するよ」「紹介するね」は書かず、いきなり商品の説明から始める
+- 紹介文の中で同じ評価の言葉（便利・重宝・魅力・おすすめ・安心 など）を2回以上使わない
 - セール・クーポン・ポイント・送料・期間限定の話は書かない（日によって変わるため）
 - 商品名のキーワードの羅列をそのまま書き写さず、自然な文章にする
 
@@ -88,6 +89,9 @@ def call_model(item, key, model):
     return json.loads(m.group(0))
 
 
+REPEATABLE = ("便利", "重宝", "魅力", "おすすめ", "安心", "手軽", "活躍")
+
+
 def validate(d):
     if not isinstance(d, dict):
         return None
@@ -97,6 +101,8 @@ def validate(d):
            "for_whom": str(d.get("for_whom", "")).strip(), "check": str(d.get("check", "")).strip()}
     text = " ".join([intro, out["for_whom"], out["check"], *feats])
     if len(intro) < 100 or len(feats) < 2 or BANNED.search(text):
+        return None
+    if "紹介する" in intro or any(intro.count(w) >= 2 for w in REPEATABLE):
         return None
     return out
 
@@ -115,7 +121,16 @@ def describe(items, day, limit=40):
                 log.append("連続で失敗したため中断")
                 break
             try:
-                d = validate(call_model(it, token, model))
+                try:
+                    d = validate(call_model(it, token, model))
+                except urllib.error.HTTPError as ex:
+                    if ex.code not in (500, 503):
+                        raise
+                    time.sleep(15)  # 一時的な混雑。1回だけ再試行
+                    d = validate(call_model(it, token, model))
+                if d is None:  # ルール違反なら1回だけ書き直させる
+                    time.sleep(7)
+                    d = validate(call_model(it, token, model))
             except urllib.error.HTTPError as ex:
                 if ex.code == 404 and model != MODELS[-1]:  # モデルが使えなければ次の候補へ
                     model = MODELS[MODELS.index(model) + 1]
