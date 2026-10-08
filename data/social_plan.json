@@ -15,7 +15,8 @@
     "kumamoto-food:10002669",
     "pierrot:10014126",
     "nuthyougo:10000672"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -25,7 +26,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/pierrot/cabinet/img221/b2608-011035_1r.jpg?_ex=600x600",
    "codes": [
     "pierrot:10017661"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-beauty",
@@ -37,7 +39,8 @@
     "attenir:10000252",
     "fatuite:10000022",
     "shuuemura:10000018"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -47,7 +50,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/kenkocom/cabinet/906/4514603420906.jpg?_ex=600x600",
    "codes": [
     "kenkocom:12079545"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-appliances",
@@ -59,7 +63,8 @@
     "brita:10000161",
     "quads:10000095",
     "kobe-beauty-labo:10000074"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -69,7 +74,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/rakutenoriginal-daily/cabinet/item/water/ro-b-001_e_v2.jpg?_ex=600x600",
    "codes": [
     "rakutenoriginal-daily:10000000"
-   ]
+   ],
+   "scheduled": true
   }
  ]
 }

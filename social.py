@@ -23,8 +23,9 @@ DATA = ROOT / "data"
 POSTED = DATA / "posted.json"
 LOG = DATA / "social_log.txt"
 JST = dt.timezone(dt.timedelta(hours=9))
-# 1日10件（Buffer無料プランの予約上限＝同時10件）
-SLOTS = [(8, 0), (9, 30), (11, 0), (12, 15), (13, 30), (15, 0), (17, 0), (18, 30), (20, 0), (21, 30)]
+SLOTS = [(7, 30), (8, 15), (9, 0), (9, 45), (10, 30), (11, 15), (12, 0), (12, 45), (13, 30), (14, 15),
+         (15, 0), (15, 45), (16, 30), (17, 15), (18, 0), (18, 45), (19, 30), (20, 15), (21, 0), (22, 0)]
+BUFFER_CAP = 10  # Buffer無料プランで同時に予約できる件数。昼にもう一度予約して1日20件にする
 MAX_TAGS = 5
 FONTS = ["/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc", "C:/Windows/Fonts/YuGothB.ttc"]
 STOP = {"送料無料", "セット", "公式", "まとめ買い", "大容量", "ギフト", "プレゼント", "選べる", "人気", "おしゃれ",
@@ -284,10 +285,9 @@ PLAN = DATA / "social_plan.json"
 
 def plan(cfg, results, budget, descs, day, out_dir):
     """投稿の計画（本文・画像・時刻）を作り、画像をサイト内に置く。予約はサイト公開後に run_plan で行う."""
+    if PLAN.exists() and json.loads(PLAN.read_text(encoding="utf-8")).get("day") == day:
+        return  # 本日の計画は作成済み（予約状況を保持する）
     posted = json.loads(POSTED.read_text(encoding="utf-8")) if POSTED.exists() else {}
-    if posted.get("_scheduled") == day:
-        LOG.write_text(f"{day} 本日分は予約済み\n", encoding="utf-8")
-        return
     cutoff = (dt.date.fromisoformat(day) - dt.timedelta(days=7)).isoformat()
     recent = {k for k, v in posted.items() if not k.startswith("_") and v >= cutoff}
     names = [it["name"] for it in budget or []] + [it["name"] for v in results.values() for it in v]
@@ -336,42 +336,50 @@ def wait_until_live(url, tries=20):
 
 
 def run_plan():
-    """サイト公開後に実行。計画どおり Buffer に予約する."""
+    """計画のうち未予約の投稿を、Buffer の空き枠（同時予約の上限 BUFFER_CAP）の範囲で予約する.
+
+    朝のビルド後と、昼（前半の投稿が済んで枠が空いたころ）に実行される。
+    """
     key = os.environ.get("BUFFER_API_KEY")
     if not PLAN.exists():
         return
     p = json.loads(PLAN.read_text(encoding="utf-8"))
     day = p["day"]
-    posted = json.loads(POSTED.read_text(encoding="utf-8")) if POSTED.exists() else {}
     if not key:
         LOG.write_text(f"{day} BUFFER_API_KEY がないため投稿の予約をスキップ\n", encoding="utf-8")
         return
-    if posted.get("_scheduled") == day or not p["posts"]:
-        return
-    channel = find_channel(key)
-    log, ok = [f"{day} セール判定: {p['sale'] or 'なし'}"], False
-    for post in p["posts"]:
-        if not wait_until_live(post["image"]):
-            log.append(f"{post['kind']}: 失敗 画像が公開されていない {post['image']}")
-            continue
-        q = CREATE % (json.dumps(post["text"]), json.dumps(channel), json.dumps(post["due"]), json.dumps(post["image"]))
-        try:
-            r = gql(key, q)["createPost"]
-            if r.get("message"):
-                log.append(f"{post['kind']}: 失敗 {r['message']}")
+    now = dt.datetime.now(dt.timezone.utc)
+    due = lambda post: dt.datetime.strptime(post["due"], "%Y-%m-%dT%H:%M:%S.000Z").replace(tzinfo=dt.timezone.utc)  # noqa: E731
+    pending = sum(1 for x in p["posts"] if x.get("scheduled") and due(x) > now)
+    room = BUFFER_CAP - pending
+    todo = [x for x in p["posts"] if not x.get("scheduled") and due(x) > now + dt.timedelta(minutes=5)]
+    posted = json.loads(POSTED.read_text(encoding="utf-8")) if POSTED.exists() else {}
+    log = LOG.read_text(encoding="utf-8").rstrip("\n").split("\n") if LOG.exists() else []
+    log.append(f"--- {dt.datetime.now(JST):%H:%M} 予約処理: 空き枠 {room} / 未予約 {len(todo)}")
+    if todo and room > 0:
+        channel = find_channel(key)
+        for post in todo[:room]:
+            if not wait_until_live(post["image"]):
+                log.append(f"{post['time']} {post['kind']}: 失敗 画像が公開されていない")
                 continue
-            for c in post["codes"]:
-                posted[c] = day
-            ok = True
-            log.append(f"{post['kind']}: {post['time']} に予約 / {x_len(post['text'])}文字 / 画像 {post['image']}\n{post['text']}")
-        except Exception as ex:  # noqa: BLE001
-            log.append(f"{post['kind']}: 失敗 {ex}")
-    if ok:
-        posted["_scheduled"] = day
+            q = CREATE % (json.dumps(post["text"]), json.dumps(channel), json.dumps(post["due"]),
+                          json.dumps(post["image"]))
+            try:
+                r = gql(key, q)["createPost"]
+                if r.get("message"):
+                    log.append(f"{post['time']} {post['kind']}: 失敗 {r['message']}")
+                    continue
+                post["scheduled"] = True
+                for c in post["codes"]:
+                    posted[c] = day
+                log.append(f"{post['time']} {post['kind']}: 予約 / {x_len(post['text'])}文字")
+            except Exception as ex:  # noqa: BLE001
+                log.append(f"{post['time']} {post['kind']}: 失敗 {ex}")
     cutoff = (dt.date.fromisoformat(day) - dt.timedelta(days=7)).isoformat()
-    posted = {k: v for k, v in posted.items() if k.startswith("_") or v >= cutoff}
+    posted = {k: v for k, v in posted.items() if not k.startswith("_") and v >= cutoff}
     POSTED.write_text(json.dumps(posted, ensure_ascii=False, indent=0), encoding="utf-8")
-    LOG.write_text("\n---\n".join(log) + "\n", encoding="utf-8")
+    PLAN.write_text(json.dumps(p, ensure_ascii=False, indent=1), encoding="utf-8")
+    LOG.write_text("\n".join(log) + "\n", encoding="utf-8")
 
 
 if __name__ == "__main__":
