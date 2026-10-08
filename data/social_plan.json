@@ -12,7 +12,8 @@
     "darkangel:10035877",
     "darkangel:10036320",
     "irisplaza-r:10151238"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -22,7 +23,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/auc-kaei-trading/cabinet/zk-snb02/box-2c.jpg?_ex=600x600",
    "codes": [
     "auc-kaei-trading:10000754"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-appliances",
@@ -34,7 +36,8 @@
     "thanko:10005481",
     "vesync:10000022",
     "nanobig:10000898"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -46,7 +49,8 @@
     "f434281-takamori:10000542",
     "f173860-hodatsushimizu:10000450",
     "f452025-miyakonojo:10003918"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -56,7 +60,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/linoulu/cabinet/ladys/shorts/sho7_r_61006.jpg?_ex=600x600",
    "codes": [
     "linoulu:10000507"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-interior",
@@ -68,7 +73,8 @@
     "e-kurashi:10048736",
     "t-interior:10000256",
     "auc-kaei-trading:10000740"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -77,7 +83,8 @@
    "text": "楽天 #PR\n🎬1000円台・送料無料 売れ筋TOP3【10/9】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-09-1.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -87,7 +94,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/9826/4970381219826.jpg?_ex=600x600",
    "codes": [
     "book:22125841"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -97,7 +105,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/f406091-aka/cabinet/07597737/sakemi/fukuyume_senyu0917.jpg?_ex=600x600",
    "codes": [
     "f406091-aka:10000539"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-daily",
@@ -109,7 +118,8 @@
     "knox:10003362",
     "rakuten24:11128644",
     "rakuten24:11128650"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
