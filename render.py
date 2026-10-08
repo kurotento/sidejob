@@ -166,7 +166,9 @@ def section(title, icon, note, inner, more=""):
 
 
 def page(cfg, title, body, path, demo, updated, active=None, hero="", extra_css=""):
-    tabs = '<a href="index.html" class="{}">🏠 総合</a>'.format("on" if active is None else "")
+    tabs = '<a href="index.html" class="{}">{}</a>'.format("on" if active is None else "", e(cfg.get("home_label", "🏠 総合")))
+    for href, label, key in cfg.get("extra_tabs", []):
+        tabs += f'<a href="{href}" class="{"on" if active == key else ""}">{e(label)}</a>'
     if cfg.get("budget"):
         tabs += '<a href="{}.html" class="{}">💰 1000円台</a>'.format(cfg["budget"]["slug"], "on" if active == "budget" else "")
     tabs += "".join(f'<a href="{g["slug"]}.html" class="{"on" if active == g["slug"] else ""}">{e(g["icon"])} {e(g["title"])}</a>'
@@ -189,7 +191,7 @@ def page(cfg, title, body, path, demo, updated, active=None, hero="", extra_css=
 <header class="top"><div class="wrap bar"><a class="logo" href="index.html"><span class="mark">{CROWN}</span>{e(cfg['site_name'])}</a>
 <span class="prtag">PR・楽天アフィリエイト参加中</span></div><nav class="tabs">{tabs}</nav></header>
 {hero}<main class="wrap">{body}</main>
-<footer><div class="wrap"><p>掲載している価格・在庫・ポイント倍率・レビューは{e(updated)}時点の情報です。ご購入前に必ず販売ページでご確認ください。</p>
+<footer><div class="wrap"><p>{e(cfg.get("footer_note", "掲載している価格・在庫・ポイント倍率・レビューは{updated}時点の情報です。ご購入前に必ず販売ページでご確認ください。").format(updated=updated))}</p>
 <p>当サイトは楽天アフィリエイトを利用しており、リンク経由のご購入で運営者に紹介料が支払われる場合があります。</p>
 <p><a href="about.html">運営者情報・免責事項</a> ／ Supported by <a href="https://webservice.rakuten.co.jp/" rel="noopener">Rakuten Developers</a></p></div></footer>
 </body></html>"""
