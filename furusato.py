@@ -143,8 +143,16 @@ def render_site(cfg, cats, descs, demo, day, updated, out_dir):
         html_text = html_text.replace(f'<div class="shop">{e(it["shop"])}</div>',
                                       f'<div class="shop"><span class="muni">📍{e(it["shop"])}</span></div>', 1)
         html_text = html_text.replace('<span class="yen">', '<span class="yen"><small>寄付額 </small>')
-        return html_text.replace("楽天で詳細を見る", "返礼品を見る").replace("楽天で見る", "返礼品を見る")
+        html_text = html_text.replace("楽天で詳細を見る", "返礼品を見る").replace("楽天で見る", "返礼品を見る")
+        if it["code"] in has_page:  # 紹介ページがある返礼品には「くわしく」を付ける
+            more = f'<a class="cta ghost" href="{item_path(it)}">くわしく見る</a>'
+            if html_text.endswith("</div></article>"):
+                html_text = html_text[: -len("</div></article>")] + more + "</div></article>"
+            else:
+                html_text = html_text[: -len("</article>")] + more + "</article>"
+        return html_text
 
+    has_page = {it["code"] for c in cats for it in c["items"][:10]}
     clean = lambda it: {**it, "name": short_name(it["name"], 50)}  # noqa: E731 - 宣伝文句を除いた名前で表示
     fcard = lambda it, cat=None: localize(card(clean(it), genre=cat), it)  # noqa: E731
     frow = lambda it: localize(row(clean(it)), it)  # noqa: E731
