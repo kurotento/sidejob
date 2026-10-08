@@ -283,7 +283,7 @@ def main():
     print(f"生成完了: {OUT_DIR}（失敗ジャンル {errors}件）")
     if not args.demo:
         try:
-            social.schedule(cfg, results, budget, descs, day, OUT_DIR)
+            social.plan(cfg, results, budget, descs, day, OUT_DIR)
         except Exception as ex:  # noqa: BLE001 - 投稿の失敗でサイト更新は止めない
             print(f"[social] 失敗: {ex}", file=sys.stderr)
 
