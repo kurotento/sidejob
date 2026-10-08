@@ -334,6 +334,11 @@ def main():
             social.plan(cfg, results, budget, {**descs, **fdescs}, day, OUT_DIR, cats, videos)
         except Exception as ex:  # noqa: BLE001 - 投稿の失敗でサイト更新は止めない
             print(f"[social] 失敗: {ex}", file=sys.stderr)
+        try:  # Threads・Instagram（予約は social.run_plan で X と一緒に行う）
+            import sns
+            print(f"[sns] Threads・Instagram 計画 {sns.build(cfg, day, videos)}件")
+        except Exception as ex:  # noqa: BLE001
+            print(f"[sns] 失敗: {ex}", file=sys.stderr)
 
 
 if __name__ == "__main__":

@@ -436,15 +436,15 @@ def gql(key, query):
     return data["data"]
 
 
-def find_channel(key):
-    if os.environ.get("BUFFER_CHANNEL_ID"):
+def find_channel(key, services=("twitter", "x")):
+    if services == ("twitter", "x") and os.environ.get("BUFFER_CHANNEL_ID"):
         return os.environ["BUFFER_CHANNEL_ID"]
     for org in gql(key, "query { account { organizations { id name } } }")["account"]["organizations"]:
         q = "query { channels(input: {organizationId: %s}) { id name service } }" % json.dumps(org["id"])
         for c in gql(key, q)["channels"]:
-            if c["service"].lower() in ("twitter", "x"):
+            if c["service"].lower() in services:
                 return c["id"]
-    raise RuntimeError("Buffer に X のチャンネルが接続されていません")
+    raise RuntimeError(f"Buffer に {services[0]} のチャンネルが接続されていません")
 
 
 CREATE_VIDEO = """mutation { createPost(input: {text: %s, channelId: %s, schedulingType: automatic, mode: customScheduled,
@@ -680,8 +680,84 @@ def wait_until_live(url, tries=20):
     return False
 
 
+def create(key, post, channel, meta=""):
+    args = (json.dumps(post["text"]), json.dumps(channel), json.dumps(post["due"]))
+    if post.get("video"):
+        q = CREATE_VIDEO % (*args, json.dumps(post["video"]))
+    elif post["image"]:
+        q = CREATE % (*args, json.dumps(post["image"]))
+    else:
+        q = CREATE_NOIMG % args
+    if meta:
+        q = q.replace(", schedulingType:", f", metadata: {meta}, schedulingType:", 1)
+    return gql(key, q)["createPost"]
+
+
+# Instagram は投稿の種類（フィード・リール・ストーリー）を指定する
+INSTA_META = {"feed": "{instagram: {type: post, shouldShareToFeed: true}}",
+              "reel": "{instagram: {type: reel, shouldShareToFeed: true}}",
+              "story": "{instagram: {type: story, shouldShareToFeed: false}}"}
+SERVICES = {"x": ("twitter", "x"), "threads": ("threads",), "instagram": ("instagram",)}
+SNS_PLAN = DATA / "sns_plan.json"
+SCHEMA = DATA / "buffer_schema.txt"
+
+
+def log_schema(key):
+    """Buffer の投稿APIの項目を一度だけ記録する（Threads の返信や Instagram の種類指定の調整用）."""
+    if SCHEMA.exists():
+        return
+    out = []
+    for name in ("CreatePostInput", "PostInputMetaData", "InstagramPostMetadataInput", "ThreadsPostMetadataInput"):
+        try:
+            t = gql(key, '{ __type(name: "%s") { inputFields { name type { name kind ofType { name kind } } } enumValues { name } } }' % name)
+            out.append(f"{name}: {json.dumps(t['__type'], ensure_ascii=False)}")
+        except Exception as ex:  # noqa: BLE001
+            out.append(f"{name}: {ex}")
+    SCHEMA.write_text("\n".join(out) + "\n", encoding="utf-8")
+
+
+def schedule(key, posts, service, log, posted, day):
+    """posts（同じチャンネル向け）のうち未予約のものを、空き枠の範囲で予約する."""
+    now = dt.datetime.now(dt.timezone.utc)
+    due = lambda post: dt.datetime.strptime(post["due"], "%Y-%m-%dT%H:%M:%S.000Z").replace(tzinfo=dt.timezone.utc)  # noqa: E731
+    pending = sum(1 for x in posts if x.get("scheduled") and due(x) > now)
+    room = BUFFER_CAP - pending
+    todo = sorted((x for x in posts if not x.get("scheduled") and due(x) > now + dt.timedelta(minutes=5)), key=due)
+    log.append(f"--- {dt.datetime.now(JST):%H:%M} 予約処理[{service}]: 空き枠 {room} / 未予約 {len(todo)}")
+    if not todo or room <= 0:
+        return
+    try:
+        channel = find_channel(key, SERVICES[service])
+    except Exception as ex:  # noqa: BLE001
+        log.append(f"[{service}] {ex}")
+        return
+    for post in todo[:room]:
+        media = post.get("video") or post["image"]
+        if media and not wait_until_live(media):
+            log.append(f"{post['time']} {post['kind']}: 失敗 画像が公開されていない")
+            continue
+        meta = INSTA_META.get(post["kind"], "") if service == "instagram" else ""
+        try:
+            try:
+                r = create(key, post, channel, meta)
+            except RuntimeError as ex:  # 種類の指定が通らなければ、指定なしでもう一度
+                if not meta:
+                    raise
+                log.append(f"{post['time']} {post['kind']}: 種類指定でエラー（{str(ex)[:120]}）→ 指定なしで再試行")
+                r = create(key, post, channel)
+            if r.get("message"):
+                log.append(f"{post['time']} {post['kind']}: 失敗 {r['message']}")
+                continue
+            post["scheduled"] = True
+            for c in post["codes"]:
+                posted[c] = day
+            log.append(f"{post['time']} {post['kind']}: 予約 / {x_len(post['text'])}文字")
+        except Exception as ex:  # noqa: BLE001
+            log.append(f"{post['time']} {post['kind']}: 失敗 {ex}")
+
+
 def run_plan():
-    """計画のうち未予約の投稿を、Buffer の空き枠（同時予約の上限 BUFFER_CAP）の範囲で予約する.
+    """計画のうち未予約の投稿を、Buffer の空き枠（チャンネルごとの同時予約の上限 BUFFER_CAP）の範囲で予約する.
 
     朝のビルド後と、昼（前半の投稿が済んで枠が空いたころ）に実行される。
     """
@@ -693,39 +769,18 @@ def run_plan():
     if not key:
         LOG.write_text(f"{day} BUFFER_API_KEY がないため投稿の予約をスキップ\n", encoding="utf-8")
         return
-    now = dt.datetime.now(dt.timezone.utc)
-    due = lambda post: dt.datetime.strptime(post["due"], "%Y-%m-%dT%H:%M:%S.000Z").replace(tzinfo=dt.timezone.utc)  # noqa: E731
-    pending = sum(1 for x in p["posts"] if x.get("scheduled") and due(x) > now)
-    room = BUFFER_CAP - pending
-    todo = sorted((x for x in p["posts"] if not x.get("scheduled") and due(x) > now + dt.timedelta(minutes=5)), key=due)
     posted = json.loads(POSTED.read_text(encoding="utf-8")) if POSTED.exists() else {}
     log = LOG.read_text(encoding="utf-8").rstrip("\n").split("\n") if LOG.exists() else []
-    log.append(f"--- {dt.datetime.now(JST):%H:%M} 予約処理: 空き枠 {room} / 未予約 {len(todo)}")
-    if todo and room > 0:
-        channel = find_channel(key)
-        for post in todo[:room]:
-            media = post.get("video") or post["image"]
-            if media and not wait_until_live(media):
-                log.append(f"{post['time']} {post['kind']}: 失敗 画像が公開されていない")
-                continue
-            args = (json.dumps(post["text"]), json.dumps(channel), json.dumps(post["due"]))
-            if post.get("video"):
-                q = CREATE_VIDEO % (*args, json.dumps(post["video"]))
-            elif post["image"]:
-                q = CREATE % (*args, json.dumps(post["image"]))
-            else:
-                q = CREATE_NOIMG % args
-            try:
-                r = gql(key, q)["createPost"]
-                if r.get("message"):
-                    log.append(f"{post['time']} {post['kind']}: 失敗 {r['message']}")
-                    continue
-                post["scheduled"] = True
-                for c in post["codes"]:
-                    posted[c] = day
-                log.append(f"{post['time']} {post['kind']}: 予約 / {x_len(post['text'])}文字")
-            except Exception as ex:  # noqa: BLE001
-                log.append(f"{post['time']} {post['kind']}: 失敗 {ex}")
+    schedule(key, p["posts"], "x", log, posted, day)
+    if SNS_PLAN.exists():  # Threads・Instagram
+        sp = json.loads(SNS_PLAN.read_text(encoding="utf-8"))
+        try:
+            log_schema(key)
+        except Exception:  # noqa: BLE001
+            pass
+        for service in ("threads", "instagram"):
+            schedule(key, [x for x in sp["posts"] if x["service"] == service], service, log, posted, day)
+        SNS_PLAN.write_text(json.dumps(sp, ensure_ascii=False, indent=1), encoding="utf-8")
     cutoff = (dt.date.fromisoformat(day) - dt.timedelta(days=7)).isoformat()
     posted = {k: v for k, v in posted.items() if not k.startswith("_") and v >= cutoff}
     POSTED.write_text(json.dumps(posted, ensure_ascii=False, indent=0), encoding="utf-8")
