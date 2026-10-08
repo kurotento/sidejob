@@ -79,15 +79,8 @@ def sale_tags(names):
 
 
 def build_tags(items, sale, descs=None):
-    tags = []
-    for it in items:
-        t = product_tag(it["name"], (descs or {}).get(it["code"]))
-        if t and t not in tags:
-            tags.append(t)
-    tags = tags[:3] + sale
-    if len(tags) < MAX_TAGS - 1:
-        tags.append("楽天")
-    return " ".join("#" + t for t in tags[: MAX_TAGS - 1] + ["PR"])
+    """参考アカウントにならい、タグは最小限（PR表記は先頭の「楽天 #PR」で行う）."""
+    return "#お買い物マラソン" if "お買い物マラソン" in sale else ""
 
 
 # ---------- 投稿の中身 ----------
@@ -145,17 +138,62 @@ def candidates(cfg, results, budget, recent, descs=None, day="2000-01-01"):
     return out
 
 
+HOOKS = {
+    "cheaper": ["昨日より安くなってるの見つけた👀", "値下がりしてる…！今のうちにチェック", "お、値下がりしてる！"],
+    "risers": ["今これ急に売れてる📈", "ランキング急上昇中のやつ", "昨日からぐんぐん順位が上がってる"],
+    "budget": ["1000円台・送料無料で今売れてるやつ", "買い回りの1店舗に使える1000円台", "送料無料の1000円台、今売れてるのはこれ"],
+    "genre": ["{g}、今日はこれが売れてる", "{g}の売れ筋チェック✍️", "{g}で今いちばん売れてるのはこの3つ"],
+}
+
+
+def pick(seed, options):
+    return options[sum(map(ord, seed)) % len(options)]
+
+
+def finish(lines, url, tags):
+    return "\n".join(["楽天 #PR"] + lines + ["👇", url] + ([tags] if tags else []))
+
+
+def compose_text(title, rows, url, tags, day, kind="budget"):
+    """TOP3 の投稿。人が話すような短い書き出し＋3商品."""
+    nums = ["1️⃣", "2️⃣", "3️⃣"]
+    if kind.startswith("genre"):
+        hook = pick(day + kind, HOOKS["genre"]).format(g=title.replace("の売れ筋TOP3", ""))
+    else:
+        hook = pick(day + kind, HOOKS.get(kind, HOOKS["budget"]))
+    limit = 26
+    while True:
+        lines = [hook] + [f"{nums[i]}{short_name(it['name'], limit)} {it['price']:,}円（{note}）"
+                          for i, (it, note) in enumerate(rows)]
+        text = finish(lines, url, tags)
+        if x_len(text) <= 280 or limit <= 8:
+            return text
+        limit -= 2
+
+
+def single_hook(it, day):
+    if it.get("price_diff", 0) < 0:
+        return f"は！昨日より{-it['price_diff']:,}円値下がりしてる！"
+    if isinstance(it.get("move"), int) and it["move"] >= 10:
+        return f"昨日から{it['move']}位も上がってる📈"
+    if it["reviews"] >= 1000:
+        return f"レビュー{it['reviews'] // 1000 * 1000:,}件超えの定番"
+    if it["point_rate"] >= 5:
+        return f"今ならポイント{it['point_rate']}倍✨"
+    return pick(day + it["code"], ["送料無料の1000円台、買い回りの1店舗に", "1000円台で送料無料のやつ見つけた",
+                                   "これ1000円台なのに送料無料"])
+
+
 def compose_single(it, desc, url, tags, day):
-    m, d = int(day[5:7]), int(day[8:10])
-    stars = f" ★{it['rating']:.2f}（{it['reviews']:,}件）" if it["reviews"] else ""
+    """1商品の投稿。データに基づく一言＋紹介文の最初の一文（体験談は書かない）."""
+    stars = f"（★{it['rating']:.1f}）" if it["reviews"] >= 10 else ""
     lead = re.split(r"(?<=[。！!])", desc["intro"])[0] if desc else ""
     limit = 40
     while True:
-        lines = [f"【1000円台の注目商品】{m}/{d}", short_name(it["name"], limit),
-                 f"{it['price']:,}円・送料無料{stars}"]
+        lines = [single_hook(it, day), "", short_name(it["name"], limit), f"{it['price']:,}円、送料無料！{stars}"]
         if lead:
             lines.append(lead)
-        text = "\n".join(lines + ["▼くわしくはこちら", url, tags])
+        text = finish(lines, url, tags)
         if x_len(text) <= 280:
             return text
         if lead:
@@ -166,17 +204,22 @@ def compose_single(it, desc, url, tags, day):
         limit -= 4
 
 
-def compose_text(title, rows, url, tags, day):
-    m, d = int(day[5:7]), int(day[8:10])
-    nums = ["1️⃣", "2️⃣", "3️⃣"]
-    limit = 26
-    while True:
-        lines = [f"【{title}】{m}/{d}"]
-        lines += [f"{nums[i]}{short_name(it['name'], limit)} {it['price']:,}円（{note}）" for i, (it, note) in enumerate(rows)]
-        text = "\n".join(lines + ["▼くわしくはこちら", url, tags])
-        if x_len(text) <= 280 or limit <= 8:
-            return text
-        limit -= 2
+def event_posts(day, url, sale):
+    """楽天の毎月の定番イベント日・セール中のお知らせ（リンク先は1000円台のまとめ）.
+
+    キャンペーンの細かい条件は変わることがあるため、断定せず公式ページの確認を促す。
+    """
+    d = int(day[8:10])
+    out = []
+    if d % 5 == 0:
+        out.append("今日は5と0のつく日！\n楽天カードで買う人はエントリーを忘れずに✍️\n（条件は楽天の公式ページで確認してね）")
+    if d == 1:
+        out.append("今日は毎月1日のワンダフルデー！\nエントリーを忘れずに✍️\n（条件は楽天の公式ページで確認してね）")
+    if d == 18:
+        out.append("今日は楽天のご愛顧感謝デー！\n会員ランクによってポイントが変わる日だよ\n（条件は楽天の公式ページで確認してね）")
+    if sale:
+        out.append("お買い物マラソン開催中！\n1ショップ1,000円以上の買い回りでポイント倍率が上がるやつ\n送料無料の1000円台、まとめてます")
+    return [finish([t], url, "#お買い物マラソン" if sale and "マラソン" in t else "") for t in out[:2]]
 
 
 # ---------- 画像 ----------
@@ -274,6 +317,11 @@ def find_channel(key):
     raise RuntimeError("Buffer に X のチャンネルが接続されていません")
 
 
+CREATE_NOIMG = """mutation { createPost(input: {text: %s, channelId: %s, schedulingType: automatic, mode: customScheduled,
+  dueAt: %s}) {
+  ... on PostActionSuccess { post { id dueAt } }
+  ... on MutationError { message } } }"""
+
 CREATE = """mutation { createPost(input: {text: %s, channelId: %s, schedulingType: automatic, mode: customScheduled,
   dueAt: %s, assets: [{image: {url: %s}}]}) {
   ... on PostActionSuccess { post { id dueAt } }
@@ -296,25 +344,26 @@ def plan(cfg, results, budget, descs, day, out_dir):
     now = dt.datetime.now(JST) + dt.timedelta(minutes=20)  # 公開と予約にかかる時間を見込む
     slots = [(h, m) for h, m in SLOTS if dt.datetime(d.year, d.month, d.day, h, m, tzinfo=JST) > now]
     cands = candidates(cfg, results, budget, recent, descs, day)
+    events = event_posts(day, f"{cfg['base_url'].rstrip('/')}/{cfg['budget']['slug']}.html", sale)
+    for n, t in enumerate(events):  # 朝いちばんと夕方にお知らせを入れる
+        cands.insert(min(n * 10, len(cands)), ("event", t, [], ""))
     base = cfg["base_url"].rstrip("/")
     items = []
     for n, ((h, m), (kind, title, rows, url)) in enumerate(zip(slots, cands)):
         tags = build_tags([it for it, _ in rows], sale, descs)
-        if kind == "single":
+        if kind == "event":
+            text, image = title, ""
+        elif kind == "single":
             it = rows[0][0]
             text = compose_single(it, (descs or {}).get(it["code"]), url, tags, day)
             image = re.sub(r"_ex=\d+x\d+", "_ex=600x600", it.get("image", ""))
         else:
             img_name = f"social/{day}-{n:02d}-{kind}.png"
             make_image(title, rows, day, out_dir / img_name)
-            text = compose_text(title, rows, url, tags, day)
+            text = compose_text(title, rows, url, tags, day, kind)
             image = f"{base}/{img_name}"
-        while x_len(text) > 280 and tags.count("#") > 1:  # 長すぎるときは長いタグから外す（#PRは残す）
-            tl = tags.split()
-            gen = [t for t in ("#楽天", "#買い回り", "#お買い物マラソン") if t in tl]
-            tl.remove(gen[0] if gen else max((t for t in tl if t != "#PR"), key=len))
-            old, tags = tags, " ".join(tl)
-            text = text.replace(old, tags)
+        if x_len(text) > 280 and tags:  # 長すぎるときはタグを外す（PR表記は先頭にあるので残る）
+            text = text.replace("\n" + tags, "")
         due = dt.datetime(d.year, d.month, d.day, h, m, tzinfo=JST).astimezone(dt.timezone.utc)
         items.append({"kind": kind, "time": f"{h:02d}:{m:02d}", "due": due.strftime("%Y-%m-%dT%H:%M:%S.000Z"),
                       "text": text, "image": image, "codes": [it["code"] for it, _ in rows]})
@@ -359,11 +408,11 @@ def run_plan():
     if todo and room > 0:
         channel = find_channel(key)
         for post in todo[:room]:
-            if not wait_until_live(post["image"]):
+            if post["image"] and not wait_until_live(post["image"]):
                 log.append(f"{post['time']} {post['kind']}: 失敗 画像が公開されていない")
                 continue
-            q = CREATE % (json.dumps(post["text"]), json.dumps(channel), json.dumps(post["due"]),
-                          json.dumps(post["image"]))
+            args = (json.dumps(post["text"]), json.dumps(channel), json.dumps(post["due"]))
+            q = CREATE % (*args, json.dumps(post["image"])) if post["image"] else CREATE_NOIMG % args
             try:
                 r = gql(key, q)["createPost"]
                 if r.get("message"):
