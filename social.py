@@ -752,17 +752,27 @@ def schedule(key, posts, service, log, posted, day):
             log.append(f"{post['time']} {post['kind']}: 失敗 画像が公開されていない")
             continue
         meta = INSTA_META.get(post["kind"], "") if service == "instagram" else ""
+        if service == "threads" and post.get("reply"):  # 本文＋自分への返信（リンク）のスレッドにする
+            items = ", ".join("{text: %s, assets: []}" % json.dumps(t) for t in (post["text"], post["reply"]))
+            meta = "{threads: {type: thread, thread: [%s]}}" % items
+        send = post
         try:
             try:
-                r = create(key, post, channel, meta)
+                r = create(key, send, channel, meta)
+                err = r.get("message") if service == "threads" and meta else None
+                if err:
+                    raise RuntimeError(err)
             except RuntimeError as ex:  # 種類の指定が通らなければ、指定なしでもう一度
                 if not meta:
                     raise
+                if service == "threads":  # スレッドにできなければ、リンクを本文に足して1件で
+                    send = {**post, "text": post["text"] + "\n\n" + post["reply"]}
+                    meta = ""
                 log.append(f"{post['time']} {post['kind']}: 種類指定でエラー（{str(ex)[:120]}）→ 指定なしで再試行")
-                r = create(key, post, channel)
+                r = create(key, send, channel)
             how = ""
             if "notification scheduling" in (r.get("message") or ""):
-                r = create(key, post, channel, meta, notify=True)
+                r = create(key, send, channel, meta, notify=True)
                 how = "（通知で投稿）"
             if r.get("message"):
                 log.append(f"{post['time']} {post['kind']}: 失敗 {r['message']}")
@@ -770,7 +780,7 @@ def schedule(key, posts, service, log, posted, day):
             post["scheduled"] = True
             for c in post["codes"]:
                 posted[c] = day
-            log.append(f"{post['time']} {post['kind']}: 予約{how} / {x_len(post['text'])}文字")
+            log.append(f"{post['time']} {post['kind']}: 予約{how}{'（返信つき）' if meta and service == 'threads' else ''} / {x_len(send['text'])}文字")
         except Exception as ex:  # noqa: BLE001
             log.append(f"{post['time']} {post['kind']}: 失敗 {ex}")
 

@@ -38,8 +38,9 @@ def threads_posts(day, at):
         url = v.get("url")
         if not url:
             continue
-        text = f"{v['patterns'][0]['text']}\n\n{v['reply_lead']}👇\n{url}\n#PR"
-        out.append(item("threads", "threads", at(h, m), text))
+        x = item("threads", "threads", at(h, m), v["patterns"][0]["text"])
+        x["reply"] = f"{v['reply_lead']}👇\n{url}\n#PR"  # リンクは本文ではなく、自分への返信に入れる
+        out.append(x)
     return out
 
 
