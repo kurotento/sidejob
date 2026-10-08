@@ -118,3 +118,6 @@ https://kurotento.github.io/sidejob/item-rakutenoriginal-daily-10000000.html
 --- 19:28 予約処理[x]: 空き枠 3 / 未予約 0
 --- 19:28 予約処理[threads]: 空き枠 9 / 未予約 0
 --- 19:28 予約処理[instagram]: 空き枠 8 / 未予約 0
+--- 19:45 予約処理[x]: 空き枠 4 / 未予約 0
+--- 19:45 予約処理[threads]: 空き枠 9 / 未予約 0
+--- 19:45 予約処理[instagram]: 空き枠 8 / 未予約 0
