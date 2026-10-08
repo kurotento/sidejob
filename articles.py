@@ -70,7 +70,7 @@ def slug_of(code):
 
 # 含まれていたら区間ごと捨てる宣伝文句
 PROMO = re.compile(r"エントリー|SALE|セール|OFF|[%％円]オフ|クーポン|限定|予定|期間|マラソン|最大|半額|先着|まで|迄|\d+[%％]|"
-                   r"ランキング|\d+位|連続|常連|当店|お得|ぽっきり|TV|放送|\d+/\d+|\d+:\d+|今だけ|本日|楽券|[\d,]+円")
+                   r"ランキング|\d+位|連続|常連|当店|お得|ぽっきり|TV|放送|\d+/\d+|\d+:\d+|今だけ|本日|楽券|ふるさと納税|発送|営業日|総合|寄付|お届け|配送|[\d,]+円")
 # 区間の中から取り除くだけでよい語
 SOFT = re.compile(r"送料無料|ポイント\d+倍|P\d+倍|まとめ買い|お得用|【|】|公式")
 
@@ -79,7 +79,20 @@ def short_name(name, limit=42):
     """商品名から宣伝文句を除き、商品そのものを表す部分を取り出す."""
     parts = re.split(r"[【】\[\]［］≪≫＜＞<>＼／★☆※●■◆♪!！]", name)
     parts = [re.sub(r"\s+", " ", SOFT.sub(" ", x)).strip(" 　/・") for x in parts]
-    good = [x for x in parts if len(x) >= 6 and not PROMO.search(x)]
+
+    def strip_promo(x):
+        """区間の中の宣伝語を含む単語だけを取り除く（「総合1位 新米 能登米」→「新米 能登米」）."""
+        return " ".join(w for w in x.split(" ") if w and not PROMO.search(w)).strip(" 　/・_|")
+
+    def usable(x):
+        return (len(x) >= 6 and not PROMO.search(x)
+                and not re.fullmatch(r"[A-Za-z0-9_\-\s]+", x)  # 管理番号だけ
+                and not re.search(r"\d{6,}", x)  # 管理番号を含む
+                and not re.fullmatch(r"\S{2,4}[都道府県]\S{1,6}[市区町村]", x))  # 自治体名だけ
+
+    good = [x for x in parts if usable(x)] or [y for y in map(strip_promo, parts) if usable(y)]
+    if good and not any(len(x) >= 10 for x in good):
+        good += [y for y in map(strip_promo, parts) if usable(y) and y not in good]
     # 先頭側の十分な長さの区間を優先し、なければ最長の区間（キーワードの羅列）を使う
     first = [x for x in good if len(x) >= 10]
     if first:
