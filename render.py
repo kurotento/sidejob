@@ -249,6 +249,10 @@ def render(cfg, results, demo, day, updated, out_dir, budget=None, series=None, 
         extra_css = articles.CSS
         extra_paths = articles.render_budget(cfg, budget, series or {}, descs or {}, demo, day, updated, write)
         body += articles.banner(cfg, budget)
+    body += ('<a class="banner" href="furusato/" style="margin-top:16px;background:linear-gradient(135deg,#e8f6ef,#fff7e6);border-color:#bfe6cf">'
+             '<span style="font-size:2.6rem">🎁</span><div><b>ふるさと納税の人気返礼品ランキング</b>'
+             '<small>肉・海鮮・お米・フルーツなど、レビューの多い定番を寄付金額別にチェック</small></div>'
+             '<span class="cta" style="background:#0b7a4b">見てみる</span></a>')
     if not (risers or cheaper):
         body += '<div class="notice"{}>'.format(' style="margin-top:16px"' if budget else '') + '📈 順位の急上昇・値下がり情報は、明日から掲載します。</div>'
     champs = "".join(card(results[g["slug"]][0], genre=g, cta="ランキングを見る").replace(

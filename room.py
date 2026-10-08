@@ -16,7 +16,9 @@ from articles import short_name
 
 DATA = Path(__file__).resolve().parent / "data"
 HISTORY = DATA / "room_list.json"
-PER_DAY = 10
+PER_DAY = 20
+FURUSATO_PER_DAY = 5
+REPEAT_DAYS = 3  # 同じ商品をもう一度リストに出すまでの日数
 e = html.escape
 
 
@@ -24,7 +26,7 @@ def room_url(code):
     return f"https://room.rakuten.co.jp/mix?itemcode={code}"
 
 
-def room_comment(it, desc, tag):
+def room_comment(it, desc, tag, furusato=False):
     """ROOM用のおすすめコメント。紹介文の要約と事実だけ（体験談は書かない）."""
     parts = []
     if desc:
@@ -32,20 +34,36 @@ def room_comment(it, desc, tag):
         parts.append("".join(sents[:2]).strip())
         parts.append(" / ".join(desc["features"][:2]))
     stars = f"★{it['rating']:.1f}（レビュー{it['reviews']:,}件）" if it["reviews"] >= 10 else ""
-    parts.append(f"{it['price']:,}円・送料無料 {stars}".strip())
-    tags = ["#楽天ROOM", "#1000円台", "#送料無料", "#買い回り"] + ([f"#{tag}"] if tag else [])
+    if furusato:
+        parts.append(f"寄付額{it['price']:,}円｜{it['shop']} {stars}".strip())
+        tags = ["#楽天ROOM", "#ふるさと納税", "#楽天ふるさと納税", "#返礼品"] + ([f"#{tag}"] if tag and tag != "ふるさと納税" else [])
+    else:
+        parts.append(f"{it['price']:,}円・送料無料 {stars}".strip())
+        tags = ["#楽天ROOM", "#1000円台", "#送料無料", "#買い回り"] + ([f"#{tag}"] if tag else [])
     parts.append(" ".join(tags))
     return "\n".join(p for p in parts if p)
 
 
-def build(cfg, budget, descs, day, out_dir, save=True):
+def build(cfg, budget, descs, day, out_dir, save=True, fcats=None, fdescs=None):
     from social import product_tag
 
     hist = json.loads(HISTORY.read_text(encoding="utf-8")) if HISTORY.exists() else {}
-    cutoff = (dt.date.fromisoformat(day) - dt.timedelta(days=7)).isoformat()
+    cutoff = (dt.date.fromisoformat(day) - dt.timedelta(days=REPEAT_DAYS)).isoformat()
     hist = {k: v for k, v in hist.items() if k >= cutoff}
     recent = {c for k, codes in hist.items() if k != day for c in codes}
     picks = [it for it in budget or [] if it["code"] not in recent and descs.get(it["code"])][:PER_DAY]
+    # ふるさと納税の返礼品を3件（各ジャンル上位から順に）
+    fdescs = fdescs or {}
+    fpicks = []
+    for rank in range(30):
+        for c in fcats or []:
+            if len(fpicks) < FURUSATO_PER_DAY and rank < len(c["items"]):
+                it = c["items"][rank]
+                if it["code"] not in recent and fdescs.get(it["code"]) and it not in fpicks:
+                    fpicks.append(it)
+    furusato_codes = {it["code"] for it in fpicks}
+    picks = picks + fpicks
+    descs = {**descs, **fdescs}
     hist[day] = [it["code"] for it in picks]
     if save:
         HISTORY.write_text(json.dumps(hist, ensure_ascii=False, indent=0), encoding="utf-8")
@@ -53,7 +71,7 @@ def build(cfg, budget, descs, day, out_dir, save=True):
     rows = []
     for it in picks:
         tag = product_tag(it["name"], descs.get(it["code"]))
-        rows.append({"it": it, "comment": room_comment(it, descs.get(it["code"]), tag)})
+        rows.append({"it": it, "comment": room_comment(it, descs.get(it["code"]), tag, it["code"] in furusato_codes)})
 
     # スプレッドシート用CSV（改行は IMPORTDATA で崩れるので「 / 」に置き換える）
     buf = io.StringIO()
@@ -66,7 +84,7 @@ def build(cfg, budget, descs, day, out_dir, save=True):
     (out_dir / "room-list.csv").write_text(buf.getvalue(), encoding="utf-8")
 
     cards = "".join(f"""<article class="c" id="i{n}"><img src="{e(r['it']['image'])}" alt="">
-<div><h2>{n + 1}. {e(short_name(r['it']['name'], 40))}</h2><p class="p">{r['it']['price']:,}円・送料無料</p>
+<div><h2>{n + 1}. {e(short_name(r['it']['name'], 40))}</h2><p class="p">{('寄付額' + format(r['it']['price'], ',') + '円｜' + e(r['it']['shop'])) if r['it']['code'] in furusato_codes else format(r['it']['price'], ',') + '円・送料無料'}</p>
 <textarea readonly>{e(r['comment'])}</textarea>
 <button onclick="go({n})">① コメントをコピーしてROOMを開く</button>
 <a class="sub" href="{e(r['it']['url'])}" target="_blank" rel="noopener">開けないときは商品ページから「ROOMに投稿」</a>
