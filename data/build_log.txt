@@ -6,4 +6,5 @@
 [daily] 30件
 [baby] 30件
 [budget] 総合598件中 75件が条件に一致
+[room] 投稿リスト 10件
 生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
