@@ -10,9 +10,18 @@ from articles import short_name
 
 e = html.escape
 
-SEARCHES = ["買い回り おすすめ", "買い回り 1000円", "お買い物マラソン 何買う", "あと1店舗", "楽天 送料無料 おすすめ",
-            "ふるさと納税 おすすめ", "ふるさと納税 迷う", "ふるさと納税 初めて", "ふるさと納税 米", "ふるさと納税 肉",
-            "ふるさと納税 1万円"]
+# 単語だけで探すと宣伝ボットの投稿ばかり出るので、困っている人の言い回しで探し、
+# リンク付き・#PR・プレゼント企画などを除外する
+NOISE = " lang:ja -filter:links -filter:retweets -PR -ROOM -アフィリエイト -プレゼント -キャンペーン -応募 -フォロー"
+SEARCHES = [
+    ("ふるさと納税 どれにしよう", '"ふるさと納税" ("迷う" OR "迷って" OR "決まらない" OR "どれにしよう" OR "悩む" OR "悩んで")'),
+    ("ふるさと納税 おすすめ教えて", '"ふるさと納税" ("おすすめ教えて" OR "オススメ教えて" OR "おすすめある" OR "おすすめありますか" OR "何がいい")'),
+    ("ふるさと納税 よくわからない", '"ふるさと納税" ("わからない" OR "分からない" OR "よくわからん" OR "初めて" OR "やり方")'),
+    ("返礼品が届いた", '"ふるさと納税" ("届いた" OR "美味しかった" OR "おいしかった")'),
+    ("マラソン 何買うか迷う", '("買い回り" OR "マラソン") ("何買う" OR "何買お" OR "買うもの" OR "決まらない")'),
+    ("あと1店舗たりない", '("あと1店舗" OR "あと一店舗" OR "あと1ショップ" OR "あと何店舗")'),
+    ("楽天 買ってよかった", '"楽天" ("買ってよかった" OR "買って良かった" OR "リピ買い")'),
+]
 
 
 def nm(it, n=20):
@@ -63,6 +72,10 @@ def build(cfg, budget, fcats, day, out_dir):
         qa.append(("ふるさと納税、1万円以内でいいのある？",
                    f"1万円以内だと「{nm(under10k[0])}」（寄付{under10k[0]['price']:,}円）や"
                    f"「{nm(under10k[1])}」（寄付{under10k[1]['price']:,}円）がレビュー多めで人気です #PR"))
+    qa.append(("（返礼品が届いた・美味しかった という投稿に）",
+               "おいしそう！それ気になってました。量はどのくらいでした？参考にさせてください"))
+    qa.append(("（楽天で買ってよかった という投稿に）",
+               "それ良さそうですね！どのくらい使ってますか？自分も買い回りの候補に入れようか迷ってました"))
     qa.append(("ふるさと納税っていつまでにやればいい？",
                "その年の控除の対象になるのは12月31日までの寄付です。年末は申し込みも配送も混むので、早めがおすすめです"))
     qa.append(("ワンストップ特例ってなに？",
@@ -70,8 +83,8 @@ def build(cfg, budget, fcats, day, out_dir):
                "寄付先の数などに条件があるので、自治体や楽天のガイドで確認してくださいね"))
 
     search_links = "".join(
-        f'<a class="s" href="https://x.com/search?q={urllib.parse.quote(q)}&f=live" target="_blank" rel="noopener">🔍 {e(q)}</a>'
-        for q in SEARCHES)
+        f'<a class="s" href="https://x.com/search?q={urllib.parse.quote(q + NOISE)}&f=live" target="_blank" rel="noopener">🔍 {e(label)}</a>'
+        for label, q in SEARCHES)
     cards = "".join(f"""<article class="c"><p class="q">Q. {e(q)}</p><textarea readonly rows="4">{e(a)}</textarea>
 <button onclick="cp(this)">返信文をコピー</button></article>""" for q, a in qa)
     page = f"""<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -91,7 +104,7 @@ button{{width:100%;margin-top:6px;padding:10px;border:0;border-radius:10px;backg
 <li>商品をすすめる返信には「#PR」を残す（ステマ規制）</li>
 <li>リンクは貼らないのが基本。気になった人はプロフィールを見に来てくれます</li>
 <li>1日5〜10件、相手の質問にちゃんと答えるのがコツ</li></ul></div>
-<h2>① 探す（X の最新の投稿を開きます）</h2>{search_links}
+<h2>① 探す（X の最新の投稿を開きます）</h2><p style="font-size:.8rem;margin:0 0 8px">リンク付き・#PR・プレゼント企画などの宣伝投稿は除いて検索します。出てこない日は、少し時間をおいて開き直してね</p>{search_links}
 <h2>② 答える（今日の売れ筋入り）</h2>{cards}
 </main>
 <script>async function cp(b){{const t=b.previousElementSibling;try{{await navigator.clipboard.writeText(t.value)}}catch(e){{t.select();document.execCommand('copy')}}b.textContent='コピーしました';setTimeout(()=>b.textContent='返信文をコピー',1500)}}</script>
