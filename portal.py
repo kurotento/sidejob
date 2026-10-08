@@ -24,6 +24,11 @@ def tasks(day, videos):
         out.append(("週1（月曜）", "楽天アフィリエイトの成果レポートを見る", "https://affiliate.rakuten.co.jp/report/",
                     "クリック数と売れた商品をチェック"))
         out.append(("週1（月曜）", "Search Console で検索からの表示回数を見る", "https://search.google.com/search-console", ""))
+    if dt.date(2027, 1, 8) <= d <= dt.date(2027, 2, 28) and d.weekday() == 0:
+        out.append(("期限つき", "26tyama で Facebook 登録 → Meta 開発者アプリの持ち主を移す", "https://developers.facebook.com/apps/",
+                    "仮のアカウントで作ったアプリを 26tyama に移す（accounts.md 参照）"))
+    if dt.date(2027, 9, 1) <= d <= dt.date(2027, 10, 8) and d.weekday() == 0:
+        out.append(("期限つき", "楽天ウェブサービスのアプリの有効期限を延長（10/8まで）", "https://webservice.rakuten.co.jp/app/list", ""))
     if d.day == 1:
         out.append(("月1（1日）", "ROOM のランク更新のお知らせを見る", "https://room.rakuten.co.jp/", "オリジナル写真の条件を確認"))
     return out
