@@ -53,3 +53,8 @@ https://kurotento.github.io/sidejob/item-rakutenoriginal-daily-10000000.html
 #ミネラルウォーター #お買い物マラソン #買い回り #楽天 #PR
 --- 13:19 予約処理: 空き枠 4 / 未予約 0
 --- 13:39 予約処理: 空き枠 5 / 未予約 0
+--- 13:42 予約処理: 空き枠 5 / 未予約 4
+22:30 last-call: 予約 / 278文字
+23:30 last-call: 予約 / 280文字
+00:30 last-call: 予約 / 278文字
+01:30 last-call: 予約 / 274文字
