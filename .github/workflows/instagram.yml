@@ -1,0 +1,40 @@
+name: instagram
+
+# スプレッドシートの予約表を見て、時間になった Instagram 投稿を公開する（15分ごと）
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: instagram
+  cancel-in-progress: false
+
+jobs:
+  post:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Post due Instagram items
+        env:
+          IG_TOKEN: ${{ secrets.IG_TOKEN }}
+          GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          pip install --quiet gspread pynacl
+          python igpost.py
+      - name: Commit Instagram log
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          git diff --cached --quiet || git commit -m "data: Instagram posting record"
+          for i in 1 2 3; do git pull --rebase -q origin main && git push && break; sleep 5; done

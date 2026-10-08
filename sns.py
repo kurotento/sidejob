@@ -69,7 +69,36 @@ def insta_posts(cfg, day, videos, at):
     return out
 
 
-def build(cfg, day, videos):
+SHEET_KIND = {"reel": "post", "story": "story", "feed": "image"}
+
+
+def jpeg_url(url, out_dir):
+    """Instagram の公式APIは JPEG しか受け付けないので、サイトに置いた PNG の横に JPEG を作る."""
+    from PIL import Image
+    name = url.rsplit("/", 1)[-1]
+    src = DATA / "social_img" / name
+    if not (src.exists() and out_dir):
+        return url
+    jpg = name.rsplit(".", 1)[0] + ".jpg"
+    Image.open(src).convert("RGB").save(out_dir / "social" / jpg, quality=92)
+    return url.rsplit("/", 1)[0] + "/" + jpg
+
+
+def to_sheet(cfg, day, posts, out_dir):
+    import igsheet
+    rows = []
+    for x in posts:
+        due = dt.datetime.strptime(x["due"], "%Y-%m-%dT%H:%M:%S.000Z").replace(tzinfo=dt.timezone.utc).astimezone(JST)
+        if due < dt.datetime.now(JST) + dt.timedelta(minutes=10):  # 過ぎた時間の分は入れない
+            continue
+        url = x["video"] or jpeg_url(x["image"], out_dir)
+        rows.append({"日付": day, "投稿枠": "daily", "種別": SHEET_KIND[x["kind"]], "予約日時": due.strftime("%Y-%m-%d %H:%M:%S"),
+                     "動画URL": url, "キャプション": x["text"]})
+    n = igsheet.add_rows(cfg["instagram_sheet_id"], rows)
+    print(f"[sns] Instagram 予約表に {n}件追加")
+
+
+def build(cfg, day, videos, out_dir=None):
     d = dt.date.fromisoformat(day)
     now = dt.datetime.now(JST) + dt.timedelta(minutes=20)
     at = lambda h, m: dt.datetime(d.year, d.month, d.day, h, m, tzinfo=JST)  # noqa: E731
@@ -79,7 +108,11 @@ def build(cfg, day, videos):
     else:
         posts = []
     have = {(x["service"], x["kind"], x["time"]) for x in posts}
-    for x in threads_posts(day, at) + insta_posts(cfg, day, videos, at):
+    insta = insta_posts(cfg, day, videos, at)
+    if cfg.get("instagram_via") == "sheet":  # Instagram はスプレッドシートの予約表から投稿する（Buffer は使わない）
+        to_sheet(cfg, day, insta, out_dir)
+        insta = []
+    for x in threads_posts(day, at) + insta:
         if (x["service"], x["kind"], x["time"]) not in have and dt.datetime.strptime(
                 x["due"], "%Y-%m-%dT%H:%M:%S.000Z").replace(tzinfo=dt.timezone.utc) > now:
             posts.append(x)
