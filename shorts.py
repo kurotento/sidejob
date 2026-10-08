@@ -154,7 +154,6 @@ def title_slide(bg, title, sub, path, seed=0):
     from PIL import ImageDraw
     img = bg.copy()
     d = ImageDraw.Draw(img)
-    confetti(d, seed, (0, 120, W, 1500), 70)
     pr_badge(d)
     d.ellipse([W // 2 - 190, 230, W // 2 + 190, 610], fill=(255, 247, 230))
     bear(d, W // 2 - 32 * 4.6, 420 - 33 * 4.6, 4.6)
@@ -178,11 +177,9 @@ def item_slide(bg, rank, it, price_label, note, theme, path, text=""):
     from PIL import ImageDraw
     img = bg.copy()
     d = ImageDraw.Draw(img)
-    if rank == 1:
-        confetti(d, rank * 7, (0, 300, W, 1500), 50)
     pr_badge(d)
     medal = {1: (217, 164, 0), 2: (154, 165, 177), 3: (185, 114, 46)}[rank]
-    top = max(caption(d, text, 140, 54) + 20, 360) if text else 200
+    top = max(caption(d, text, 140, 54) + 20, 360) if text else 200  # 上部に読み上げの字幕
     d.rounded_rectangle([50, top, W - 50, 1470], radius=44, fill=(255, 255, 255))
     box = min(620, 1470 - top - 470)
     pic = fetch_image(it.get("image"))
@@ -212,7 +209,6 @@ def end_slide(bg, line1, path):
     from PIL import ImageDraw
     img = bg.copy()
     d = ImageDraw.Draw(img)
-    confetti(d, 99, (0, 120, W, 1500), 60)
     pr_badge(d)
     d.ellipse([W // 2 - 170, 260, W // 2 + 170, 600], fill=(255, 247, 230))
     bear(d, W // 2 - 32 * 4.2, 430 - 33 * 4.2, 4.2)
@@ -306,13 +302,53 @@ def confetti(d, seed, area=(0, 0, W, H), count=60):
             d.ellipse([x, y, x + w_, y + w_], fill=c)
 
 
+def confetti_frames(base_png, seconds, out_dir, seed=0, count=90):
+    """静止画の上に、紙吹雪がひらひら降ってくるフレーム列（30fps）を作る."""
+    import math
+    import random
+    from PIL import Image, ImageDraw
+    rnd = random.Random(seed)
+    cols = [(255, 214, 0), (255, 255, 255), (0, 200, 255), (255, 120, 180), (120, 230, 120)]
+    parts = [dict(x=rnd.uniform(0, W), y=rnd.uniform(-H * 0.9, -20), v=rnd.uniform(500, 950),
+                  sway=rnd.uniform(20, 60), ph=rnd.uniform(0, 6.3), w=rnd.randint(14, 26), h=rnd.randint(22, 40),
+                  c=rnd.choice(cols), round=rnd.random() < 0.35) for _ in range(count)]
+    base = Image.open(base_png).convert("RGB")
+    frames = int(seconds * 30)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    for f in range(frames):
+        t = f / 30
+        img = base.copy()
+        d = ImageDraw.Draw(img)
+        for p in parts:
+            y = p["y"] + p["v"] * t
+            if y > H + 50:
+                continue
+            x = p["x"] + p["sway"] * math.sin(p["ph"] + t * 4)
+            flip = abs(math.cos(p["ph"] + t * 6))  # くるくる回って見えるよう幅を変える
+            w_ = max(3, int(p["w"] * flip))
+            if p["round"]:
+                d.ellipse([x, y, x + p["w"], y + p["w"]], fill=p["c"])
+            else:
+                d.rectangle([x, y, x + w_, y + p["h"]], fill=p["c"])
+        img.save(out_dir / f"f{f:04d}.jpg", quality=88)
+    return out_dir / "f%04d.jpg"
+
+
 def make_video(slides, out_path, work, seed=0):
     """slides: [(画像パス, 音声パス, 秒)]。ゆっくりズーム＋切り替え時のフラッシュ、BGM付きで mp4 にする."""
     segs = []
-    for i, (img, wav, sec) in enumerate(slides):
+    for i, (img, wav, sec, *opt) in enumerate(slides):
         dur = sec + 0.35
         frames = int(dur * 30)
         seg = work / f"seg{i}.mp4"
+        if opt and opt[0]:  # 紙吹雪のアニメーション（ズームなし）
+            pattern = confetti_frames(img, dur, work / f"fr{i}", seed + i)
+            subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-framerate", "30", "-i", str(pattern), "-i", str(wav),
+                            "-vf", "fade=t=in:st=0:d=0.18:color=white,format=yuv420p", "-c:v", "libx264",
+                            "-preset", "veryfast", "-r", "30", "-c:a", "aac", "-ar", "44100", "-b:a", "128k",
+                            "-t", f"{dur:.2f}", "-af", "apad", str(seg)], check=True)
+            segs.append(seg)
+            continue
         vf = (f"scale=1296:2304,zoompan=z='min(zoom+0.0005,1.05)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)'"
               f":d={frames}:s={W}x{H}:fps=30,fade=t=in:st=0:d=0.18:color=white,format=yuv420p")
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-loop", "1", "-i", str(img), "-i", str(wav),
@@ -409,13 +445,13 @@ def build(cfg, results, budget, fcats, day, out_dir, log):
                 slides = []
                 p, a = work / "s0.png", work / "s0.wav"
                 title_slide(bg, t["title"], f"{m}月{d}日時点", p, seed=n)
-                slides.append((p, a, synth(t["intro"], spk, a)))
+                slides.append((p, a, synth(t["intro"], spk, a), True))
                 for rank in (3, 2, 1):  # 3位から発表
                     it, note = t["items"][rank - 1]
                     p, a = work / f"s{rank}.png", work / f"s{rank}.wav"
                     text = f"{'第' if rank > 1 else '堂々の第'}{rank}位は、{speakable(it['name'])}。{t['say'](it)}"
                     item_slide(bg, rank, it, t["label"], note, t["theme"], p, text=text)
-                    slides.append((p, a, synth(text, spk, a)))
+                    slides.append((p, a, synth(text, spk, a), rank == 1))
                 p, a = work / "s9.png", work / "s9.wav"
                 end_slide(bg, "楽天ランキング速報" if t["theme"] == "red" else "ふるさと納税 人気返礼品ランキング", p)
                 slides.append((p, a, synth("気になったら、プロフィールのリンクからチェックするのだ！", spk, a)))
