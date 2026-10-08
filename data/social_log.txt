@@ -58,3 +58,4 @@ https://kurotento.github.io/sidejob/item-rakutenoriginal-daily-10000000.html
 23:30 last-call: 予約 / 280文字
 00:30 last-call: 予約 / 278文字
 01:30 last-call: 予約 / 274文字
+--- 13:47 予約処理: 空き枠 1 / 未予約 0
