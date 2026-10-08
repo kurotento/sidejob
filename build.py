@@ -303,7 +303,7 @@ def main():
         print(f"[furusato] 失敗: {ex}", file=sys.stderr)
     if budget:
         try:
-            n = room.build(cfg, budget, descs, day, OUT_DIR, save=not args.demo, fcats=cats, fdescs=fdescs)
+            n = room.build(cfg, budget, descs, day, OUT_DIR, save=not args.demo, fcats=cats, fdescs=fdescs, results=results)
             print(f"[room] 投稿リスト {n}件")
         except Exception as ex:  # noqa: BLE001
             print(f"[room] 失敗: {ex}", file=sys.stderr)
