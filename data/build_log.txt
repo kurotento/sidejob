@@ -1,7 +1,10 @@
-Traceback (most recent call last):
-  File "/home/runner/work/sidejob/sidejob/build.py", line 26, in <module>
-    import social
-  File "/home/runner/work/sidejob/sidejob/social.py", line 168
-    LOG.write_text(f"{day} 本日の投稿枠はすべて過ぎています
-                   ^
-SyntaxError: unterminated f-string literal (detected at line 168)
+2026-10-08 model=gemini-3.5-flash-lite 新規0件 / 対象1件
+superpack:10000747: ルール違反または不完全な出力のため不採用
+[food] 30件
+[beauty] 30件
+[appliances] 30件
+[interior] 30件
+[daily] 30件
+[baby] 30件
+[budget] 総合598件中 75件が条件に一致
+生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
