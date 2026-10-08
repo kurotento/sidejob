@@ -1,5 +1,5 @@
 
-2026-10-08 model=gemini-3.5-flash-lite 新規2件 / 対象4件
+2026-10-08 model=gemini-3.5-flash-lite 新規0件 / 対象2件
 f402052-iizuka:10000315: ルール違反または不完全な出力のため不採用
 f434281-takamori:10000628: ルール違反または不完全な出力のため不採用
 [food] 30件
@@ -16,5 +16,5 @@ f434281-takamori:10000628: ルール違反または不完全な出力のため�
 [furusato:sweets] 30件
 [furusato:daily] 30件
 [furusato] 69ページ
-[room] 投稿リスト 10件
+[room] 投稿リスト 25件
 生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
