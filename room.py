@@ -16,7 +16,9 @@ from articles import short_name
 
 DATA = Path(__file__).resolve().parent / "data"
 HISTORY = DATA / "room_list.json"
-PER_DAY = 20
+PER_DAY = 12           # 1000円台・送料無料（買い回り向け）
+NICHE_PER_GENRE = 5    # ROOM の中心層（30〜40代女性）に強いジャンルから
+NICHE_GENRES = ("interior", "daily")  # インテリア・収納 / 日用品
 FURUSATO_PER_DAY = 5
 REPEAT_DAYS = 3  # 同じ商品をもう一度リストに出すまでの日数
 e = html.escape
@@ -26,25 +28,66 @@ def room_url(code):
     return f"https://room.rakuten.co.jp/mix?itemcode={code}"
 
 
-def room_comment(it, desc, tag, furusato=False):
-    """ROOM用のおすすめコメント。紹介文の要約と事実だけ（体験談は書かない）."""
-    parts = []
+def room_comment(it, desc, tag, furusato=False, budget=False):
+    """ROOM用のおすすめコメント。商品の事実と特徴だけを書く（使ったふりの体験談は書かない）.
+
+    ROOM では「ひとこと＋箇条書きの推しポイント＋どんな人向けか」の形がよく読まれる。
+    """
+    head = "＼ふるさと納税で人気／" if furusato else ("＼1000円台・送料無料／" if budget else "＼楽天で売れてる／")
+    parts = [head]
     if desc:
-        sents = re.split(r"(?<=[。！!])", desc["intro"])
-        parts.append("".join(sents[:2]).strip())
-        parts.append(" / ".join(desc["features"][:2]))
+        first = re.split(r"(?<=[。！!])", desc["intro"])[0].strip()
+        first = re.sub(r"^(これは|こちらは)[、,]?\s*", "", first)
+        parts.append(first)
+        parts.append("\n".join(f"✔ {f}" for f in desc["features"][:3]))
+        if desc.get("for_whom"):
+            parts.append("👉 " + desc["for_whom"])
     stars = f"★{it['rating']:.1f}（レビュー{it['reviews']:,}件）" if it["reviews"] >= 10 else ""
     if furusato:
         parts.append(f"寄付額{it['price']:,}円｜{it['shop']} {stars}".strip())
-        tags = ["#楽天ROOM", "#ふるさと納税", "#楽天ふるさと納税", "#返礼品"] + ([f"#{tag}"] if tag and tag != "ふるさと納税" else [])
+        tags = ["#ふるさと納税", "#楽天ふるさと納税", "#返礼品"] + ([f"#{tag}"] if tag and tag != "ふるさと納税" else [])
     else:
-        parts.append(f"{it['price']:,}円・送料無料 {stars}".strip())
-        tags = ["#楽天ROOM", "#1000円台", "#送料無料", "#買い回り"] + ([f"#{tag}"] if tag else [])
+        ship = "・送料無料" if budget else ""
+        parts.append(f"{it['price']:,}円{ship} {stars}".strip())
+        tags = (["#1000円台", "#送料無料", "#買い回り"] if budget else ["#楽天ランキング"]) + ([f"#{tag}"] if tag else [])
     parts.append(" ".join(tags))
     return "\n".join(p for p in parts if p)
 
 
-def build(cfg, budget, descs, day, out_dir, save=True, fcats=None, fdescs=None):
+def season_note(day, budget):
+    """今日のセール・イベントに合わせた、投稿のねらい."""
+    from social import sale_tags
+
+    d = dt.date.fromisoformat(day)
+    notes = []
+    if "お買い物マラソン" in sale_tags([it["name"] for it in budget or []]):
+        notes.append("🏃 お買い物マラソン中：1000円台の「あと1店舗」向けを優先して投稿")
+    if d.day % 5 == 0:
+        notes.append("🎯 5と0のつく日：買う人が増える日なので、いつもより多めに投稿")
+    if d.day == 1:
+        notes.append("📅 毎月1日：ROOMのランクが更新される日。今月のオリジナル写真の条件をお知らせで確認")
+    if d.month in (11, 12):
+        notes.append("🔥 11〜12月は大型セールとふるさと納税の締め切りが重なる、1年でいちばん売れる時期。投稿数を増やす")
+    elif d.month == 10:
+        notes.append("🍂 11〜12月の繁忙期に向けて、いまのうちに投稿数とフォロワーを増やしておく時期")
+    return notes
+
+
+def plan_box(day, budget):
+    notes = "".join(f"<li>{e(n)}</li>" for n in season_note(day, budget))
+    return f"""<details class="plan" open><summary>今日の作戦</summary>
+{f'<ul class="season">{notes}</ul>' if notes else ''}
+<ol>
+<li><b>20〜22時に投稿</b>：ROOMがいちばん見られる時間。1件ずつ間をあけて（1時間100件・1日200件を超えると投稿できなくなる目安）</li>
+<li><b>オリジナル写真を1枚</b>：届いた返礼品や、自分で買った物を撮って投稿。ランクB以上の条件で、買う人がいちばん重視するのもこれ（週3枚が目標）</li>
+<li><b>いいね・フォローは手で</b>：同じジャンルの人の投稿に。自動ツールやAIエージェントでの操作は禁止で、凍結のおそれあり</li>
+<li><b>コメントは少し手直し</b>：AIっぽい文が増えているので、ひとこと自分の言葉を足すと差がつく。使っていない物を「使ってみた」とは書かない</li>
+</ol>
+<p class="ng">NG：アカウントの複数持ち／家族・知人に「私のROOMから買って」と頼む・買ったことをコメントで知らせてもらう</p>
+</details>"""
+
+
+def build(cfg, budget, descs, day, out_dir, save=True, fcats=None, fdescs=None, results=None):
     from social import product_tag
 
     hist = json.loads(HISTORY.read_text(encoding="utf-8")) if HISTORY.exists() else {}
@@ -52,6 +95,15 @@ def build(cfg, budget, descs, day, out_dir, save=True, fcats=None, fdescs=None):
     hist = {k: v for k, v in hist.items() if k >= cutoff}
     recent = {c for k, codes in hist.items() if k != day for c in codes}
     picks = [it for it in budget or [] if it["code"] not in recent and descs.get(it["code"])][:PER_DAY]
+    budget_codes = seen = {it["code"] for it in picks}
+    seen = set(seen)
+    for g in NICHE_GENRES:  # インテリア・収納／日用品のランキングから（ROOM でいちばん投稿・購入が多いジャンル）
+        n = 0
+        for it in (results or {}).get(g, []):
+            if n < NICHE_PER_GENRE and it["code"] not in recent and it["code"] not in seen:
+                picks.append(it)
+                seen.add(it["code"])
+                n += 1
     # ふるさと納税の返礼品を3件（各ジャンル上位から順に）
     fdescs = fdescs or {}
     fpicks = []
@@ -71,7 +123,8 @@ def build(cfg, budget, descs, day, out_dir, save=True, fcats=None, fdescs=None):
     rows = []
     for it in picks:
         tag = product_tag(it["name"], descs.get(it["code"]))
-        rows.append({"it": it, "comment": room_comment(it, descs.get(it["code"]), tag, it["code"] in furusato_codes)})
+        rows.append({"it": it, "comment": room_comment(it, descs.get(it["code"]), tag, it["code"] in furusato_codes,
+                                                   it["code"] in budget_codes)})
 
     # スプレッドシート用CSV（改行は IMPORTDATA で崩れるので「 / 」に置き換える）
     buf = io.StringIO()
@@ -84,7 +137,7 @@ def build(cfg, budget, descs, day, out_dir, save=True, fcats=None, fdescs=None):
     (out_dir / "room-list.csv").write_text(buf.getvalue(), encoding="utf-8")
 
     cards = "".join(f"""<article class="c" id="i{n}"><img src="{e(r['it']['image'])}" alt="">
-<div><h2>{n + 1}. {e(short_name(r['it']['name'], 40))}</h2><p class="p">{('寄付額' + format(r['it']['price'], ',') + '円｜' + e(r['it']['shop'])) if r['it']['code'] in furusato_codes else format(r['it']['price'], ',') + '円・送料無料'}</p>
+<div><h2>{n + 1}. {e(short_name(r['it']['name'], 40))}</h2><p class="p">{('寄付額' + format(r['it']['price'], ',') + '円｜' + e(r['it']['shop'])) if r['it']['code'] in furusato_codes else format(r['it']['price'], ',') + ('円・送料無料' if r['it']['code'] in budget_codes else '円')}</p>
 <textarea readonly>{e(r['comment'])}</textarea>
 <button onclick="go({n})">① コメントをコピーしてROOMを開く</button>
 <a class="sub" href="{e(r['it']['url'])}" target="_blank" rel="noopener">開けないときは商品ページから「ROOMに投稿」</a>
@@ -101,9 +154,12 @@ main{{padding:12px;max-width:640px;margin:0 auto}}
 textarea{{width:100%;height:96px;font-size:.78rem;border:1px solid #ddd;border-radius:8px;box-sizing:border-box}}
 button{{width:100%;margin-top:6px;padding:12px;border:0;border-radius:10px;background:#bf0000;color:#fff;font-weight:700;font-size:.9rem}}
 .sub{{display:block;font-size:.72rem;color:#2563eb;margin-top:6px}}label{{display:block;margin-top:6px;font-size:.85rem}}
+.plan{{background:#fff;border-radius:14px;padding:12px 14px;margin-bottom:12px;font-size:.84rem;line-height:1.6}}
+.plan summary{{font-weight:700;font-size:.95rem;cursor:pointer}}.plan ol,.plan ul{{padding-left:1.2em;margin:8px 0}}
+.season{{list-style:none;padding:8px 10px!important;background:#fff4e5;border-radius:10px}}.ng{{color:#b42318;font-size:.78rem;margin:4px 0 0}}
 .note{{font-size:.75rem;color:#6e6e73;background:#fff;border-radius:10px;padding:10px}}</style></head><body>
 <header><h1>楽天ROOM 投稿リスト（{m}月{d}日）</h1><p>ボタンを押す →「コメント」欄に貼り付け → 投稿。1件ずつ、間をあけて投稿してね</p></header>
-<main><p class="note">このページは検索に表示されません。コメントは商品ごとに少し手直しすると、より自然になります。</p>{cards}</main>
+<main>{plan_box(day, budget)}<p class="note">このページは検索に表示されません。コメントは商品ごとに少し手直しすると、より自然になります。</p>{cards}</main>
 <script>
 const K='room-done-{day}';let s={{}};try{{s=JSON.parse(localStorage.getItem(K)||'{{}}')}}catch(e){{}}
 function mark(){{document.querySelectorAll('.c').forEach((c,i)=>{{c.classList.toggle('ok',!!s[i]);c.querySelector('input').checked=!!s[i]}})}}
