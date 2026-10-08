@@ -23,6 +23,7 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
+import room
 import social
 import writer
 from render import render
@@ -280,6 +281,12 @@ def main():
     if not args.demo:
         prune_history()
     render(cfg, results, args.demo, day, updated, OUT_DIR, budget=budget, series=series, descs=descs)
+    if budget:
+        try:
+            n = room.build(cfg, budget, descs, day, OUT_DIR, save=not args.demo)
+            print(f"[room] 投稿リスト {n}件")
+        except Exception as ex:  # noqa: BLE001
+            print(f"[room] 失敗: {ex}", file=sys.stderr)
     print(f"生成完了: {OUT_DIR}（失敗ジャンル {errors}件）")
     if not args.demo:
         try:
