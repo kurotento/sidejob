@@ -1,7 +1,7 @@
-[beauty] HTTP 503: {"error_description":"response error","error":"service_unavailable"}
 
 
 [food] 29件
+[beauty] 30件
 [appliances] 30件
 [interior] 30件
 [daily] 29件
@@ -15,9 +15,9 @@
 [furusato:daily] 30件
 [furusato] 69ページ
 [room] 投稿リスト 25件
-生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 1件）
-[shorts] shorts/2026-10-08-1.mp4 34秒 1000円台・送料無料
+生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
+[shorts] shorts/2026-10-08-1.mp4 32秒 1000円台・送料無料
 売れ筋TOP3
-[shorts] shorts/2026-10-08-2.mp4 44秒 ふるさと納税
+[shorts] shorts/2026-10-08-2.mp4 40秒 ふるさと納税
 海鮮・魚介の人気TOP3
 [shorts] 動画 2本
