@@ -68,13 +68,46 @@ def product_tag(name, desc=None):
     return cands[0] if cands else None
 
 
-def sale_tags(names):
-    joined = "\n".join(names)
+DT_PAT = r"(\d{1,2})/(\d{1,2})(?:\s*[（(][^）)]{1,3}[）)])?\s*(\d{1,2}):(\d{2})"
+
+
+def sale_period(names, now):
+    """商品名に書かれた「10/4 20:00〜10/9 01:59」などから、セールの開始・終了日時を推定する."""
+    starts, ends = [], []
+    for n in names:
+        found = [(m.start(), m.end(), m.groups()) for m in re.finditer(DT_PAT, n)]
+        for k, (s, e, (mo, d, h, mi)) in enumerate(found):
+            try:
+                t = dt.datetime(now.year, int(mo), int(d), int(h), int(mi), tzinfo=JST)
+            except ValueError:
+                continue
+            if t - now > dt.timedelta(days=200):  # 年をまたぐ場合（12月に1月の日付など）
+                t = t.replace(year=now.year - 1)
+            elif now - t > dt.timedelta(days=200):
+                t = t.replace(year=now.year + 1)
+            before, after = n[max(0, s - 2):s], n[e:e + 3]
+            if re.search(r"[~〜～]", after) or (len(found) == 2 and k == 0):
+                starts.append(t)
+            elif re.search(r"[~〜～]", before) or re.search(r"迄|まで", after) or (len(found) == 2 and k == 1):
+                ends.append(t)
+    common = lambda xs: max(set(xs), key=xs.count) if xs else None  # noqa: E731
+    return common(starts), common(ends)
+
+
+def sale_tags(names, now=None):
+    """商品名からセール開催中かを判定する。期間が読み取れれば、その期間内のときだけ開催中とする."""
+    now = now or dt.datetime.now(JST)
     tags = []
-    if joined.count("マラソン") >= 5:
-        tags += ["お買い物マラソン", "買い回り"]
-    if len(re.findall(r"スーパーSALE|スーパーセール", joined)) >= 5:
-        tags += ["楽天スーパーSALE"]
+    marathon = [n for n in names if "マラソン" in n]
+    if len(marathon) >= 5:
+        start, end = sale_period(marathon, now)
+        if not ((start and now < start) or (end and now > end)):
+            tags += ["お買い物マラソン", "買い回り"]
+    supersale = [n for n in names if re.search(r"スーパーSALE|スーパーセール", n)]
+    if len(supersale) >= 5:
+        start, end = sale_period(supersale, now)
+        if not ((start and now < start) or (end and now > end)):
+            tags += ["楽天スーパーSALE"]
     return tags
 
 
