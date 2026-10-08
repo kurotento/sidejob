@@ -309,19 +309,20 @@ def main():
             print(f"[room] 失敗: {ex}", file=sys.stderr)
     print(f"生成完了: {OUT_DIR}（失敗ジャンル {errors}件）")
     if not args.demo:
-        try:
-            social.plan(cfg, results, budget, {**descs, **fdescs}, day, OUT_DIR, cats)
-        except Exception as ex:  # noqa: BLE001 - 投稿の失敗でサイト更新は止めない
-            print(f"[social] 失敗: {ex}", file=sys.stderr)
-        try:  # YouTube ショート動画（アップロードは手動）
+        videos = []
+        try:  # YouTube ショート動画（YouTube へのアップロードは手動。X には Buffer 経由で投稿）
             import shorts
             slog = []
-            n = shorts.build(cfg, results, budget, cats, day, OUT_DIR, slog)
+            videos = shorts.build(cfg, results, budget, cats, day, OUT_DIR, slog)
             for line in slog:
                 print(line)
-            print(f"[shorts] 動画 {n}本")
+            print(f"[shorts] 動画 {len(videos)}本")
         except Exception as ex:  # noqa: BLE001
             print(f"[shorts] 失敗: {ex}", file=sys.stderr)
+        try:
+            social.plan(cfg, results, budget, {**descs, **fdescs}, day, OUT_DIR, cats, videos)
+        except Exception as ex:  # noqa: BLE001 - 投稿の失敗でサイト更新は止めない
+            print(f"[social] 失敗: {ex}", file=sys.stderr)
 
 
 if __name__ == "__main__":

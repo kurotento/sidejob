@@ -488,8 +488,43 @@ class Talker:
         return self.sprites[(blink, lv)], bob
 
 
-def anim_title(theme, title, sub, dur, out, seed, mouth=()):
+def sub_chunks(text):
+    """字幕用に、読み上げを「、」「。」などで短く区切る（短すぎる区切りは次とつなぐ）."""
+    parts = re.findall(r"[^、。！？!?]+[、。！？!?]*", text)
+    out = []
+    for p in parts:
+        if out and len(out[-1]) < 8:
+            out[-1] += p
+        else:
+            out.append(p)
+    return out or [text]
+
+
+def sub_at(chunks, t, dur):
+    """経過時間 t に読んでいる区切り（文字数の割合で時間を配分する）."""
+    speak = max(dur - 0.4, 0.1)
+    total = sum(len(c) for c in chunks)
+    acc = 0
+    for c in chunks:
+        acc += len(c)
+        if t <= speak * acc / total:
+            return c
+    return chunks[-1]
+
+
+def draw_sub(d, text):
+    """普通のショート動画と同じく、画面下側（YouTube のタイトル表示より上）に字幕を出す."""
+    f = font(58)
+    lines = wrap(d, text.rstrip("、"), f, 860, 2)
+    y = 1600 - (len(lines) - 1) * 76
+    for line in lines:
+        d.text((W // 2 - 30, y), line, font=f, fill=(255, 255, 255), anchor="mm", stroke_width=9, stroke_fill=(15, 15, 15))
+        y += 76
+
+
+def anim_title(theme, title, sub, dur, out, seed, mouth=(), text=""):
     from PIL import ImageDraw
+    chunks = sub_chunks(text) if text else []
     big = stripes_bg(theme)
     talker = Talker(400)
     text_l = layer((W, 560))
@@ -519,6 +554,8 @@ def anim_title(theme, title, sub, dur, out, seed, mouth=()):
             d.text((W // 2, hook_y), "3位から発表！", font=font(84), fill=(255, 226, 90), anchor="mm",
                    stroke_width=7, stroke_fill=(90, 0, 10))
         draw_confetti(d, parts, t)
+        if chunks:
+            draw_sub(d, sub_at(chunks, t, dur))
         pr_badge(d)
         img.save(out / f"f{f:04d}.jpg", quality=88)
     return [("whoosh", 0.0), ("pop", 0.25)]
@@ -527,10 +564,8 @@ def anim_title(theme, title, sub, dur, out, seed, mouth=()):
 def anim_item(theme, rank, it, price_label, note, text, dur, out, seed, mouth=()):
     from PIL import ImageDraw
     big = stripes_bg(theme)
-    cap_l = layer((W, 330))
-    cd = ImageDraw.Draw(cap_l)
-    # 右上にしゃべるらんくま、その左に字幕
-    top = max(caption(cd, text, 10, 50, cx=(W - 280) // 2 + 10, width=W - 360) + 150, 410) if text else 410
+    chunks = sub_chunks(text) if text else []
+    top = 300  # 右上にしゃべるらんくま。字幕は画面下側に出す
     talker = Talker(250)
     # 商品カード（価格・バッジを除く）
     card_h = 1470 - top
@@ -568,8 +603,6 @@ def anim_item(theme, rank, it, price_label, note, text, dur, out, seed, mouth=()
     for f in range(int(dur * FPS)):
         t = f / FPS
         img = bg_at(big, t).convert("RGB")
-        if text:
-            img.paste(cap_l, (0, 130), cap_l)
         dx = int((1 - ease_out(t / 0.35)) * W)  # 右からスライドイン
         img.paste(card, (50 + dx, top), card)
         if t > 0.6:  # 価格がドンッと出る
@@ -581,6 +614,8 @@ def anim_item(theme, rank, it, price_label, note, text, dur, out, seed, mouth=()
         d = ImageDraw.Draw(img)
         if parts:
             draw_confetti(d, parts, t)
+        if chunks:
+            draw_sub(d, sub_at(chunks, t, dur))
         pr_badge(d)
         img.save(out / f"f{f:04d}.jpg", quality=88)
     events = [("whoosh", 0.0), ("pop", 0.35), ("pop", 0.62)]
@@ -589,9 +624,10 @@ def anim_item(theme, rank, it, price_label, note, text, dur, out, seed, mouth=()
     return events
 
 
-def anim_end(theme, line1, dur, out, mouth=()):
+def anim_end(theme, line1, dur, out, mouth=(), text=""):
     import math
     from PIL import ImageDraw
+    chunks = sub_chunks(text) if text else []
     big = stripes_bg(theme)
     talker = Talker(360)
     out.mkdir(parents=True, exist_ok=True)
@@ -607,6 +643,8 @@ def anim_end(theme, line1, dur, out, mouth=()):
                    stroke_fill=(90, 0, 10))
         d.text((W // 2, 1200), line1, font=font(48), fill=(255, 240, 240), anchor="mm")
         d.text((W // 2, 1400), CREDIT, font=font(36), fill=(255, 235, 235), anchor="mm")
+        if chunks:
+            draw_sub(d, sub_at(chunks, t, dur))
         pr_badge(d)
         img.save(out / f"f{f:04d}.jpg", quality=88)
     return [("whoosh", 0.0), ("pop", 0.2)]
@@ -735,7 +773,7 @@ def description(t, day, site):
 def build(cfg, results, budget, fcats, day, out_dir, log):
     if not voicevox_ready():
         log.append("[shorts] VOICEVOX に接続できないため動画作成をスキップ")
-        return 0
+        return []
     spk = zundamon_id()
     m, d = int(day[5:7]), int(day[8:10])
     site = cfg["base_url"].rstrip("/") + "/"
@@ -748,7 +786,7 @@ def build(cfg, results, budget, fcats, day, out_dir, log):
                 a = work / "s0.wav"
                 sec = synth(t["intro"], spk, a) + 0.4
                 ev = anim_title(t["theme"], t["title"], f"{m}月{d}日時点", sec, work / "f0", seed=n,
-                                mouth=mouth_curve(a, sec))
+                                mouth=mouth_curve(a, sec), text=t["intro"])
                 slides.append((work / "f0", a, sec, ev))
                 for rank in (3, 2, 1):  # 3位から発表
                     it, note = t["items"][rank - 1]
@@ -759,19 +797,20 @@ def build(cfg, results, budget, fcats, day, out_dir, log):
                                    seed=n * 10 + rank, mouth=mouth_curve(a, sec))
                     slides.append((work / f"f{rank}", a, sec, ev))
                 a = work / "s9.wav"
-                sec = synth("気になったら、プロフィールのリンクからチェックするのだ！", spk, a) + 0.4
+                end_text = "気になったら、プロフィールのリンクからチェックするのだ！"
+                sec = synth(end_text, spk, a) + 0.4
                 ev = anim_end(t["theme"], "楽天ランキング速報" if t["theme"] == "red" else "ふるさと納税 人気返礼品ランキング",
-                              sec, work / "f9", mouth=mouth_curve(a, sec))
+                              sec, work / "f9", mouth=mouth_curve(a, sec), text=end_text)
                 slides.append((work / "f9", a, sec, ev))
                 name = f"shorts/{day}-{n + 1}.mp4"
                 make_video_anim(slides, out_dir / name, work, seed=dt.date.fromisoformat(day).toordinal() + n)
-            made.append({"file": name, "title": video_title(t, m, d), "desc": description(t, day, site),
+            made.append({"file": name, "title": video_title(t, m, d), "desc": description(t, day, site), "theme": t["theme"],
                          "sec": round(sum(s[2] for s in slides))})
             log.append(f"[shorts] {name} {made[-1]['sec']}秒 {t['title']}")
         except Exception as ex:  # noqa: BLE001
             log.append(f"[shorts] 失敗 {t['title']}: {ex}")
     page(made, day, out_dir)
-    return len(made)
+    return made
 
 
 def page(made, day, out_dir):
