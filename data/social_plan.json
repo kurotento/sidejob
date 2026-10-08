@@ -87,7 +87,8 @@
     "rakutenoriginal-daily:10000001",
     "devirockstore:10030402",
     "rakkenshop:10000083"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "last-call",
@@ -99,7 +100,8 @@
     "shizennoyakata:10007292",
     "duen1111:10000056",
     "kenkocom:12148912"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "last-call",
@@ -111,7 +113,8 @@
     "queeneyes:10000429",
     "cicib:10002043",
     "orbtech:10000027"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "last-call",
@@ -123,7 +126,8 @@
     "dainichi-corp:10000046",
     "sosuke:10000226",
     "irisplaza-r:10163799"
-   ]
+   ],
+   "scheduled": true
   }
  ]
 }
