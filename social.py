@@ -469,6 +469,24 @@ IMG_DIR = DATA / "social_img"
 
 # ---------- 追加の投稿（セール速報・週1回のまとめ・ショート動画） ----------
 
+ROOM_LINES = [
+    ["今日の売れ筋、楽天ROOMにもまとめたよ🛍", "1000円台・送料無料の買い回り候補はこちら"],
+    ["収納・日用品の人気どころを楽天ROOMに集めてます📦", "寝る前のお買い物チェックにどうぞ"],
+    ["ふるさと納税の人気返礼品も楽天ROOMで一覧にしてるよ🎁", "レビューが多い定番を中心に"],
+    ["楽天ROOMを更新したよ✨", "今日ランキングに入っていたものを追加しました"],
+]
+
+
+def room_posts(cfg, day):
+    """毎晩、ROOM がよく見られる時間（21時）に ROOM への案内を1件。返り値は [(日時JST, 本文)]."""
+    if not cfg.get("room_url"):
+        return []
+    d = dt.date.fromisoformat(day)
+    lines = ROOM_LINES[d.toordinal() % len(ROOM_LINES)]
+    return [(dt.datetime(d.year, d.month, d.day, 21, 0, tzinfo=JST),
+             finish(lines, cfg["room_url"], "#楽天ROOM #楽天ルーム #買い回り"))]
+
+
 def sale_alerts(names, d, url):
     """商品名から読み取ったセールの開始・終了時刻にあわせた速報投稿。返り値は [(日時JST, 本文)]."""
     now = dt.datetime.now(JST)
@@ -634,6 +652,7 @@ def plan(cfg, results, budget, descs, day, out_dir, fcats=None, videos=None):
     extra = [(t, txt, "", "") for t, txt in sale_alerts(names, d, f"{base}/{cfg['budget']['slug']}.html")]
     extra += [(t, txt, img, "") for t, txt, img in weekly_posts(cfg, budget, fcats, day, out_dir)]
     extra += [(t, txt, "", vid) for t, txt, vid in video_posts(cfg, videos, day)]
+    extra += [(t, txt, "", "") for t, txt in room_posts(cfg, day)]
     for t, txt, img, vid in extra:
         if t > later:
             due = t.astimezone(dt.timezone.utc)

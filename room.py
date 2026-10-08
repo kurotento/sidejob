@@ -10,6 +10,7 @@ import html
 import io
 import json
 import re
+import urllib.parse
 from pathlib import Path
 
 from articles import short_name
@@ -83,6 +84,7 @@ def plan_box(day, budget):
 <li><b>いいね・フォローは手で</b>：同じジャンルの人の投稿に。自動ツールやAIエージェントでの操作は禁止で、凍結のおそれあり</li>
 <li><b>コメントは少し手直し</b>：AIっぽい文が増えているので、ひとこと自分の言葉を足すと差がつく。使っていない物を「使ってみた」とは書かない</li>
 </ol>
+<p><a href="room-engage.html">👉 いいね・フォロー回りのリストはこちら</a></p>
 <p class="ng">NG：アカウントの複数持ち／家族・知人に「私のROOMから買って」と頼む・買ったことをコメントで知らせてもらう</p>
 </details>"""
 
@@ -123,7 +125,7 @@ def build(cfg, budget, descs, day, out_dir, save=True, fcats=None, fdescs=None, 
     rows = []
     for it in picks:
         tag = product_tag(it["name"], descs.get(it["code"]))
-        rows.append({"it": it, "comment": room_comment(it, descs.get(it["code"]), tag, it["code"] in furusato_codes,
+        rows.append({"it": it, "tag": tag, "comment": room_comment(it, descs.get(it["code"]), tag, it["code"] in furusato_codes,
                                                    it["code"] in budget_codes)})
 
     # スプレッドシート用CSV（改行は IMPORTDATA で崩れるので「 / 」に置き換える）
@@ -170,4 +172,58 @@ window.open(c.querySelector('a.u').href,'_blank')}}
 mark();
 </script></body></html>"""
     (out_dir / "room.html").write_text(page, encoding="utf-8")
+    engage_page(cfg, day, [r["tag"] for r in rows if r["tag"]], out_dir)
     return len(rows)
+
+
+# ---------- いいね・フォロー回り（手で行う。ここでは探すためのリンクだけを作る） ----------
+
+USER_WORDS = ["整理収納", "日用品", "時短家事", "キッチン", "買い回り", "ふるさと納税", "プチプラ", "子育て", "インテリア"]
+FOLLOW_GOAL, LIKE_GOAL = 20, 50
+
+
+def engage_page(cfg, day, tags, out_dir):
+    base = "https://room.rakuten.co.jp"
+    me = re.sub(r"/items/?$", "", cfg.get("room_url", "").rstrip("/"))
+    q = urllib.parse.quote
+    words = list(dict.fromkeys(tags))[:12] or ["収納", "日用品"]
+    users = "".join(f'<a class="s" href="{base}/search/user?keyword={q(w)}" target="_blank" rel="noopener">👤 {e(w)}</a>'
+                    for w in USER_WORDS)
+    items = "".join(f'<a class="s" href="{base}/search/item?keyword={q(w)}" target="_blank" rel="noopener">♡ {e(w)}</a>'
+                    for w in words)
+    m, d = int(day[5:7]), int(day[8:10])
+    page = f"""<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>ROOM いいね・フォロー {m}/{d}</title><style>
+body{{margin:0;font-family:system-ui,"Hiragino Sans",sans-serif;background:#f6f4f0;color:#1d1d1f}}
+header{{background:#bf0000;color:#fff;padding:14px 16px}}header h1{{font-size:1.1rem;margin:0}}header p{{margin:4px 0 0;font-size:.8rem;opacity:.9}}
+main{{padding:12px;max-width:640px;margin:0 auto}}section{{background:#fff;border-radius:14px;padding:12px 14px;margin-bottom:12px;font-size:.85rem;line-height:1.6}}
+h2{{font-size:.98rem;margin:0 0 6px}}.s{{display:inline-block;margin:0 6px 8px 0;padding:8px 12px;border-radius:999px;background:#f6f4f0;border:1px solid #ddd;color:#111;text-decoration:none}}
+.big{{display:block;text-align:center;padding:12px;border-radius:10px;background:#bf0000;color:#fff;font-weight:700;text-decoration:none}}
+.cnt{{display:flex;align-items:center;gap:10px;margin-top:6px}}.cnt button{{padding:8px 14px;border:0;border-radius:8px;background:#111;color:#fff;font-weight:700}}
+.cnt b{{font-size:1.1rem}}ul{{padding-left:1.2em;margin:6px 0}}.ng{{color:#b42318;font-size:.78rem}}a{{color:#2563eb}}</style></head><body>
+<header><h1>楽天ROOM いいね・フォロー回り（{m}月{d}日）</h1><p>20〜22時に。上から順に、1件ずつ中身を見ながら手で</p></header>
+<main>
+<section><h2>① フォロー返し（最初に）</h2>
+<p>フォローしてくれた人を確認して、同じジャンルの人にはフォローを返す。</p>
+<a class="big" href="{e(me)}/followers" target="_blank" rel="noopener">自分のフォロワー一覧を開く</a></section>
+<section><h2>② フォローする人を探す（目標 {FOLLOW_GOAL}人）</h2>
+<ul><li>フォロワー<b>100〜3,000人</b>くらいで、<b>最近も投稿している</b>人がフォローを返してくれやすい</li>
+<li>1万人をこえる人は返ってきにくいので、参考に見るだけでOK</li>
+<li>自分と同じジャンル（収納・日用品・ふるさと納税）の人を選ぶ</li></ul>
+{users}
+<div class="cnt">フォローした数 <b id="f">0</b> / {FOLLOW_GOAL}<button onclick="add('f')">＋1</button></div></section>
+<section><h2>③ いいね回り（目標 {LIKE_GOAL}件）</h2>
+<p>今日のリストの商品ジャンルで探すと、同じものに興味がある人に届く。オリジナル写真の投稿を優先して、気に入ったものだけに。</p>
+{items}
+<div class="cnt">いいねした数 <b id="l">0</b> / {LIKE_GOAL}<button onclick="add('l')">＋1</button></div></section>
+<section><h2>やらないこと</h2>
+<p class="ng">自動ツール・AIエージェントでのいいね／フォロー、短時間での連打（制限がかかります）、フォロー解除をくり返すこと、「フォロー返してね」「私のROOMから買って」のお願い</p>
+<p><a href="room.html">← 今日の投稿リストへ戻る</a></p></section>
+</main>
+<script>
+const K='room-eng-{day}';let s={{f:0,l:0}};try{{s=Object.assign(s,JSON.parse(localStorage.getItem(K)||'{{}}'))}}catch(e){{}}
+function show(){{document.getElementById('f').textContent=s.f;document.getElementById('l').textContent=s.l}}
+function add(k){{s[k]++;try{{localStorage.setItem(K,JSON.stringify(s))}}catch(e){{}}show()}}
+show();
+</script></body></html>"""
+    (out_dir / "room-engage.html").write_text(page, encoding="utf-8")
