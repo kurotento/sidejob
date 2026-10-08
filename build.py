@@ -23,6 +23,7 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
+import social
 import writer
 from render import render
 
@@ -280,6 +281,11 @@ def main():
         prune_history()
     render(cfg, results, args.demo, day, updated, OUT_DIR, budget=budget, series=series, descs=descs)
     print(f"生成完了: {OUT_DIR}（失敗ジャンル {errors}件）")
+    if not args.demo:
+        try:
+            social.schedule(cfg, results, budget, descs, day)
+        except Exception as ex:  # noqa: BLE001 - 投稿の失敗でサイト更新は止めない
+            print(f"[social] 失敗: {ex}", file=sys.stderr)
 
 
 if __name__ == "__main__":
