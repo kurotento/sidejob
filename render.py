@@ -282,3 +282,9 @@ def render(cfg, results, demo, day, updated, out_dir, budget=None, series=None, 
         for f in static.iterdir():
             if f.is_file():
                 shutil.copy(f, out_dir / f.name)
+    # X投稿用の画像（Buffer が投稿時に読みに来るので、作り直しても消えないようにする）
+    social_img = Path(__file__).resolve().parent / "data" / "social_img"
+    if social_img.exists():
+        (out_dir / "social").mkdir(exist_ok=True)
+        for f in social_img.glob("*.png"):
+            shutil.copy(f, out_dir / "social" / f.name)

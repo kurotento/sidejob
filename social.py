@@ -10,6 +10,7 @@ import io
 import json
 import os
 import re
+import shutil
 import time
 import unicodedata
 import urllib.request
@@ -370,6 +371,7 @@ CREATE = """mutation { createPost(input: {text: %s, channelId: %s, schedulingTyp
 
 
 PLAN = DATA / "social_plan.json"
+IMG_DIR = DATA / "social_img"
 
 
 def plan(cfg, results, budget, descs, day, out_dir):
@@ -400,7 +402,10 @@ def plan(cfg, results, budget, descs, day, out_dir):
             image = re.sub(r"_ex=\d+x\d+", "_ex=600x600", it.get("image", ""))
         else:
             img_name = f"social/{day}-{n:02d}-{kind}.png"
-            make_image(title, rows, day, out_dir / img_name)
+            # 画像は data/social_img に保存し（コミットされて残る）、サイトを作るたびに public/social へ公開する
+            make_image(title, rows, day, IMG_DIR / Path(img_name).name)
+            (out_dir / "social").mkdir(parents=True, exist_ok=True)
+            shutil.copy(IMG_DIR / Path(img_name).name, out_dir / img_name)
             text = compose_text(title, rows, url, tags, day, kind)
             image = f"{base}/{img_name}"
         while x_len(text) > 280 and tags:  # 長すぎるときは一般的なタグ→長いタグの順に外す（PR表記は先頭に残る）
@@ -412,6 +417,9 @@ def plan(cfg, results, budget, descs, day, out_dir):
         due = dt.datetime(d.year, d.month, d.day, h, m, tzinfo=JST).astimezone(dt.timezone.utc)
         items.append({"kind": kind, "time": f"{h:02d}:{m:02d}", "due": due.strftime("%Y-%m-%dT%H:%M:%S.000Z"),
                       "text": text, "image": image, "codes": [it["code"] for it, _ in rows]})
+    for f in IMG_DIR.glob("*.png"):  # 3日より前の投稿画像は消す（投稿済みのため不要）
+        if f.name[:10] < (d - dt.timedelta(days=3)).isoformat():
+            f.unlink()
     PLAN.write_text(json.dumps({"day": day, "sale": sale, "posts": items}, ensure_ascii=False, indent=1), encoding="utf-8")
     LOG.write_text(f"{day} 計画 {len(items)}件（セール判定: {sale or 'なし'} / 残り枠 {len(slots)} / 候補 {len(cands)}）\n",
                    encoding="utf-8")
