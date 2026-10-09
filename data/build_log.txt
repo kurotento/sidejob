@@ -1,5 +1,4 @@
-2026-10-09 model=gemini-3.5-flash-lite 新規13件 / 対象14件
-seedcoms:10007533: ルール違反または不完全な出力のため不採用
+2026-10-09 model=gemini-3.5-flash-lite 新規1件 / 対象1件
 
 [food] 29件
 [beauty] 30件
@@ -7,7 +6,7 @@ seedcoms:10007533: ルール違反または不完全な出力のため不採用
 [interior] 30件
 [daily] 30件
 [baby] 30件
-[budget] 総合596件中 88件が条件に一致
+[budget] 総合597件中 88件が条件に一致
 [gemini] キーの確認: OK（gemini-3.5-flash-lite）
 [furusato:meat] 30件
 [furusato:seafood] 30件
@@ -27,5 +26,6 @@ seedcoms:10007533: ルール違反または不完全な出力のため不採用
 [shorts] shorts/2026-10-09-3.mp4 40秒 ふるさと納税
 お米の人気TOP3
 [shorts] 動画 3本
+[pinterest] ピン 35件
 [sns] Instagram 予約表に 0件追加
 [sns] Threads・Instagram 計画 7件
