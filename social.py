@@ -368,11 +368,11 @@ def font(size):
     return ImageFont.load_default()
 
 
-def fetch_image(url):
+def fetch_image(url, size=400):
     from PIL import Image
     if not url:
         return None
-    url = re.sub(r"_ex=\d+x\d+", "_ex=400x400", url)
+    url = re.sub(r"_ex=\d+x\d+", f"_ex={size}x{size}", url)
     try:
         with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"}), timeout=20) as r:
             return Image.open(io.BytesIO(r.read())).convert("RGB")

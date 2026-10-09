@@ -338,6 +338,11 @@ def main():
             social.plan(cfg, results, budget, {**descs, **fdescs}, day, OUT_DIR, cats, videos)
         except Exception as ex:  # noqa: BLE001 - 投稿の失敗でサイト更新は止めない
             print(f"[social] 失敗: {ex}", file=sys.stderr)
+        try:  # Pinterest（週1回、まとめて作成用の CSV とピン画像）
+            import pinterest
+            print(f"[pinterest] ピン {pinterest.build(cfg, results, budget, cats, {**descs, **fdescs}, day, OUT_DIR)}件")
+        except Exception as ex:  # noqa: BLE001
+            print(f"[pinterest] 失敗: {ex}", file=sys.stderr)
         try:  # Threads・Instagram（予約は social.run_plan で X と一緒に行う）
             import sns
             print(f"[sns] Threads・Instagram 計画 {sns.build(cfg, day, videos, OUT_DIR)}件")
