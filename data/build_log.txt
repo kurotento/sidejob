@@ -16,7 +16,7 @@
 [furusato:daily] 30件
 [furusato] 69ページ
 [room] 投稿リスト 27件
-[replies] 質問 13件
+[replies] 質問 11件
 [threads] 投稿 5本
 生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
 [shorts] shorts/2026-10-09-1.mp4 35秒 今日の楽天
@@ -27,5 +27,5 @@
 お米の人気TOP3
 [shorts] 動画 3本
 [pinterest] ピン 0件
-[sns] Instagram 予約表に 1件追加
+[sns] Instagram 予約表に 0件追加
 [sns] Threads・Instagram 計画 7件
