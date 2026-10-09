@@ -90,6 +90,8 @@ def pin_text(it, kind, desc):
         parts += [f"・{plain(f).rstrip('。')}" for f in desc.get("features", [])[:3]]
         if desc.get("for_whom"):
             parts.append(plain(desc["for_whom"]))
+    elif it.get("catch") or it.get("caption"):  # 紹介文のない商品は、ショップのキャッチコピーを短く使う
+        parts.append(re.sub(r"\s+", " ", it.get("catch") or it["caption"])[:120])
     parts.append("楽天のレビュー件数・ランキングをもとに毎日まとめています。")
     parts.append("※楽天アフィリエイトを利用しています（PR）")
     return title[:100], " ".join(parts)[:500]  # 改行は CSV の取り込みで崩れることがあるので使わない
