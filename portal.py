@@ -25,6 +25,15 @@ def tasks(day, videos):
     if videos and not cfg_flag("youtube_via", "buffer"):
         out.append(("朝〜昼", f"YouTube にショート動画を投稿（{len(videos)}本）", "shorts.html", "保存 → YouTube アプリで投稿"))
     out.append(("昼〜夜", "X で困っている人に返信（5〜10件）", "replies.html", "検索 → 返信例をコピーして少し直す"))
+    try:  # Pinterest のピンを作った日（ふだんは月曜）は、CSV のアップロード
+        import json
+        from pathlib import Path
+        week = json.loads((Path(__file__).resolve().parent / "data" / "pins_history.json").read_text(encoding="utf-8")).get("_week")
+    except (OSError, ValueError):
+        week = None
+    if week == day:
+        out.append(("今日中", "Pinterest に今週のピン（pins.csv）をアップロード", "pins.csv",
+                    "保存 → Pinterest の「ピンをまとめて作成」から取り込む（1週間分が自動で順に公開）"))
     out.append(("20〜22時", "楽天ROOM に投稿", "room.html", "新しい会員でログインしているか確認してから"))
     out.append(("20〜22時", "ROOM のいいね・フォロー回り", "room-engage.html", "フォロー20人・いいね50件まで"))
     if d.weekday() == 0:
@@ -50,6 +59,7 @@ LINKS = [
         ("YouTube Studio", "https://studio.youtube.com/"),
         ("楽天ROOM（自分のページ）", "{room}"),
         ("Threads 投稿リスト（手で投稿したいとき）", "threads.html"),
+        ("Pinterest", "https://www.pinterest.jp/"),
     ]),
     ("自分のアカウント", [
         ("X @rankumasidejob", "https://x.com/rankumasidejob"),
