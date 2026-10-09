@@ -207,7 +207,7 @@ def item_slide(bg, rank, it, price_label, note, theme, path, text=""):
     accent = THEMES[theme][1]
     if price_label:
         d.text((90, 1225), price_label, font=font(40), fill=(110, 110, 115))
-    d.text((90, 1260), f"{it['price']:,}円", font=font(120), fill=accent)
+    d.text((90, 1260), price_text(it), font=font(120), fill=accent)
     if note:
         tw = min(d.textlength(note, font=font(44)), 760)
         d.rounded_rectangle([90 + 0, 1395, 90 + tw + 52, 1455], radius=16, fill=accent)
@@ -597,7 +597,7 @@ def anim_item(theme, rank, it, price_label, note, text, dur, out, seed, mouth=()
     bdg.text((100, 160), "位", font=font(38), fill=(255, 255, 255), anchor="mm")
     price_l = layer((900, 170))
     pd = ImageDraw.Draw(price_l)
-    pd.text((0, 10), f"{it['price']:,}円", font=font(120), fill=accent)
+    pd.text((0, 10), price_text(it), font=font(120), fill=accent)
     parts = confetti_parts(seed) if rank == 1 else []
     out.mkdir(parents=True, exist_ok=True)
     for f in range(int(dur * FPS)):
@@ -784,35 +784,99 @@ def spoken_name(it, cache):
     return cache.get(code) or normalize_reading(speakable(it["name"]))
 
 
-def topics(cfg, results, budget, fcats, day):
-    """その日の動画のテーマ（最大 PER_DAY 本）."""
-    allg = [it for g in cfg["genres"] for it in results.get(g["slug"], [])]
+SEARCH = "https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20260701"
+_fresh = {}
+
+
+def latest(it, base_url):
+    """動画を作る直前に、商品の最新の値段と在庫を楽天の商品検索で確かめる.
+
+    サイズ・色で値段が変わる商品は「買える種類のうちいちばん安い値段〜」にする。
+    返り値は値段を差し替えた商品（買えない・見つからないときは None）。確かめられないときは元のまま。
+    """
+    import os
+    if not os.environ.get("RAKUTEN_APP_ID"):
+        return it
+    code = it["code"]
+    if code not in _fresh:
+        params = {"applicationId": os.environ["RAKUTEN_APP_ID"], "accessKey": os.environ["RAKUTEN_ACCESS_KEY"],
+                  "itemCode": code, "formatVersion": 2}
+        req = urllib.request.Request(SEARCH + "?" + urllib.parse.urlencode(params), headers={
+            "Referer": base_url.rstrip("/") + "/", "User-Agent": "rakuten-ranking-site/1.0",
+            "Origin": urllib.parse.urlsplit(base_url)._replace(path="").geturl()})
+        try:
+            with urllib.request.urlopen(req, timeout=30) as res:
+                found = json.load(res).get("Items", [])
+            time.sleep(1)  # API の毎秒の上限を避ける
+        except Exception:  # noqa: BLE001
+            _fresh[code] = it
+            return it
+        raw = found[0].get("Item", found[0]) if found else None
+        if not raw or str(raw.get("availability", "1")) != "1":
+            _fresh[code] = None
+        else:
+            lo = int(raw.get("itemPriceMin3") or raw.get("itemPrice") or it["price"])
+            hi = int(raw.get("itemPriceMax3") or lo)
+            prev = it["price"] - it.get("price_diff", 0)  # 前日の値段
+            _fresh[code] = {**it, "price": lo, "from": hi > lo, "price_diff": lo - prev if "price_diff" in it else 0}
+    return _fresh[code]
+
+
+def price_text(it):
+    return f"{it['price']:,}円" + ("〜" if it.get("from") else "")
+
+
+def price_say(it):
+    return f"{it['price']:,}円" + ("から" if it.get("from") else "")
+
+
+def pick3(cands, base_url, ok=lambda it: True):
+    """候補の上から、最新の値段で条件に合う商品を3つ選ぶ（売り切れ・見つからないものは飛ばす）."""
     out = []
-    cheaper = sorted((x for x in allg if x.get("price_diff", 0) < 0), key=lambda x: x["price_diff"])[:3]
+    for it in cands:
+        f = latest(it, base_url)
+        if f and ok(f):
+            out.append(f)
+            if len(out) == 3:
+                break
+    return out
+
+
+def topics(cfg, results, budget, fcats, day):
+    """その日の動画のテーマ（最大 PER_DAY 本）。値段は作る直前に最新のものを確かめる."""
+    allg = [it for g in cfg["genres"] for it in results.get(g["slug"], [])]
+    base = cfg["base_url"]
+    out = []
+    # 値下がり：値段が種類で変わる商品は比べられないので除き、最新の値段でもまだ下がっているものだけ
+    cheaper = pick3(sorted((x for x in allg if x.get("price_diff", 0) < 0 and not x.get("has_range")),
+                           key=lambda x: x["price_diff"]), base, lambda f: not f.get("from") and f["price_diff"] < 0)
     if len(cheaper) == 3:
         out.append(dict(theme="red", title="今日の楽天\n値下がりTOP3", tag="値下がり", label="楽天の価格",
                         items=[(it, f"前日より{-it['price_diff']:,}円安い") for it in cheaper],
                         intro="今日の楽天で、値下がりした商品トップ3を紹介するのだ！",
-                        say=lambda it: f"{-it['price_diff']:,}円安くなって、{it['price']:,}円なのだ。"))
-    risers = sorted((x for x in allg if isinstance(x.get("move"), int) and x["move"] >= 3), key=lambda x: -x["move"])[:3]
+                        say=lambda it: f"{-it['price_diff']:,}円安くなって、{price_say(it)}なのだ。"))
+    risers = pick3(sorted((x for x in allg if isinstance(x.get("move"), int) and x["move"] >= 3),
+                          key=lambda x: -x["move"]), base)
     if len(risers) == 3:
         out.append(dict(theme="red", title="今日の楽天\n急上昇TOP3", tag="急上昇", label="楽天の価格",
                         items=[(it, f"{it['move']}位アップ") for it in risers],
                         intro="今日の楽天で、ランキングが急上昇している商品トップ3なのだ！",
-                        say=lambda it: f"昨日から{it['move']}位も上がって、{it['price']:,}円なのだ。"))
-    if budget and len(budget) >= 3:
+                        say=lambda it: f"昨日から{it['move']}位も上がって、{price_say(it)}なのだ。"))
+    picks = pick3(budget or [], base, lambda f: 1000 <= f["price"] < 2000)  # 最新の値段でも1000円台のものだけ
+    if len(picks) == 3:
         out.append(dict(theme="red", title="1000円台・送料無料\n売れ筋TOP3", tag="1000円台", label="",
-                        items=[(it, "送料無料") for it in budget[:3]],
+                        items=[(it, "送料無料") for it in picks],
                         intro="楽天で今売れている、1000円台で送料無料の商品トップ3なのだ！",
-                        say=lambda it: f"送料無料で{it['price']:,}円なのだ。"))
+                        say=lambda it: f"送料無料で{price_say(it)}なのだ。"))
     if fcats:
         k = dt.date.fromisoformat(day).toordinal() % len(fcats)
         c = fcats[k]
-        if len(c["items"]) >= 3:
+        fpicks = pick3(c["items"], base)
+        if len(fpicks) == 3:
             out.append(dict(theme="green", title=f"ふるさと納税\n{c['title']}の人気TOP3", tag="ふるさと納税",
-                            label="寄付額", items=[(it, it["shop"]) for it in c["items"][:3]],
+                            label="寄付額", items=[(it, it["shop"]) for it in fpicks],
                             intro=f"楽天ふるさと納税で、レビューが多い{c['title']}の返礼品トップ3なのだ！",
-                            say=lambda it: f"{it['shop']}の返礼品で、寄付額は{it['price']:,}円なのだ。"))
+                            say=lambda it: f"{it['shop']}の返礼品で、寄付額は{price_say(it)}なのだ。"))
     return out[:PER_DAY]
 
 
@@ -832,7 +896,7 @@ def description(t, day, site):
     m, d = int(day[5:7]), int(day[8:10])
     lines = [f"{t['title'].replace(chr(10), ' ')}（{m}月{d}日時点）", ""]
     for i, (it, note) in enumerate(t["items"]):
-        price = f"寄付額{it['price']:,}円（{it['shop']}）" if t["theme"] == "green" else f"{it['price']:,}円"
+        price = f"寄付額{price_text(it)}（{it['shop']}）" if t["theme"] == "green" else price_text(it)
         lines.append(f"{i + 1}位 {short_name(it['name'], 40)}｜{price}")
     lines += ["", "▶くわしくはプロフィールのリンクから", site, "",
               "※価格・寄付額は動画作成時点のものです。最新情報は販売ページでご確認ください。",
