@@ -1,5 +1,6 @@
 """サイトのHTML生成（見た目）."""
 import html
+import re
 import shutil
 from pathlib import Path
 
@@ -143,10 +144,15 @@ def link_attrs(it):
     return f'href="{e(it["url"])}" rel="sponsored noopener" target="_blank"'
 
 
+def anchor(it):
+    """ピンなど外からのリンクで、その商品の位置へ飛べるようにする id."""
+    return re.sub(r"[^A-Za-z0-9_-]", "-", it["code"])
+
+
 def card(it, genre=None, cta="楽天で詳細を見る"):
     rk = it["rank"]
     chip = f'<span class="chip">{e(genre["icon"])} {e(genre["title"])}</span>' if genre else ""
-    return f"""<article class="card"><a class="thumb" {link_attrs(it)}>{thumb(it)}
+    return f"""<article class="card" id="{anchor(it)}"><a class="thumb" {link_attrs(it)}>{thumb(it)}
 <span class="rk rk{rk if rk <= 3 else 'x'}">{rk}<small>位</small></span><span class="flags">{flags(it)}</span></a>
 <div class="body">{chip}<h3 class="nm"><a {link_attrs(it)}>{e(it['name'])}</a></h3>{stars(it)}{price(it)}
 <div class="shop">{e(it['shop'])}</div><a class="cta" {link_attrs(it)}>{cta}</a></div></article>"""

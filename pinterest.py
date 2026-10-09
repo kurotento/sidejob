@@ -40,6 +40,8 @@ KEYWORDS = {
     "daily": "日用品,ストック,まとめ買い,楽天,暮らし,節約",
     "furusato": "ふるさと納税,返礼品,ふるさと納税おすすめ,楽天ふるさと納税,節約",
 }
+# サプリ・健康食品は Pinterest の審査で弾かれる（健康の表現の決まりも厳しい）ので入れない
+SKIP = re.compile(r"サプリ|栄養機能食品|機能性表示食品|特定保健用食品|トクホ|プロテイン|ダイエット")
 RED, GREEN = (191, 0, 0), (31, 138, 76)
 
 
@@ -102,7 +104,8 @@ def link_for(it, kind, base):
         return f"{base}/furusato/{slug_of(it['code'])}"
     if kind == "budget":
         return f"{base}/{slug_of(it['code'])}"
-    return f"{base}/{kind}.html"
+    a = re.sub(r"[^A-Za-z0-9_-]", "-", it["code"])  # Pinterest は同じリンクのピンを受け付けないので商品ごとに変える
+    return f"{base}/{kind}.html?p={a}#{a}"
 
 
 def build(cfg, results, budget, fcats, descs, day, out_dir, force=False):
@@ -126,6 +129,7 @@ def build(cfg, results, budget, fcats, descs, day, out_dir, force=False):
         "furusato": [it for c in fcats or [] for it in c["items"] if descs.get(it["code"])],
     }
     order = ["budget", "interior", "furusato", "daily", "budget"]  # 1日5ピンの並び
+    pools = {k: [x for x in v if not SKIP.search(x["name"])] for k, v in pools.items()}
     picks = []
     used = set(recent)
     for n in range(7 * len(TIMES)):
