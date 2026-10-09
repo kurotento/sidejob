@@ -45,34 +45,38 @@ SKIP = re.compile(r"サプリ|栄養機能食品|機能性表示食品|特定保
 RED, GREEN = (191, 0, 0), (31, 138, 76)
 
 
-def make_pin(it, kind, path):
-    """1000x1500 の縦長ピン画像."""
+def make_pin(it, kind, path, day="2026-10-12"):
+    """1000x1500 の縦長ピン画像。見た目は design の型で2週間ごとに変わる."""
+    import design
     from PIL import Image, ImageDraw
+    pat = design.pattern(day)
     W, H = 1000, 1500
-    accent = GREEN if kind == "furusato" else RED
-    img = Image.new("RGB", (W, H), (246, 244, 240))
+    theme = "green" if kind == "furusato" else "red"
+    accent = pat["accent"][theme]
+    img = design.canvas(pat, W, H)
+    design.header(img, pat, theme, LABEL[kind], "楽天で人気", 170, 64, 40, pad=50)
     d = ImageDraw.Draw(img)
-    d.rectangle([0, 0, W, 170], fill=accent)
-    d.text((50, 46), LABEL[kind], font=font(64), fill=(255, 255, 255))
-    d.text((W - 50, 70), "楽天で人気", font=font(40), fill=(255, 230, 230), anchor="ra")
-    d.rounded_rectangle([50, 210, W - 50, 1060], radius=36, fill=(255, 255, 255))
+    F = lambda n: design.font(pat, n)  # noqa: E731
+    d.rounded_rectangle([50, 210, W - 50, 1060], radius=36 if pat["head"] != "pill" else 60, fill=(255, 255, 255))
     pic = fetch_image(it.get("image"), 800)
     if pic:  # 楽天の画像は小さめなので、枠いっぱいまで拡大する
         r = min(780 / pic.width, 780 / pic.height)
         pic = pic.resize((int(pic.width * r), int(pic.height * r)), Image.LANCZOS)
         img.paste(pic, ((W - pic.width) // 2, 245 + (780 - pic.height) // 2))
-    for j, line in enumerate(wrap(d, short_name(it["name"], 60), font(46), W - 100, 3)):
-        d.text((50, 1090 + j * 62), line, font=font(46), fill=(29, 29, 31))
+    for j, line in enumerate(wrap(d, short_name(it["name"], 60), design.font(pat, 46, head=True), W - 100, 3)):
+        d.text((50, 1090 + j * 62), line, font=design.font(pat, 46, head=True), fill=pat["ink"])
     info = f"★{it['rating']:.1f}（レビュー{it['reviews']:,}件）" if it.get("reviews", 0) >= 10 else ""
     if kind == "furusato":
         info = (f"{it['shop']}  " + info).strip()
-    d.text((50, 1290), info, font=font(40), fill=accent)
-    d.line([(50, 1365), (W - 50, 1365)], fill=(225, 220, 212), width=2)
+    d.text((50, 1290), info, font=F(40), fill=accent)
+    d.line([(50, 1365), (W - 50, 1365)], fill=pat["muted"], width=1)
     if ICON.exists():
         bear = Image.open(ICON).convert("RGB").resize((90, 90))
-        img.paste(bear, (50, 1385))
-    d.text((160, 1410), "らんくま｜楽天の売れ筋・ふるさと納税", font=font(32), fill=(110, 110, 115))
-    d.text((W - 50, 1410), "#PR", font=font(32), fill=(110, 110, 115), anchor="ra")
+        mask = Image.new("L", (90, 90), 0)
+        ImageDraw.Draw(mask).ellipse([0, 0, 89, 89], fill=255)
+        img.paste(bear, (50, 1385), mask)
+    d.text((160, 1410), "らんくま｜楽天の売れ筋・ふるさと納税", font=F(32), fill=pat["muted"])
+    d.text((W - 50, 1410), "#PR", font=F(32), fill=pat["muted"], anchor="ra")
     path.parent.mkdir(parents=True, exist_ok=True)
     img.save(path, quality=82)
 
@@ -147,7 +151,7 @@ def build(cfg, results, budget, fcats, descs, day, out_dir, force=False):
     rows = []
     for kind, it, when in picks:
         name = re.sub(r"[^A-Za-z0-9_-]", "-", it["code"]) + ".jpg"
-        make_pin(it, kind, IMG_DIR / name)
+        make_pin(it, kind, IMG_DIR / name, day)
         title, desc_text = pin_text(it, kind, descs.get(it["code"]))
         rows.append([title, f"{base}/pins/{name}", BOARDS[kind], "", desc_text, link_for(it, kind, base),
                      when.astimezone(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%S"), KEYWORDS[kind]])
