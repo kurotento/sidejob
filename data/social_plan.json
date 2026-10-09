@@ -8,7 +8,8 @@
    "due": "2026-10-09T23:15:00.000Z",
    "text": "楽天 #PR\n今日は5と0のつく日！\n楽天カードで買う人はエントリーを忘れずに✍️\n（条件は楽天の公式ページで確認してね）\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html",
    "image": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "budget",
@@ -20,7 +21,8 @@
     "velus:10000030",
     "auc-kaei-trading:10000765",
     "seedcoms:10007533"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -30,7 +32,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/velus/cabinet/cart-yoko/official-rank/hydroquinone-thum2.jpg?_ex=600x600",
    "codes": [
     "velus:10000092"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-interior",
@@ -42,7 +45,8 @@
     "ease-space:10009401",
     "tansu:10043927",
     "luckyspread:10000001"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -54,7 +58,8 @@
     "f202118-nakano:10000622",
     "f303810-mihama:10000544",
     "f385069-ainan:10000343"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -64,7 +69,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/dalba/cabinet/d_10000072/imgrc0127807674.jpg?_ex=600x600",
    "codes": [
     "dalba:10000072"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -73,7 +79,8 @@
    "text": "楽天 #PR\n🎬1000円台・送料無料 売れ筋TOP3【10/10】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-10-1.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "genre-daily",
@@ -95,7 +102,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/rakkenshop/cabinet/08757658/13157239/imgrc0099575089.jpg?_ex=600x600",
    "codes": [
     "rakkenshop:10000003"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -105,7 +113,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/f192023-fujiyoshida/cabinet/08974571/08974588/f031-108-128-s-r-4.jpg?_ex=600x600",
    "codes": [
     "f192023-fujiyoshida:10000414"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-baby",
