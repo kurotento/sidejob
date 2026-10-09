@@ -712,10 +712,10 @@ SCHEMA = DATA / "buffer_schema.txt"
 
 def log_schema(key):
     """Buffer の投稿APIの項目を一度だけ記録する（Threads の返信や Instagram の種類指定の調整用）."""
-    if SCHEMA.exists() and "v2" in SCHEMA.read_text(encoding="utf-8")[:10]:
+    if SCHEMA.exists() and "v3" in SCHEMA.read_text(encoding="utf-8")[:10]:
         return
-    out, seen = ["v2"], set()
-    todo = ["ThreadsPostMetadataInput", "InstagramPostMetadataInput", "PostType", "SchedulingType"]
+    out, seen = ["v3"], set()
+    todo = ["YoutubePostMetadataInput", "ThreadsPostMetadataInput", "PostType", "SchedulingType"]
     q = '{ __type(name: "%s") { kind inputFields { name type { name kind ofType { name kind ofType { name kind ofType { name } } } } } enumValues { name } } }'
     while todo and len(seen) < 12:
         name = todo.pop(0)
