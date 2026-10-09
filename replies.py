@@ -7,8 +7,13 @@ import html
 import urllib.parse
 
 from articles import short_name
+from social import yen
 
 e = html.escape
+
+
+def paren(t):
+    return f"（{t}）" if t else ""
 
 # 単語だけで探すと宣伝ボットの投稿ばかり出るので、困っている人の言い回しで探し、
 # リンク付き・#PR・プレゼント企画などを除外する
@@ -44,8 +49,8 @@ def build(cfg, budget, fcats, day, out_dir):
     qa = []
     if len(b) >= 2:
         qa.append(("買い回り、あと1店舗なに買おう？",
-                   f"迷ったら消耗品が無難です！今日の楽天だと「{nm(b[0])}」{b[0]['price']:,}円や"
-                   f"「{nm(b[1])}」{b[1]['price']:,}円あたりが送料無料で売れてますよ #PR"))
+                   f"迷ったら消耗品が無難です！今日の楽天だと「{nm(b[0])}」{yen(b[0])}や"
+                   f"「{nm(b[1])}」{yen(b[1])}あたりが送料無料で売れてますよ #PR"))
         qa.append(("1000円ちょうどくらいで送料無料のものない？",
                    f"1000円台で送料無料なら「{nm(b[2] if len(b) > 2 else b[0])}」がよく売れてます。"
                    "クーポンで1000円を下回らないよう、少し上の金額を選ぶのがコツです #PR"))
@@ -62,16 +67,16 @@ def build(cfg, budget, fcats, day, out_dir):
     if len(cat.get("rice", [])) >= 2:
         r = cat["rice"]
         qa.append(("ふるさと納税でお米のおすすめある？",
-                   f"レビューが多いのだと「{nm(r[0])}」（{r[0]['shop']}・寄付{r[0]['price']:,}円）や"
+                   f"レビューが多いのだと「{nm(r[0])}」（{r[0]['shop']}{yen(r[0], '・寄付')}）や"
                    f"「{nm(r[1])}」（{r[1]['shop']}）が人気ですよ #PR"))
     if len(cat.get("meat", [])) >= 2:
         r = cat["meat"]
         qa.append(("ふるさと納税でお肉のおすすめは？",
-                   f"「{nm(r[0])}」（{r[0]['shop']}・寄付{r[0]['price']:,}円）はレビューがかなり多くて定番です #PR"))
+                   f"「{nm(r[0])}」（{r[0]['shop']}{yen(r[0], '・寄付')}）はレビューがかなり多くて定番です #PR"))
     if len(under10k) >= 2:
         qa.append(("ふるさと納税、1万円以内でいいのある？",
-                   f"1万円以内だと「{nm(under10k[0])}」（寄付{under10k[0]['price']:,}円）や"
-                   f"「{nm(under10k[1])}」（寄付{under10k[1]['price']:,}円）がレビュー多めで人気です #PR"))
+                   f"1万円以内だと「{nm(under10k[0])}」{paren(yen(under10k[0], '寄付'))}や"
+                   f"「{nm(under10k[1])}」{paren(yen(under10k[1], '寄付'))}がレビュー多めで人気です #PR"))
     qa.append(("（返礼品が届いた・美味しかった という投稿に）",
                "おいしそう！それ気になってました。量はどのくらいでした？参考にさせてください"))
     qa.append(("（楽天で買ってよかった という投稿に）",

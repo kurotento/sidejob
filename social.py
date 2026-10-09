@@ -50,6 +50,11 @@ NOUNS = ("ニット", "カットソー", "タオル", "パンツ", "シャツ", 
          "カーテン", "ライト", "ケーブル", "フィルム", "スポンジ", "クリーナー", "ブラシ", "シール", "バッグ", "ソックス")
 
 
+def yen(it, prefix=""):
+    """値段の表記。サイズ・色などで値段が変わる商品は、楽天の表示（最安値〜）とずれるので書かない."""
+    return "" if it.get("has_range") else f"{prefix}{it['price']:,}円"
+
+
 def product_tag(name, desc=None):
     """商品名から、商品の種類を表す語を1つ取り出す（例：炭酸水、ミックスナッツ、ヘアアイロン）."""
     cands = []
@@ -148,7 +153,7 @@ def candidates(cfg, results, budget, recent, descs=None, day="2000-01-01", fcats
     allg = [it for g in cfg["genres"] for it in results.get(g["slug"], [])]
     tops = []
     cheaper = take([(it, f"{-it['price_diff']:,}円↓") for it in sorted(
-        (x for x in allg if x.get("price_diff", 0) < 0), key=lambda x: x["price_diff"])])
+        (x for x in allg if x.get("price_diff", 0) < 0 and not x.get("has_range")), key=lambda x: x["price_diff"])])
     if cheaper:
         tops.append(("cheaper", "今日の値下がりTOP3", cheaper, base + "/"))
     risers = take([(it, f"{it['move']}位UP") for it in sorted(
@@ -219,7 +224,7 @@ def compose_text(title, rows, url, tags, day, kind="budget"):
         hook = pick(day + kind, HOOKS.get(kind, HOOKS["budget"]))
     limit = 26
     while True:
-        lines = [hook] + [f"{nums[i]}{short_name(it['name'], limit)} {it['price']:,}円（{note}）"
+        lines = [hook] + [f"{nums[i]}{short_name(it['name'], limit)} {yen(it)}（{note}）".replace(" （", "（")
                           for i, (it, note) in enumerate(rows)]
         text = finish(lines, url, tags)
         if x_len(text) <= 280 or limit <= 8:
@@ -228,7 +233,7 @@ def compose_text(title, rows, url, tags, day, kind="budget"):
 
 
 def single_hook(it, day):
-    if it.get("price_diff", 0) < 0:
+    if it.get("price_diff", 0) < 0 and not it.get("has_range"):
         return f"は！昨日より{-it['price_diff']:,}円値下がりしてる！"
     if isinstance(it.get("move"), int) and it["move"] >= 10:
         return f"昨日から{it['move']}位も上がってる📈"
@@ -246,7 +251,7 @@ def compose_single(it, desc, url, tags, day):
     lead = re.split(r"(?<=[。！!])", desc["intro"])[0] if desc else ""
     limit = 40
     while True:
-        lines = [single_hook(it, day), "", short_name(it["name"], limit), f"{it['price']:,}円、送料無料！{stars}"]
+        lines = [single_hook(it, day), "", short_name(it["name"], limit), f"{yen(it) + '、' if yen(it) else ''}送料無料！{stars}"]
         if lead:
             lines.append(lead)
         text = finish(lines, url, tags)
@@ -325,7 +330,7 @@ def compose_furusato_top(genre, rows, url, tags, day):
     nums = ["1️⃣", "2️⃣", "3️⃣"]
     limit = 22
     while True:
-        lines = [hook] + [f"{nums[i]}{short_name(it['name'], limit)} 寄付{it['price']:,}円（{muni}）"
+        lines = [hook] + [f"{nums[i]}{short_name(it['name'], limit)} {yen(it, '寄付')}（{muni}）".replace(" （", "（")
                           for i, (it, muni) in enumerate(rows)]
         text = finish(lines, url, tags)
         if x_len(text) <= 280 or limit <= 8:
@@ -339,7 +344,7 @@ def compose_furusato_single(it, desc, url, tags, day):
     lead = re.split(r"(?<=[。！!])", desc["intro"])[0] if desc else ""
     limit = 40
     while True:
-        lines = [hook, "", short_name(it["name"], limit), f"寄付額{it['price']:,}円｜{it['shop']}"]
+        lines = [hook, "", short_name(it["name"], limit), f"{yen(it, '寄付額') + '｜' if yen(it) else ''}{it['shop']}"]
         if lead:
             lines.append(lead)
         text = finish(lines, url, tags)
@@ -415,7 +420,7 @@ def make_image(title, rows, day, path):
         d.text((x + 44, y + 44), str(i + 1), font=font(34), fill=(255, 255, 255), anchor="mm")
         for j, line in enumerate(wrap(d, short_name(it["name"], 40), font(24), w - 36)):
             d.text((x + 18, y + 296 + j * 34), line, font=font(24), fill=(29, 29, 31))
-        d.text((x + 18, y + 378), f"{it['price']:,}円", font=font(44), fill=(191, 0, 0))
+        d.text((x + 18, y + 378), yen(it), font=font(44), fill=(191, 0, 0))
         d.rounded_rectangle([x + 18, y + 442, x + 18 + d.textlength(note, font=font(24)) + 28, y + 480],
                             radius=10, fill=(232, 89, 12) if "UP" in note else (15, 157, 88))
         d.text((x + 32, y + 447), note, font=font(24), fill=(255, 255, 255))
@@ -534,7 +539,7 @@ def make_top10_image(title, items, day, path, price_prefix=""):
         d.text((x + 35, y + 35), str(i + 1), font=font(30), fill=(255, 255, 255), anchor="mm")
         for j, line in enumerate(wrap(d, short_name(it["name"], 40), font(24), 310, 3)):
             d.text((x + 240, y + 22 + j * 34), line, font=font(24), fill=(29, 29, 31))
-        d.text((x + 240, y + 150), f"{price_prefix}{it['price']:,}円", font=font(44), fill=(191, 0, 0))
+        d.text((x + 240, y + 150), yen(it, price_prefix), font=font(44), fill=(191, 0, 0))
         if price_prefix:
             d.text((x + 240, y + 205), f"📍{it.get('shop', '')}"[:16], font=font(22), fill=(6, 92, 56))
     d.text((Wd - 30, Hd - 18), "楽天ランキング速報 ｜ #PR", font=font(22), fill=(110, 110, 115), anchor="rb")
