@@ -22,7 +22,7 @@ def tasks(day, videos):
     """今日やること（時間の目安つき）. 返り値は [(時間, 作業, URL, 補足)]."""
     d = dt.date.fromisoformat(day)
     out = []
-    if videos:
+    if videos and not cfg_flag("youtube_via", "buffer"):
         out.append(("朝〜昼", f"YouTube にショート動画を投稿（{len(videos)}本）", "shorts.html", "保存 → YouTube アプリで投稿"))
     out.append(("昼〜夜", "X で困っている人に返信（5〜10件）", "replies.html", "検索 → 返信例をコピーして少し直す"))
     out.append(("20〜22時", "楽天ROOM に投稿", "room.html", "新しい会員でログインしているか確認してから"))
@@ -117,11 +117,11 @@ boxes.forEach(b=>b.addEventListener('change',()=>{{s[b.dataset.k]=b.checked;try{
 async function txt(f){{try{{const r=await fetch('{RAW}'+f+'?t='+Date.now());return r.ok?await r.text():''}}catch(e){{return ''}}}}
 function row(k,v,cls){{return '<b>'+k+'</b><span class="'+(cls||'')+'">'+v+'</span>'}}
 (async()=>{{
- const [b,so]=await Promise.all([txt('build_log.txt'),txt('social_log.txt')]);const out=[];
+ const [b,so,ig]=await Promise.all([txt('build_log.txt'),txt('social_log.txt'),txt('instagram_log.txt')]);const out=[];
  const done=b.match(/生成完了.*（失敗ジャンル (\\d+)件）/);out.push(row('サイト更新',done?(done[1]==='0'?'OK':'一部失敗 '+done[1]+'件'):'記録なし',done&&done[1]==='0'?'ok':'ng'));
  const g=b.match(/\\[gemini\\] キーの確認: (.*)/);if(g)out.push(row('Gemini',g[1],g[1].startsWith('OK')?'ok':'ng'));
  const v=b.match(/\\[shorts\\] 動画 (\\d+)本/);if(v)out.push(row('ショート動画',v[1]+'本'));
- for(const [sv,label] of [['x','X'],['threads','Threads'],['instagram','Instagram']]){{
+ for(const [sv,label] of [['x','X'],['threads','Threads'],['youtube','YouTube']]){{
   let ok=0,ng=0,notify=0;
   const sec=so.split(/--- \\d\\d:\\d\\d 予約処理/);
   const want=sv==='x'?/^(\\[x\\])?:/:new RegExp('^\\\\['+sv+'\\\\]');
@@ -130,6 +130,12 @@ function row(k,v,cls){{return '<b>'+k+'</b><span class="'+(cls||'')+'">'+v+'</sp
   for(const l of Object.values(last)){{if(/: 予約/.test(l)){{ok++;if(/通知/.test(l))notify++}}else ng++}}
   out.push(row(label,'予約 '+ok+'件'+(notify?'（うち通知 '+notify+'）':'')+(ng?' / 失敗 '+ng+'件':''),ng?'ng':(ok?'ok':'')));
  }}
+ const today=('0'+(new Date().getMonth()+1)).slice(-2)+'/'+('0'+new Date().getDate()).slice(-2);  // Instagram はシートから投稿した記録
+ const il=ig.split('
+').filter(l=>l.startsWith(today));const iok=il.filter(l=>/: 完了/.test(l)).length,ing=il.filter(l=>/: エラー/.test(l)).length;
+ out.push(row('Instagram','投稿 '+iok+'件'+(ing?' / エラー '+ing+'件':''),ing?'ng':(iok?'ok':'')));
+ if(/Secrets を更新できず/.test(ig.split('
+').filter(l=>/鍵の延長/.test(l)).pop()||''))out.push(row('Instagram の鍵','自動の入れ直しができていません（GH_PAT を設定）','ng'));
  document.getElementById('st').innerHTML=out.join('');
 }})();
 </script></body></html>"""

@@ -18,6 +18,8 @@ INSTA_REEL_TIME = (20, 0)
 INSTA_FEED_TIME = (12, 0)
 INSTA_STORY_TIMES = [(18, 0), (21, 15)]  # ストーリーは24時間で消えるので、夕方と夜に1本ずつ
 
+YOUTUBE_TIMES = [(17, 30), (20, 30)]  # ショート動画を YouTube に（Buffer で自動投稿）
+
 INSTA_TAGS = {
     "red": "#楽天 #楽天市場 #楽天お買い物マラソン #買い回り #1000円台 #送料無料 #楽天購入品 #プチプラ #暮らしを整える #PR",
     "green": "#ふるさと納税 #楽天ふるさと納税 #ふるさと納税返礼品 #返礼品 #ふるさと納税おすすめ #お取り寄せ #節約 #PR",
@@ -98,6 +100,17 @@ def to_sheet(cfg, day, posts, out_dir):
     print(f"[sns] Instagram 予約表に {n}件追加")
 
 
+def youtube_posts(cfg, day, videos, at):
+    if cfg.get("youtube_via") != "buffer":
+        return []
+    out = []
+    for (h, m), v in zip(YOUTUBE_TIMES, videos or []):
+        x = item("youtube", "short", at(h, m), v.get("desc", ""), video=f"{cfg['base_url'].rstrip('/')}/{v['file']}")
+        x["title"] = v["title"][:100]
+        out.append(x)
+    return out
+
+
 def build(cfg, day, videos, out_dir=None):
     d = dt.date.fromisoformat(day)
     now = dt.datetime.now(JST) + dt.timedelta(minutes=20)
@@ -112,7 +125,7 @@ def build(cfg, day, videos, out_dir=None):
     if cfg.get("instagram_via") == "sheet":  # Instagram はスプレッドシートの予約表から投稿する（Buffer は使わない）
         to_sheet(cfg, day, insta, out_dir)
         insta = []
-    for x in threads_posts(day, at) + insta:
+    for x in threads_posts(day, at) + insta + youtube_posts(cfg, day, videos, at):
         if (x["service"], x["kind"], x["time"]) not in have and dt.datetime.strptime(
                 x["due"], "%Y-%m-%dT%H:%M:%S.000Z").replace(tzinfo=dt.timezone.utc) > now:
             posts.append(x)
