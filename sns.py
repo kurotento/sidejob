@@ -14,15 +14,21 @@ SNS_PLAN = DATA / "sns_plan.json"
 JST = dt.timezone(dt.timedelta(hours=9))
 
 THREADS_TIMES = [(12, 15), (19, 0), (21, 30)]  # 新しいアカウントなので最初は1日3本
-INSTA_REEL_TIME = (20, 0)
+# フォロワーが少ないうちは、フォロワー以外にも届くリールを中心にする（ストーリーはフォロワーにしか出ない）
+INSTA_REEL_TIMES = [(18, 0), (21, 0)]
 INSTA_FEED_TIME = (12, 0)
-INSTA_STORY_TIMES = [(18, 0), (21, 15)]  # ストーリーは24時間で消えるので、夕方と夜に1本ずつ
+INSTA_STORY_TIMES = []  # フォロワーが100人くらいになったら [(18, 0), (21, 15)] に戻す
 
 YOUTUBE_TIMES = [(17, 30), (20, 30)]  # ショート動画を YouTube に（Buffer で自動投稿）
 
+# Instagram の検索は投稿文の言葉でも探されるので、1行目に検索される言葉を入れ、タグは内容に合う数個にしぼる
 INSTA_TAGS = {
-    "red": "#楽天 #楽天市場 #楽天お買い物マラソン #買い回り #1000円台 #送料無料 #楽天購入品 #プチプラ #暮らしを整える #PR",
-    "green": "#ふるさと納税 #楽天ふるさと納税 #ふるさと納税返礼品 #返礼品 #ふるさと納税おすすめ #お取り寄せ #節約 #PR",
+    "red": "#楽天購入品 #楽天お買い物マラソン #送料無料 #PR",
+    "green": "#ふるさと納税 #ふるさと納税返礼品 #楽天ふるさと納税 #PR",
+}
+INSTA_LEAD = {
+    "red": "楽天 1000円台 送料無料 おすすめ｜買い回りの候補に",
+    "green": "ふるさと納税 おすすめ 返礼品｜レビューの多い人気どころ",
 }
 
 
@@ -50,11 +56,12 @@ def threads_posts(day, at):
 def insta_posts(cfg, day, videos, at):
     base = cfg["base_url"].rstrip("/")
     out = []
-    for v in (videos or [])[:1]:
+    for (h, m), v in zip(INSTA_REEL_TIMES, videos or []):
+        theme = v.get("theme") if v.get("theme") in INSTA_TAGS else "red"
         title = re.sub(r"\s*#\S+", "", v["title"]).strip()
-        cap = (f"{title}\n\nらんくまが30秒で紹介するよ🧸\n商品はプロフィールのリンク（楽天ROOM）からまとめて見られます\n\n"
-               f"{INSTA_TAGS.get(v.get('theme'), INSTA_TAGS['red'])}")
-        out.append(item("instagram", "reel", at(*INSTA_REEL_TIME), cap, video=f"{base}/{v['file']}"))
+        cap = (f"{INSTA_LEAD[theme]}\n{title}\n\nらんくまが30秒で紹介するよ🧸 気になったら保存しておいてね\n"
+               f"商品はプロフィールのリンク（楽天ROOM）からまとめて見られます\n\n{INSTA_TAGS[theme]}")
+        out.append(item("instagram", "reel", at(h, m), cap, video=f"{base}/{v['file']}"))
     for (h, m), v in zip(INSTA_STORY_TIMES, videos or []):
         out.append(item("instagram", "story", at(h, m), "", video=f"{base}/{v['file']}"))
     plan = DATA / "social_plan.json"
@@ -64,7 +71,7 @@ def insta_posts(cfg, day, videos, at):
             img = next((x for x in p["posts"] if x["kind"] == "budget" and x.get("image")), None)
             if img:
                 lines = [ln for ln in img["text"].split("\n") if re.match(r"^[1-3]️⃣", ln)]
-                cap = ("【1000円台・送料無料 売れ筋TOP3】\n買い回りのあと1店舗に💡\n\n" + "\n".join(lines) +
+                cap = (INSTA_LEAD["red"] + "\n【1000円台・送料無料 売れ筋TOP3】\n\n" + "\n".join(lines) +
                        "\n\n商品はプロフィールのリンク（楽天ROOM）から見られます\n保存しておくと、買い回りのときに便利だよ\n\n"
                        + INSTA_TAGS["red"])
                 out.append(item("instagram", "feed", at(*INSTA_FEED_TIME), cap, image=img["image"]))
