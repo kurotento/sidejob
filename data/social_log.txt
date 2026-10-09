@@ -22,3 +22,10 @@
 10/09 18:00 story: 予約 / 0文字
 10/09 20:00 reel: 予約 / 239文字
 10/09 21:15 story: 予約 / 0文字
+--- 10:58 予約処理[x]: 空き枠 4 / 未予約 12
+15:00 single: 予約 / 267文字
+15:45 genre-baby: 失敗 Invalid post: Twitter / X posts cannot exceed 280 characters.
+16:30 furusato-top: 予約 / 267文字
+17:15 single: 予約 / 198文字
+--- 10:58 予約処理[threads]: 空き枠 7 / 未予約 0
+--- 10:58 予約処理[instagram]: 空き枠 6 / 未予約 0
