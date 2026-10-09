@@ -36,6 +36,7 @@ def plain(text):
     text = re.sub(r"を?(取り上げる|紹介する)よ?[。！!]?$", "です。", text)
     text = re.sub(r"(る|た)よ([。！!]|$)", r"\1\2", text)
     text = re.sub(r"いよ([。！!]|$)", r"いです\1", text)
+    text = re.sub(r"([ぁ-ん])よ([。！!]|$)", r"\1\2", text)  # 「届くよ。」→「届く。」
     return re.sub(r"^(これは|こちらは)[、,]?\s*", "", text.strip())
 
 
