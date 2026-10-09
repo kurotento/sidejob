@@ -101,7 +101,7 @@ def to_sheet(cfg, day, posts, out_dir):
 
 
 def youtube_posts(cfg, day, videos, at):
-    if cfg.get("youtube_via") != "buffer":
+    if cfg.get("youtube_via") != "buffer" or day < cfg.get("youtube_from", ""):
         return []
     out = []
     for (h, m), v in zip(YOUTUBE_TIMES, videos or []):
