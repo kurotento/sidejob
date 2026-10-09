@@ -1,12 +1,12 @@
 
 
-[food] 30件
-[beauty] 30件
+[food] 29件
+[beauty] 29件
 [appliances] 29件
 [interior] 30件
 [daily] 29件
 [baby] 30件
-[budget] 総合597件中 76件が条件に一致
+[budget] 総合594件中 76件が条件に一致
 [gemini] キーの確認: OK（gemini-3.5-flash-lite）
 [furusato:meat] 30件
 [furusato:seafood] 30件
@@ -24,4 +24,5 @@
 [shorts] shorts/2026-10-09-2.mp4 40秒 ふるさと納税
 お米の人気TOP3
 [shorts] 動画 2本
+[sns] Instagram 予約表に 4件追加
 [sns] Threads・Instagram 計画 7件
