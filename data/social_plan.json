@@ -244,7 +244,8 @@
    "text": "楽天 #PR\nふるさと納税の人気返礼品も楽天ROOMで一覧にしてるよ🎁\nレビューが多い定番を中心に\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -254,7 +255,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/fancl-shop/cabinet/marathon/m_20261002/3670-21_p5.jpg?_ex=600x600",
    "codes": [
     "fancl-shop:10009046"
-   ]
+   ],
+   "scheduled": true
   }
  ]
 }
