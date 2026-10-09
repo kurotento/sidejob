@@ -68,14 +68,17 @@ def room_comment(it, desc, tag, furusato=False, budget=False, body=None, n=0):
         body = fallback_body(desc, n)
     parts = [body or ""]
     stars = f"★{it['rating']:.1f}（{it['reviews']:,}件）" if it["reviews"] >= 10 else ""
+    # サイズ・色などで値段が変わる商品は、ROOM の表示（最安値〜）とずれるので値段を書かない
+    yen = "" if it.get("has_range") else f"{it['price']:,}円"
     if furusato:
-        parts.append(f"寄付額{it['price']:,}円｜{it['shop']} {stars}".strip())
+        parts.append(f"{'寄付額' + yen + '｜' if yen else ''}{it['shop']} {stars}".strip())
         tags = ["#ふるさと納税", "#楽天ふるさと納税", "#返礼品"] + ([f"#{tag}"] if tag and tag != "ふるさと納税" else [])
     else:
-        price = [f"{it['price']:,}円{'・送料無料' if budget else ''} {stars}",
-                 f"💰{it['price']:,}円{'（送料無料）' if budget else ''} {stars}",
-                 f"{stars} / {it['price']:,}円{'・送料込み' if budget else ''}"][n % 3]
-        parts.append(price.strip(" /"))
+        ship = ["・送料無料", "（送料無料）", "・送料込み"][n % 3] if budget else ""
+        if not yen:
+            ship = ship.strip("・（）")
+        price = [f"{yen}{ship} {stars}", f"💰{yen}{ship} {stars}", f"{stars} / {yen}{ship}"][n % 3]
+        parts.append((price if yen else price.replace("💰", "")).strip(" /"))
         base = [["#1000円台", "#送料無料", "#買い回り"], ["#買い回り", "#プチプラ", "#送料無料"],
                 ["#お買い物マラソン", "#楽天お買い物", "#送料無料"]][n % 3] if budget else ["#楽天ランキング"]
         tags = base + ([f"#{tag}"] if tag else [])

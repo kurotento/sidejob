@@ -120,12 +120,15 @@ def write(picks, descs, day):
         if not key:
             continue
         d = descs.get(it["code"]) or {"intro": it.get("caption", "")[:400]}
-        prompt = (f"ターゲットの悩み: {who}\n商品名: {short_name(it['name'], 60)}\n価格: {it['price']:,}円\n"
+        prompt = (f"ターゲットの悩み: {who}\n商品名: {short_name(it['name'], 60)}\n価格: {it['price']:,}円{'〜（種類によって変わるので、値段は書かない）' if it.get('has_range') else ''}\n"
                   f"レビュー: {it.get('reviews', 0):,}件 平均{it.get('rating', 0)}\n紹介文: {d.get('intro', '')}\n"
                   f"特徴: {' / '.join(d.get('features', []))}\n向いている人: {d.get('for_whom', '')}")
         for _ in range(2):
             try:
                 r = clean(call(prompt, key, model))
+                if r and it.get("has_range"):  # 値段が種類で変わる商品は、値段を書いた案を使わない
+                    r["patterns"] = [p for p in r["patterns"] if not re.search(r"\d[\d,]*円", p["text"])]
+                    r = r if r["patterns"] else None
             except urllib.error.HTTPError as ex:
                 if ex.code == 404 and model != MODELS[-1]:
                     model = MODELS[MODELS.index(model) + 1]
