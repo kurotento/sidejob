@@ -18,15 +18,22 @@ def paren(t):
 # 単語だけで探すと宣伝ボットの投稿ばかり出るので、困っている人の言い回しで探し、
 # リンク付き・#PR・プレゼント企画などを除外する
 NOISE = " lang:ja -filter:links -filter:retweets -PR -ROOM -アフィリエイト -プレゼント -キャンペーン -応募 -フォロー"
+# いつでも使う検索（これから買う・迷っている人が見つかる言い回し）
 SEARCHES = [
     ("ふるさと納税 どれにしよう", '"ふるさと納税" ("迷う" OR "迷って" OR "決まらない" OR "どれにしよう" OR "悩む" OR "悩んで")'),
     ("ふるさと納税 おすすめ教えて", '"ふるさと納税" ("おすすめ教えて" OR "オススメ教えて" OR "おすすめある" OR "おすすめありますか" OR "何がいい")'),
     ("ふるさと納税 よくわからない", '"ふるさと納税" ("わからない" OR "分からない" OR "よくわからん" OR "初めて" OR "やり方")'),
-    ("返礼品が届いた", '"ふるさと納税" ("届いた" OR "美味しかった" OR "おいしかった")'),
-    ("マラソン 何買うか迷う", '("買い回り" OR "お買い物マラソン" OR "楽天マラソン") ("何買う" OR "何買お" OR "買うもの" OR "決まらない")'),
-    ("あと1店舗たりない", '("あと1店舗" OR "あと一店舗" OR "あと1ショップ" OR "あと何店舗") ("楽天" OR "買い回り" OR "マラソン")'),
-    ("楽天 買ってよかった", '"楽天" ("買ってよかった" OR "買って良かった" OR "リピ買い")'),
+    ("楽天 おすすめ教えて", '"楽天" ("おすすめ教えて" OR "オススメ教えて" OR "おすすめ募" OR "何買えば" OR "何を買えば")'),
+    ("収納 どれがいい", '"収納" ("おすすめ教えて" OR "何がいい" OR "どれがいい" OR "迷ってる")'),
+    ("日用品 まとめ買い 迷う", '("日用品" OR "まとめ買い" OR "ストック") ("おすすめ教えて" OR "どこで買って" OR "どこで買う" OR "迷ってる")'),
 ]
+# 時期・セールに合わせて足す検索
+SEASON_SEARCHES = {
+    "year_end": ("ふるさと納税 年内に間に合う？", '"ふるさと納税" ("間に合う" OR "年内" OR "駆け込み" OR "まだしてない" OR "まだやってない")'),
+    "sale": [("マラソン 何買うか迷う", '("買い回り" OR "お買い物マラソン" OR "楽天マラソン" OR "スーパーセール") ("何買う" OR "何買お" OR "買うもの" OR "決まらない")'),
+             ("あと1店舗たりない", '("あと1店舗" OR "あと一店舗" OR "あと1ショップ" OR "あと何店舗") ("楽天" OR "買い回り" OR "マラソン")')],
+    "five": ("5と0のつく日 何買う", '("5と0のつく日" OR "0のつく日" OR "5のつく日") ("何買う" OR "何買お" OR "買うもの")'),
+}
 
 
 def nm(it, n=20):
@@ -46,16 +53,31 @@ def build(cfg, budget, fcats, day, out_dir):
     pool = sorted({it["code"]: it for c in fcats or [] for it in c["items"]}.values(), key=lambda x: -x["reviews"])
     under10k = [it for it in pool if it["price"] <= 10000]
 
+    from social import sale_tags
+    on_sale = bool(sale_tags([it["name"] for it in b]))
+    searches = list(SEARCHES)
+    if m in (10, 11, 12):
+        searches.insert(0, SEASON_SEARCHES["year_end"])
+    if on_sale:  # マラソン・スーパーセールの期間だけ
+        searches[:0] = SEASON_SEARCHES["sale"]
+    if d % 5 in (0, 4):  # 5と0のつく日の前日と当日
+        searches.append(SEASON_SEARCHES["five"])
+
     qa = []
-    if len(b) >= 2:
+    if len(b) >= 2 and on_sale:
         qa.append(("買い回り、あと1店舗なに買おう？",
                    f"迷ったら消耗品が無難です！今日の楽天だと「{nm(b[0])}」{yen(b[0])}や"
                    f"「{nm(b[1])}」{yen(b[1])}あたりが送料無料で売れてますよ #PR"))
+    if len(b) >= 2:
         qa.append(("1000円ちょうどくらいで送料無料のものない？",
                    f"1000円台で送料無料なら「{nm(b[2] if len(b) > 2 else b[0])}」がよく売れてます。"
                    "クーポンで1000円を下回らないよう、少し上の金額を選ぶのがコツです #PR"))
     qa.append(("お買い物マラソンっていつから？",
                "開催日は楽天の公式キャンペーンページで確認できます。エントリーが必要なので、始まる前に済ませておくと安心ですよ"))
+    if m in (10, 11, 12):
+        qa.insert(0, ("ふるさと納税、今からでも間に合う？",
+                      "その年の分は12月31日の寄付まで間に合います。年末は申し込みも配送も混むので、早めがおすすめです。"
+                      "ワンストップ特例を使うなら、申請書の締め切り（翌年1月10日必着）も忘れずに"))
     qa.append(("ポイントって何倍になるの？",
                "買い回りしたショップ数や、エントリーの有無、楽天カードの利用などで変わります。上限や条件は回ごとに違うので、公式ページで確認するのが確実です"))
     qa.append(("ふるさと納税、はじめてで何からやれば？",
@@ -77,10 +99,6 @@ def build(cfg, budget, fcats, day, out_dir):
         qa.append(("ふるさと納税、1万円以内でいいのある？",
                    f"1万円以内だと「{nm(under10k[0])}」{paren(yen(under10k[0], '寄付'))}や"
                    f"「{nm(under10k[1])}」{paren(yen(under10k[1], '寄付'))}がレビュー多めで人気です #PR"))
-    qa.append(("（返礼品が届いた・美味しかった という投稿に）",
-               "おいしそう！それ気になってました。量はどのくらいでした？参考にさせてください"))
-    qa.append(("（楽天で買ってよかった という投稿に）",
-               "それ良さそうですね！どのくらい使ってますか？自分も買い回りの候補に入れようか迷ってました"))
     qa.append(("ふるさと納税っていつまでにやればいい？",
                "その年の控除の対象になるのは12月31日までの寄付です。年末は申し込みも配送も混むので、早めがおすすめです"))
     qa.append(("ワンストップ特例ってなに？",
@@ -89,7 +107,7 @@ def build(cfg, budget, fcats, day, out_dir):
 
     search_links = "".join(
         f'<a class="s" href="https://x.com/search?q={urllib.parse.quote(q + NOISE)}&f=live" target="_blank" rel="noopener">🔍 {e(label)}</a>'
-        for label, q in SEARCHES)
+        for label, q in searches)
     cards = "".join(f"""<article class="c"><p class="q">Q. {e(q)}</p><textarea readonly rows="4">{e(a)}</textarea>
 <button onclick="cp(this)">返信文をコピー</button></article>""" for q, a in qa)
     page = f"""<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
