@@ -98,6 +98,10 @@ def build(cfg, day, videos, out_dir):
         f"<section><h2>{e(g)}</h2><div class='ls'>" + "".join(
             f'<a href="{e(u.format(**fill))}" target="_blank" rel="noopener">{e(name)}</a>' for name, u in items)
         + "</div></section>" for g, items in LINKS)
+    import design
+    plan = design.schedule(day, 3)
+    looks = "".join(f"<b>{'今' if i == 0 else f'{st.month}/{st.day}〜'}</b><span>{e(p['name'])}／声：{e(p['voice']['name'])}</span>"
+                    for i, (st, p) in enumerate(plan))
     page = f"""<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow"><title>らんくま ポータル</title><style>
 :root{{--bg:#f6f4f0;--card:#fff;--ink:#1d1d1f;--sub:#6e6e73;--red:#bf0000;--ok:#1f8a4c;--ng:#b42318;--line:#e6e2da}}
@@ -116,6 +120,8 @@ label{{display:grid;grid-template-columns:22px 86px 1fr;gap:4px 8px;align-items:
 <section><h2>✅ 今日のやること</h2><div class="bar"><i id="pg"></i></div><ul id="todo">{rows}</ul></section>
 <section><h2>🤖 自動投稿の状態</h2><div class="st" id="st"><span>読み込み中…</span></div>
 <p style="font-size:.75rem;color:var(--sub);margin:8px 0 0">GitHub の記録から読んでいます。失敗があれば赤く出ます。</p></section>
+<section><h2>🎨 画像・動画のデザイン</h2><div class="st">{looks}</div>
+<p style="font-size:.75rem;color:var(--sub);margin:8px 0 0">{design.PERIOD_DAYS}日ごとに自動で切り替わります（X の画像・Pinterest・ショート動画）。</p></section>
 {groups}
 </main>
 <script>

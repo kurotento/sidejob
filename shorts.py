@@ -1,6 +1,7 @@
 """YouTube ショート動画（縦1080x1920）を毎日作る.
 
-- 商品画像のスライド＋ずんだもん（VOICEVOX）の読み上げ。ffmpeg で mp4 にする
+- 商品画像のスライド＋VOICEVOX の読み上げ。ffmpeg で mp4 にする
+- 見た目・動き・BGM・声は design.py の型で2週間ごとに切り替わる
 - アップロードはユーザーが YouTube アプリで行う（API の自動アップロードは審査前は非公開に固定されるため）
 - public/shorts.html に動画・タイトル・説明文をまとめる（検索除外）
 VOICEVOX は GitHub Actions のサービスコンテナ（http://127.0.0.1:50021）で動かす。
@@ -17,20 +18,15 @@ import urllib.request
 import wave
 from pathlib import Path
 
+import design
 from articles import short_name
 from social import FONTS, fetch_image
 
 VOICEVOX = "http://127.0.0.1:50021"
 W, H = 1080, 1920
 PER_DAY = 4
-CREDIT = "VOICEVOX:ずんだもん"
+PAT = design.PATTERNS[0]  # build() でその日の型に差し替える
 e = html.escape
-
-THEMES = {
-    "red": ((165, 0, 0), (214, 0, 47), (255, 59, 92)),
-    "green": ((6, 92, 56), (11, 122, 75), (43, 181, 124)),
-}
-
 
 # ---------- 音声 ----------
 
@@ -45,21 +41,28 @@ def voicevox_ready(timeout=180):
     return False
 
 
-def zundamon_id():
+def credit():
+    return f"VOICEVOX:{PAT['voice']['name']}"
+
+
+def speaker_id(name, style="ノーマル"):
+    """VOICEVOX の話者番号。見つからないときはずんだもん（3）にする."""
     with urllib.request.urlopen(VOICEVOX + "/speakers", timeout=30) as r:
-        for sp in json.load(r):
-            if sp["name"] == "ずんだもん":
-                for st in sp["styles"]:
-                    if st["name"] == "ノーマル":
-                        return st["id"]
-    return 3
+        speakers = json.load(r)
+    for sp in speakers:
+        if sp["name"] == name:
+            for st in sp["styles"]:
+                if st["name"] == style:
+                    return st["id"]
+            return sp["styles"][0]["id"]
+    return None
 
 
 def synth(text, speaker, path):
     q = urllib.parse.urlencode({"text": text, "speaker": speaker})
     with urllib.request.urlopen(urllib.request.Request(f"{VOICEVOX}/audio_query?{q}", method="POST"), timeout=60) as r:
         query = json.load(r)
-    query["speedScale"] = 1.15
+    query["speedScale"] = PAT["voice"]["speed"]
     req = urllib.request.Request(f"{VOICEVOX}/synthesis?speaker={speaker}", data=json.dumps(query).encode(),
                                  headers={"Content-Type": "application/json"}, method="POST")
     with urllib.request.urlopen(req, timeout=120) as r:
@@ -82,6 +85,11 @@ def speakable(name, limit=22):
 
 # ---------- 画像 ----------
 
+def hfont(size):
+    """見出し用（型によって明朝になる）."""
+    return design.font(PAT, size, head=True)
+
+
 def font(size):
     from PIL import ImageFont
     for f in FONTS:
@@ -92,7 +100,7 @@ def font(size):
 
 def background(theme):
     from PIL import Image
-    c1, c2, c3 = THEMES[theme]
+    c1, c2, c3 = PAT["grad"][theme]
     img = Image.new("RGB", (W, H))
     px = img.load()
     for y in range(H):
@@ -112,7 +120,7 @@ def wrap(draw, text, f, width, lines):
         return out[:lines]
     out, cur = [], ""
     for ch in text:
-        if draw.textlength(cur + ch, font=f) > width:
+        if draw.textlength(cur + ch, font=f) > width and ch not in "、。！？!?）」ー":  # 句読点だけの行を作らない
             out.append(cur)
             cur = ch
             if len(out) == lines:
@@ -160,88 +168,20 @@ def bear(d, ox, oy, s, mouth=0.0, blink=False):
     circ(19, 42, 2.6, (240, 138, 138)); circ(45, 42, 2.6, (240, 138, 138))  # noqa: E702
 
 
-def title_slide(bg, title, sub, path, seed=0):
-    from PIL import ImageDraw
-    img = bg.copy()
-    d = ImageDraw.Draw(img)
-    pr_badge(d)
-    d.ellipse([W // 2 - 190, 230, W // 2 + 190, 610], fill=(255, 247, 230))
-    bear(d, W // 2 - 32 * 4.6, 420 - 33 * 4.6, 4.6)
-    size = 110  # 改行指定した各行が1行に収まるまで文字を小さくする
-    while size > 60 and any(d.textlength(t, font=font(size)) > W - 120 for t in title.split("\n")):
-        size -= 6
-    y = 720
-    for line in wrap(d, title, font(size), W - 120, 3):
-        d.text((W // 2, y), line, font=font(size), fill=(255, 255, 255), anchor="mm", stroke_width=6,
-               stroke_fill=(90, 0, 10))
-        y += int(size * 1.3)
-    d.rounded_rectangle([W // 2 - 300, y + 10, W // 2 + 300, y + 110], radius=50, fill=(255, 255, 255))
-    d.text((W // 2, y + 60), sub, font=font(52), fill=(30, 30, 30), anchor="mm")
-    d.text((W // 2, y + 220), "3位から発表！", font=font(80), fill=(255, 226, 90), anchor="mm", stroke_width=6,
-           stroke_fill=(90, 0, 10))
-    img.save(path)
-
-
-def item_slide(bg, rank, it, price_label, note, theme, path, text=""):
-    """上部に字幕、その下に商品カード。ショートの表示が重なる下部約400px・右端は避ける."""
-    from PIL import ImageDraw
-    img = bg.copy()
-    d = ImageDraw.Draw(img)
-    pr_badge(d)
-    medal = {1: (217, 164, 0), 2: (154, 165, 177), 3: (185, 114, 46)}[rank]
-    top = max(caption(d, text, 140, 54) + 20, 360) if text else 200  # 上部に読み上げの字幕
-    d.rounded_rectangle([50, top, W - 50, 1470], radius=44, fill=(255, 255, 255))
-    box = min(620, 1470 - top - 470)
-    pic = fetch_image(it.get("image"))
-    if pic:
-        scale = box / max(pic.width, pic.height)
-        pic = pic.resize((int(pic.width * scale), int(pic.height * scale)))
-        img.paste(pic, ((W - pic.width) // 2, top + 30 + (box - pic.height) // 2))
-    d.ellipse([70, top - 30, 250, top + 150], fill=medal, outline=(255, 255, 255), width=8)
-    d.text((160, top + 50), f"{rank}", font=font(100), fill=(255, 255, 255), anchor="mm")
-    d.text((160, top + 122), "位", font=font(36), fill=(255, 255, 255), anchor="mm")
-    y = top + box + 50
-    for line in wrap(d, short_name(it["name"], 60), font(50), 820, 2):
-        d.text((90, y), line, font=font(50), fill=(29, 29, 31))
-        y += 66
-    accent = THEMES[theme][1]
-    if price_label:
-        d.text((90, 1225), price_label, font=font(40), fill=(110, 110, 115))
-    d.text((90, 1260), price_text(it), font=font(120), fill=accent)
-    if note:
-        tw = min(d.textlength(note, font=font(44)), 760)
-        d.rounded_rectangle([90 + 0, 1395, 90 + tw + 52, 1455], radius=16, fill=accent)
-        d.text((116, 1400), note, font=font(44), fill=(255, 255, 255))
-    img.save(path)
-
-
-def end_slide(bg, line1, path):
-    from PIL import ImageDraw
-    img = bg.copy()
-    d = ImageDraw.Draw(img)
-    pr_badge(d)
-    d.ellipse([W // 2 - 170, 260, W // 2 + 170, 600], fill=(255, 247, 230))
-    bear(d, W // 2 - 32 * 4.2, 430 - 33 * 4.2, 4.2)
-    for y, (t, s) in zip((760, 900, 1040), (("くわしくは", 90), ("プロフィールの", 110), ("リンクから！", 110))):
-        d.text((W // 2, y), t, font=font(s), fill=(255, 255, 255), anchor="mm", stroke_width=6, stroke_fill=(90, 0, 10))
-    d.text((W // 2, 1200), line1, font=font(48), fill=(255, 240, 240), anchor="mm")
-    d.text((W // 2, 1400), CREDIT, font=font(36), fill=(255, 235, 235), anchor="mm")
-    img.save(path)
-
-
 # ---------- BGM（自作。外部音源の再配布規約を気にしなくてよいように毎回プログラムで作る） ----------
 
 def make_bgm(seconds, path, seed=0):
-    """明るいポップ調のループ（BPM120、I-V-vi-IV）を作って WAV に保存する."""
+    """ループする BGM を作って WAV に保存する。テンポ・コード進行・音色は型ごとに違う."""
     import numpy as np
-    sr, bpm = 44100, 120
+    style = PAT["bgm"]
+    sr, bpm = 44100, style["bpm"]
     beat = 60 / bpm
     n = int(sr * (seconds + 1))
     t = np.arange(n) / sr
     out = np.zeros(n)
     keys = [0, 2, 5, 7]  # 日替わりで調を変える
     root = 261.63 * 2 ** (keys[seed % len(keys)] / 12)
-    prog = [[0, 4, 7], [7, 11, 14], [9, 12, 16], [5, 9, 12]]  # C G Am F
+    prog = style["prog"]
     bar = beat * 4
 
     def tone(freq, start, dur, vol, shape="sine"):
@@ -253,6 +193,10 @@ def make_bgm(seconds, path, seed=0):
         wave_ = np.sin(2 * np.pi * freq * tt)
         if shape == "pluck":
             wave_ = wave_ + 0.4 * np.sin(4 * np.pi * freq * tt)
+        elif shape == "bell":  # 鉄琴っぽい
+            wave_ = wave_ + 0.5 * np.sin(2 * np.pi * freq * 3 * tt) * np.exp(-tt * 4)
+        elif shape == "square":  # ピコピコしたゲーム音
+            wave_ = 0.6 * np.sign(wave_)
         out[i0:i1] += vol * env * wave_
 
     k = 0
@@ -261,14 +205,14 @@ def make_bgm(seconds, path, seed=0):
         s = k * bar
         for j in range(8):  # 8分音符のアルペジオ
             semi = chord[j % 3] + (12 if j % 4 == 3 else 0)
-            tone(root * 2 ** (semi / 12), s + j * beat / 2, beat / 2, 0.16, "pluck")
+            tone(root * 2 ** (semi / 12), s + j * beat / 2, beat / 2, 0.16, style["shape"])
         for j in range(4):  # ベース
             tone(root / 2 * 2 ** (chord[0] / 12), s + j * beat, beat * 0.9, 0.22)
         for j in range(4):  # キックとハイハット
             i0 = int((s + j * beat) * sr)
             if i0 < n:
                 kk = np.arange(min(int(0.15 * sr), n - i0)) / sr
-                out[i0:i0 + len(kk)] += 0.5 * np.sin(2 * np.pi * (110 - 400 * kk) * kk) * np.exp(-kk * 25)
+                out[i0:i0 + len(kk)] += style["kick"] * np.sin(2 * np.pi * (110 - 400 * kk) * kk) * np.exp(-kk * 25)
             h0 = int((s + j * beat + beat / 2) * sr)
             if h0 < n:
                 ln = min(int(0.04 * sr), n - h0)
@@ -298,90 +242,6 @@ def caption(d, text, y0=150, size=56, cx=W // 2, width=W - 200):
     return y
 
 
-def confetti(d, seed, area=(0, 0, W, H), count=60):
-    import random
-    rnd = random.Random(seed)
-    cols = [(255, 214, 0), (255, 255, 255), (0, 200, 255), (255, 120, 180), (120, 230, 120)]
-    for _ in range(count):
-        x, y = rnd.randint(area[0], area[2]), rnd.randint(area[1], area[3])
-        w_, h_ = rnd.randint(10, 22), rnd.randint(18, 34)
-        c = rnd.choice(cols)
-        if rnd.random() < 0.5:
-            d.rectangle([x, y, x + w_, y + h_], fill=c)
-        else:
-            d.ellipse([x, y, x + w_, y + w_], fill=c)
-
-
-def confetti_frames(base_png, seconds, out_dir, seed=0, count=90):
-    """静止画の上に、紙吹雪がひらひら降ってくるフレーム列（30fps）を作る."""
-    import math
-    import random
-    from PIL import Image, ImageDraw
-    rnd = random.Random(seed)
-    cols = [(255, 214, 0), (255, 255, 255), (0, 200, 255), (255, 120, 180), (120, 230, 120)]
-    parts = [dict(x=rnd.uniform(0, W), y=rnd.uniform(-H * 0.9, -20), v=rnd.uniform(500, 950),
-                  sway=rnd.uniform(20, 60), ph=rnd.uniform(0, 6.3), w=rnd.randint(14, 26), h=rnd.randint(22, 40),
-                  c=rnd.choice(cols), round=rnd.random() < 0.35) for _ in range(count)]
-    base = Image.open(base_png).convert("RGB")
-    frames = int(seconds * 30)
-    out_dir.mkdir(parents=True, exist_ok=True)
-    for f in range(frames):
-        t = f / 30
-        img = base.copy()
-        d = ImageDraw.Draw(img)
-        for p in parts:
-            y = p["y"] + p["v"] * t
-            if y > H + 50:
-                continue
-            x = p["x"] + p["sway"] * math.sin(p["ph"] + t * 4)
-            flip = abs(math.cos(p["ph"] + t * 6))  # くるくる回って見えるよう幅を変える
-            w_ = max(3, int(p["w"] * flip))
-            if p["round"]:
-                d.ellipse([x, y, x + p["w"], y + p["w"]], fill=p["c"])
-            else:
-                d.rectangle([x, y, x + w_, y + p["h"]], fill=p["c"])
-        img.save(out_dir / f"f{f:04d}.jpg", quality=88)
-    return out_dir / "f%04d.jpg"
-
-
-def make_video(slides, out_path, work, seed=0):
-    """slides: [(画像パス, 音声パス, 秒)]。ゆっくりズーム＋切り替え時のフラッシュ、BGM付きで mp4 にする."""
-    segs = []
-    for i, (img, wav, sec, *opt) in enumerate(slides):
-        dur = sec + 0.35
-        frames = int(dur * 30)
-        seg = work / f"seg{i}.mp4"
-        if opt and opt[0]:  # 紙吹雪のアニメーション（ズームなし）
-            pattern = confetti_frames(img, dur, work / f"fr{i}", seed + i)
-            subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-framerate", "30", "-i", str(pattern), "-i", str(wav),
-                            "-vf", "fade=t=in:st=0:d=0.18:color=white,format=yuv420p", "-c:v", "libx264",
-                            "-preset", "veryfast", "-r", "30", "-c:a", "aac", "-ar", "44100", "-b:a", "128k",
-                            "-t", f"{dur:.2f}", "-af", "apad", str(seg)], check=True)
-            segs.append(seg)
-            continue
-        vf = (f"scale=1296:2304,zoompan=z='min(zoom+0.0005,1.05)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)'"
-              f":d={frames}:s={W}x{H}:fps=30,fade=t=in:st=0:d=0.18:color=white,format=yuv420p")
-        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-loop", "1", "-i", str(img), "-i", str(wav),
-                        "-vf", vf, "-c:v", "libx264", "-preset", "veryfast", "-r", "30",
-                        "-c:a", "aac", "-ar", "44100", "-b:a", "128k", "-t", f"{dur:.2f}", "-af", "apad",
-                        str(seg)], check=True)
-        segs.append(seg)
-    lst = work / "list.txt"
-    lst.write_text("".join(f"file '{s.as_posix()}'\n" for s in segs), encoding="utf-8")
-    voice = work / "voice.mp4"
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", str(lst),
-                    "-c", "copy", str(voice)], check=True)
-    total = sum(s[2] + 0.35 for s in slides)
-    bgm = work / "bgm.wav"
-    make_bgm(total, bgm, seed)
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    # 声はそのまま、BGMは小さめに重ねる
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(voice), "-i", str(bgm),
-                    "-filter_complex", "[1:a]volume=0.13[b];[0:a][b]amix=inputs=2:duration=first:normalize=0[a]",
-                    "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "160k",
-                    "-movflags", "+faststart", str(out_path)], check=True)
-
-
 # ---------- アニメーション（全スライドをフレームごとに描く） ----------
 
 FPS = 30
@@ -399,18 +259,52 @@ def bounce(x):
 
 
 def stripes_bg(theme):
-    """斜めストライプ入りの背景（流れて見えるよう少し大きめに作り、毎フレームずらして切り出す）."""
+    """模様入りの背景（流れて見えるよう少し大きめに作り、毎フレームずらして切り出す）。模様は型ごとに違う."""
     from PIL import ImageDraw
     big = background(theme).resize((W + 240, H + 240))
     d = ImageDraw.Draw(big, "RGBA")
-    for k in range(-H, W + H, 120):
-        d.polygon([(k, 0), (k + 60, 0), (k + 60 - H - 240, H + 240), (k - H - 240, H + 240)], fill=(255, 255, 255, 22))
+    kind, BW, BH = PAT["overlay"], W + 240, H + 240
+    if kind == "stripes":
+        for k in range(-H, W + H, 120):
+            d.polygon([(k, 0), (k + 60, 0), (k + 60 - BH, BH), (k - BH, BH)], fill=(255, 255, 255, 22))
+    elif kind == "dots":
+        for y in range(0, BH, 60):
+            for x in range((y // 60) % 2 * 30, BW, 60):
+                d.ellipse([x - 9, y - 9, x + 9, y + 9], fill=(255, 255, 255, 50))
+    elif kind == "grid":
+        for k in range(0, max(BW, BH), 120):
+            d.line([(k, 0), (k, BH)], fill=(255, 255, 255, 30), width=3)
+            d.line([(0, k), (BW, k)], fill=(255, 255, 255, 30), width=3)
+    else:  # checker
+        for y in range(0, BH, 60):
+            for x in range((y // 60) % 2 * 60, BW, 120):
+                d.rectangle([x, y, x + 59, y + 59], fill=(255, 255, 255, 10))
     return big
 
 
 def bg_at(big, t):
     off = int((t * 90) % 120)
     return big.crop((off, off, off + W, off + H))
+
+
+def place(img, lay, x, y, t):
+    """レイヤーを左上 (x, y) に、型ごとの登場のしかたで貼る（t は登場からの経過秒）."""
+    if t <= 0:
+        return
+    kind = PAT["enter"]
+    if kind == "slide":  # 右からスライド
+        img.paste(lay, (x + int((1 - ease_out(t / 0.35)) * W), y), lay)
+    elif kind == "rise":  # 下からふわっと
+        img.paste(lay, (x, y + int((1 - ease_out(t / 0.45)) * 700)), lay)
+    elif kind == "drop":  # 上から落ちて弾む
+        img.paste(lay, (x, y - int((1 - bounce(t / 0.5)) * 900)), lay)
+    else:  # zoom：ポンッと拡大
+        paste_scaled(img, lay, x + lay.width / 2, y + lay.height / 2, bounce(t / 0.4))
+
+
+def on(color):
+    """色の上に乗せる文字の色（明るい色なら黒っぽく）."""
+    return (30, 30, 30) if sum(color) > 520 else (255, 255, 255)
 
 
 def layer(size):
@@ -442,7 +336,7 @@ def draw_confetti(d, parts, t):
 def confetti_parts(seed, count=90):
     import random
     rnd = random.Random(seed)
-    cols = [(255, 214, 0), (255, 255, 255), (0, 200, 255), (255, 120, 180), (120, 230, 120)]
+    cols = PAT["confetti"]
     return [dict(x=rnd.uniform(0, W), y=rnd.uniform(-H * 0.9, -20), v=rnd.uniform(500, 950),
                  sway=rnd.uniform(20, 60), ph=rnd.uniform(0, 6.3), w=rnd.randint(14, 26), h=rnd.randint(22, 40),
                  c=rnd.choice(cols), round=rnd.random() < 0.35) for _ in range(count)]
@@ -475,7 +369,7 @@ class Talker:
                 lay = layer((size, size))
                 d = ImageDraw.Draw(lay)
                 if ring:
-                    d.ellipse([4, 4, size - 4, size - 4], fill=(255, 247, 230), outline=(255, 255, 255), width=8)
+                    d.ellipse([4, 4, size - 4, size - 4], fill=PAT["ring"], outline=(255, 255, 255), width=8)
                 s = size / 80
                 bear(d, size / 2 - 32 * s, size / 2 - 31 * s, s, mouth=lv / 3, blink=blink)
                 self.sprites[(blink, lv)] = lay
@@ -514,12 +408,23 @@ def sub_at(chunks, t, dur):
 
 def draw_sub(d, text):
     """普通のショート動画と同じく、画面下側（YouTube のタイトル表示より上）に字幕を出す."""
-    f = font(58)
-    lines = wrap(d, text.rstrip("、"), f, 860, 2)
-    y = 1600 - (len(lines) - 1) * 76
+    text = text.rstrip("、。")
+    size = 58
+    while size > 44 and d.textlength(text, font=font(size)) > 860 * 2:  # 2行に収まるまで小さくする
+        size -= 4
+    f = font(size)
+    lines = wrap(d, text, f, 860, 2)
+    if len(lines) == 2:  # 句読点で切れるなら、そこで2行に分ける（言葉の途中で改行しない）
+        cuts = [i + 1 for i, ch in enumerate(text[:-1]) if ch in "、。！？"]
+        fit = [i for i in cuts if d.textlength(text[:i], font=f) <= 860 and d.textlength(text[i:], font=f) <= 860]
+        if fit:
+            i = min(fit, key=lambda i: abs(i - len(text) / 2))
+            lines = [text[:i], text[i:]]
+    step = int(size * 1.3)
+    y = 1600 - (len(lines) - 1) * step
     for line in lines:
         d.text((W // 2 - 30, y), line, font=f, fill=(255, 255, 255), anchor="mm", stroke_width=9, stroke_fill=(15, 15, 15))
-        y += 76
+        y += step
 
 
 def anim_title(theme, title, sub, dur, out, seed, mouth=(), text=""):
@@ -533,8 +438,8 @@ def anim_title(theme, title, sub, dur, out, seed, mouth=(), text=""):
     while size > 60 and any(td.textlength(x, font=font(size)) > W - 120 for x in title.split("\n")):
         size -= 6
     y = 70
-    for line in wrap(td, title, font(size), W - 120, 3):
-        td.text((W // 2, y), line, font=font(size), fill=(255, 255, 255), anchor="mm", stroke_width=7, stroke_fill=(90, 0, 10))
+    for line in wrap(td, title, hfont(size), W - 120, 3):
+        td.text((W // 2, y), line, font=hfont(size), fill=(255, 255, 255), anchor="mm", stroke_width=7, stroke_fill=PAT['stroke'][theme])
         y += int(size * 1.3)
     td.rounded_rectangle([W // 2 - 300, y + 10, W // 2 + 300, y + 110], radius=50, fill=(255, 255, 255))
     td.text((W // 2, y + 60), sub, font=font(52), fill=(30, 30, 30), anchor="mm")
@@ -546,13 +451,11 @@ def anim_title(theme, title, sub, dur, out, seed, mouth=(), text=""):
         img = bg_at(big, t).convert("RGB")
         sprite, bob = talker.frame(t, mouth[f] if f < len(mouth) else 0)
         paste_scaled(img, sprite, W // 2, 420 + bob, bounce(t / 0.45))
-        dy = int((1 - ease_out((t - 0.2) / 0.35)) * -300)
-        if t > 0.2:
-            img.paste(text_l, (0, 650 + dy), text_l)
+        place(img, text_l, 0, 650, t - 0.2)
         d = ImageDraw.Draw(img)
         if t > 0.7 and int(t * 4) % 2 == 0:  # 「3位から発表！」を点滅
-            d.text((W // 2, hook_y), "3位から発表！", font=font(84), fill=(255, 226, 90), anchor="mm",
-                   stroke_width=7, stroke_fill=(90, 0, 10))
+            d.text((W // 2, hook_y), "3位から発表！", font=font(84), fill=PAT["hook"], anchor="mm",
+                   stroke_width=7, stroke_fill=PAT['stroke'][theme])
         draw_confetti(d, parts, t)
         if chunks:
             draw_sub(d, sub_at(chunks, t, dur))
@@ -571,7 +474,9 @@ def anim_item(theme, rank, it, price_label, note, text, dur, out, seed, mouth=()
     card_h = 1470 - top
     card = layer((W - 100, card_h))
     kd = ImageDraw.Draw(card)
-    kd.rounded_rectangle([0, 0, W - 101, card_h - 1], radius=44, fill=(255, 255, 255))
+    kd.rounded_rectangle([0, 0, W - 101, card_h - 1], radius=44 if PAT["enter"] != "zoom" else 70, fill=PAT["vcard"])
+    if sum(PAT["vcard"]) < 300:  # 暗いカードは、商品画像の部分だけ白くする
+        kd.rounded_rectangle([30, 20, W - 131, 20 + min(620, card_h - 470) + 20], radius=30, fill=(255, 255, 255))
     box = min(620, card_h - 470)
     pic = fetch_image(it.get("image"))
     if pic:
@@ -580,15 +485,15 @@ def anim_item(theme, rank, it, price_label, note, text, dur, out, seed, mouth=()
         card.paste(pic, ((W - 100 - pic.width) // 2, 30 + (box - pic.height) // 2))
     y = box + 50
     for line in wrap(kd, short_name(it["name"], 60), font(50), 820, 2):
-        kd.text((40, y), line, font=font(50), fill=(29, 29, 31))
+        kd.text((40, y), line, font=hfont(50), fill=PAT["vink"])
         y += 66
-    accent = THEMES[theme][1]
+    accent = PAT["accent"][theme]
     if price_label:
-        kd.text((40, 1172 - top), price_label, font=font(40), fill=(110, 110, 115))
+        kd.text((40, 1172 - top), price_label, font=font(40), fill=PAT["muted"])
     if note:
         tw = min(kd.textlength(note, font=font(44)), 760)
         kd.rounded_rectangle([40, 1395 - top, 40 + tw + 52, 1455 - top], radius=16, fill=accent)
-        kd.text((66, 1400 - top), note, font=font(44), fill=(255, 255, 255))
+        kd.text((66, 1400 - top), note, font=font(44), fill=on(accent))
     medal = {1: (217, 164, 0), 2: (154, 165, 177), 3: (185, 114, 46)}[rank]
     badge = layer((200, 200))
     bdg = ImageDraw.Draw(badge)
@@ -603,8 +508,7 @@ def anim_item(theme, rank, it, price_label, note, text, dur, out, seed, mouth=()
     for f in range(int(dur * FPS)):
         t = f / FPS
         img = bg_at(big, t).convert("RGB")
-        dx = int((1 - ease_out(t / 0.35)) * W)  # 右からスライドイン
-        img.paste(card, (50 + dx, top), card)
+        place(img, card, 50, top, t)
         if t > 0.6:  # 価格がドンッと出る
             s = 1 + 0.6 * (1 - ease_out((t - 0.6) / 0.25))
             paste_scaled(img, price_l, 90 + 450 * s, 1300, s)
@@ -639,10 +543,12 @@ def anim_end(theme, line1, dur, out, mouth=(), text=""):
         d = ImageDraw.Draw(img)
         s = 1 + 0.05 * math.sin(t * 8)  # 文字が脈打つ
         for y, (txt, sz) in zip((760, 900, 1040), (("くわしくは", 90), ("プロフィールの", 110), ("リンクから！", 110))):
-            d.text((W // 2, y), txt, font=font(int(sz * s)), fill=(255, 255, 255), anchor="mm", stroke_width=7,
-                   stroke_fill=(90, 0, 10))
-        d.text((W // 2, 1200), line1, font=font(48), fill=(255, 240, 240), anchor="mm")
-        d.text((W // 2, 1400), CREDIT, font=font(36), fill=(255, 235, 235), anchor="mm")
+            d.text((W // 2, y), txt, font=hfont(int(sz * s)), fill=(255, 255, 255), anchor="mm", stroke_width=7,
+                   stroke_fill=PAT['stroke'][theme])
+        d.text((W // 2, 1200), line1, font=font(48), fill=(255, 255, 255), anchor="mm", stroke_width=5,
+               stroke_fill=PAT['stroke'][theme])
+        d.text((W // 2, 1400), credit(), font=font(36), fill=(255, 255, 255), anchor="mm", stroke_width=4,
+               stroke_fill=PAT['stroke'][theme])
         if chunks:
             draw_sub(d, sub_at(chunks, t, dur))
         pr_badge(d)
@@ -725,7 +631,7 @@ UNITS = [  # 長いものから順に置き換える
 ]
 
 SPOKEN_PROMPT = """あなたは日本語の音声合成（読み上げ）用の原稿を作る係です。
-楽天市場の商品名を、ずんだもん（音声合成）が自然に読み上げられる短い商品名に書き直してください。
+楽天市場の商品名を、音声合成が自然に読み上げられる短い商品名に書き直してください。
 
 ルール:
 - 何の商品かがわかる最小限にする（15〜25文字程度）。宣伝文句・型番・色やサイズの羅列は省く
@@ -900,7 +806,7 @@ def description(t, day, site):
         lines.append(f"{i + 1}位 {short_name(it['name'], 40)}｜{price}")
     lines += ["", "▶くわしくはプロフィールのリンクから", site, "",
               "※価格・寄付額は動画作成時点のものです。最新情報は販売ページでご確認ください。",
-              "※楽天アフィリエイトを利用しています（PR）", CREDIT, "",
+              "※楽天アフィリエイトを利用しています（PR）", credit(), "",
               f"#Shorts #PR #楽天 #{t['tag']}" + (" #楽天ふるさと納税" if t["theme"] == "green" else " #楽天市場")]
     return "\n".join(lines)
 
@@ -909,7 +815,15 @@ def build(cfg, results, budget, fcats, day, out_dir, log):
     if not voicevox_ready():
         log.append("[shorts] VOICEVOX に接続できないため動画作成をスキップ")
         return []
-    spk = zundamon_id()
+    global PAT
+    PAT = design.pattern(day, cfg)
+    spk = speaker_id(PAT["voice"]["name"], PAT["voice"]["style"])
+    if spk is None:  # その声が VOICEVOX にないときはずんだもんに戻す
+        log.append(f"[shorts] {PAT['voice']['name']} の声が見つからないため、ずんだもんで作成")
+        PAT = {**PAT, "voice": design.PATTERNS[0]["voice"]}
+        spk = speaker_id("ずんだもん") or 3
+    log.append(f"[shorts] デザイン：{PAT['name']}／声：{PAT['voice']['name']}")
+    say = lambda x: design.tone(PAT, x)  # noqa: E731
     reading = json.loads(SPOKEN_CACHE.read_text(encoding="utf-8")) if SPOKEN_CACHE.exists() else {}
     m, d = int(day[5:7]), int(day[8:10])
     site = cfg["base_url"].rstrip("/") + "/"
@@ -920,20 +834,20 @@ def build(cfg, results, budget, fcats, day, out_dir, log):
                 work = Path(tmp)
                 slides = []
                 a = work / "s0.wav"
-                sec = synth(t["intro"], spk, a) + 0.4
+                sec = synth(say(t["intro"]), spk, a) + 0.4
                 ev = anim_title(t["theme"], t["title"], f"{m}月{d}日時点", sec, work / "f0", seed=n,
-                                mouth=mouth_curve(a, sec), text=t["intro"])
+                                mouth=mouth_curve(a, sec), text=say(t["intro"]))
                 slides.append((work / "f0", a, sec, ev))
                 for rank in (3, 2, 1):  # 3位から発表
                     it, note = t["items"][rank - 1]
                     a = work / f"s{rank}.wav"
-                    text = f"{'第' if rank > 1 else '堂々の第'}{rank}位は、{spoken_name(it, reading)}。{t['say'](it)}"
+                    text = say(f"{'第' if rank > 1 else '堂々の第'}{rank}位は、{spoken_name(it, reading)}。{t['say'](it)}")
                     sec = synth(text, spk, a) + 0.4
                     ev = anim_item(t["theme"], rank, it, t["label"], note, text, sec, work / f"f{rank}",
                                    seed=n * 10 + rank, mouth=mouth_curve(a, sec))
                     slides.append((work / f"f{rank}", a, sec, ev))
                 a = work / "s9.wav"
-                end_text = "気になったら、プロフィールのリンクからチェックするのだ！"
+                end_text = say("気になったら、プロフィールのリンクからチェックするのだ！")
                 sec = synth(end_text, spk, a) + 0.4
                 ev = anim_end(t["theme"], "楽天ランキング速報" if t["theme"] == "red" else "ふるさと納税 人気返礼品ランキング",
                               sec, work / "f9", mouth=mouth_curve(a, sec), text=end_text)
