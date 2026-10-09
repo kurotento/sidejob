@@ -705,7 +705,7 @@ def create(key, post, channel, meta="", notify=False):
 INSTA_META = {"feed": "{instagram: {type: post, shouldShareToFeed: true}}",
               "reel": "{instagram: {type: reel, shouldShareToFeed: true}}",
               "story": "{instagram: {type: story, shouldShareToFeed: false}}"}
-SERVICES = {"x": ("twitter", "x"), "threads": ("threads",), "instagram": ("instagram",)}
+SERVICES = {"x": ("twitter", "x"), "threads": ("threads",), "instagram": ("instagram",), "youtube": ("youtube",)}
 SNS_PLAN = DATA / "sns_plan.json"
 SCHEMA = DATA / "buffer_schema.txt"
 
@@ -758,6 +758,8 @@ def schedule(key, posts, service, log, posted, day):
             log.append(f"{post['time']} {post['kind']}: 失敗 画像が公開されていない")
             continue
         meta = INSTA_META.get(post["kind"], "") if service == "instagram" else ""
+        if service == "youtube":  # タイトル必須。カテゴリはハウツー・スタイル、子ども向けではない、公開
+            meta = "{youtube: {title: %s, categoryId: \"26\", privacy: public, madeForKids: false, notifySubscribers: true}}" % json.dumps(post.get("title", ""))
         if service == "threads" and post.get("reply"):  # 本文＋自分への返信（リンク）のスレッドにする
             items = ", ".join("{text: %s, assets: []}" % json.dumps(t) for t in (post["text"], post["reply"]))
             meta = "{threads: {type: thread, thread: [%s]}}" % items
@@ -813,7 +815,7 @@ def run_plan():
             log_schema(key)
         except Exception:  # noqa: BLE001
             pass
-        for service in ("threads", "instagram"):
+        for service in ("threads", "instagram", "youtube"):
             schedule(key, [x for x in sp["posts"] if x["service"] == service], service, log, posted, day)
         SNS_PLAN.write_text(json.dumps(sp, ensure_ascii=False, indent=1), encoding="utf-8")
     cutoff = (dt.date.fromisoformat(day) - dt.timedelta(days=7)).isoformat()
