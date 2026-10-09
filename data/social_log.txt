@@ -33,3 +33,8 @@
 15:45 genre-baby: 失敗 Invalid post: Twitter / X posts cannot exceed 280 characters.
 --- 11:03 予約処理[threads]: 空き枠 7 / 未予約 0
 --- 11:03 予約処理[instagram]: 空き枠 6 / 未予約 0
+--- 11:37 予約処理[x]: 空き枠 2 / 未予約 9
+15:45 genre-baby: 失敗 Invalid post: Twitter / X posts cannot exceed 280 characters.
+18:00 genre-food: 予約 / 286文字
+--- 11:37 予約処理[threads]: 空き枠 7 / 未予約 0
+--- 11:37 予約処理[instagram]: 空き枠 6 / 未予約 0
