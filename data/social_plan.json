@@ -189,7 +189,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/morecon2/cabinet/brand/12982334/10000780_25offn8.jpg?_ex=600x600",
    "codes": [
     "morecon2:10001867"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -199,7 +200,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/f434418-mifune/cabinet/rice/07733058/skumhinmsn520k_06n.jpg?_ex=600x600",
    "codes": [
     "f434418-mifune:10000461"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -208,7 +210,8 @@
    "text": "楽天 #PR\n🎬ふるさと納税 お米の人気TOP3【10/9】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/furusato/\n#ふるさと納税 #楽天ふるさと納税",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-09-2.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "genre-beauty",
@@ -220,7 +223,8 @@
     "dalba:10000011",
     "velus:10000119",
     "stylife:15348833"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -230,7 +234,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/kiso/cabinet/event/ms/tm202610/m2030_time.jpg?_ex=600x600",
    "codes": [
     "kiso:10000153"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "alert",
