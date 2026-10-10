@@ -1,1 +1,23 @@
 2026-10-11 計画 24件（セール判定: なし / 残り枠 19 / 候補 43）
+--- 07:19 予約処理[x]: 空き枠 10 / 未予約 24
+08:15 budget: 予約 / 279文字
+09:00 single: 予約 / 211文字
+09:45 genre-daily: 予約 / 283文字
+10:30 furusato-top: 予約 / 268文字
+11:15 single: 予約 / 254文字
+12:00 genre-baby: 予約 / 283文字
+10/11 12:30 video: 予約 / 129文字
+12:45 single: 予約 / 251文字
+13:30 furusato-single: 予約 / 160文字
+14:15 genre-food: 予約 / 258文字
+--- 07:20 予約処理[threads]: 空き枠 10 / 未予約 3
+10/11 12:15 threads: 種類指定でエラー（Invalid post: Threads does not support the 'thread' post type. Valid types are post or ghost_post.）→ 指定なしで再試行
+10/11 12:15 threads: 予約 / 273文字
+10/11 19:00 threads: 種類指定でエラー（Invalid post: Threads does not support the 'thread' post type. Valid types are post or ghost_post.）→ 指定なしで再試行
+10/11 19:00 threads: 予約 / 249文字
+10/11 21:30 threads: 種類指定でエラー（Invalid post: Threads does not support the 'thread' post type. Valid types are post or ghost_post.）→ 指定なしで再試行
+10/11 21:30 threads: 予約 / 305文字
+--- 07:20 予約処理[instagram]: 空き枠 10 / 未予約 0
+--- 07:20 予約処理[youtube]: 空き枠 10 / 未予約 2
+10/11 17:30 short: 予約 / 501文字
+10/11 20:30 short: 予約 / 615文字
