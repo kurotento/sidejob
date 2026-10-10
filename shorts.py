@@ -776,12 +776,19 @@ SPOKEN_PROMPT = """あなたは日本語の音声合成（読み上げ）用の�
 - 英字のブランド名・商品名はカタカナの読みにする（例：Anker→アンカー、WILKINSON→ウィルキンソン）。読みがわからない英字は省く
 - 「×」「/」「|」「【】」「()」などの記号は使わない。「500ml×24本」は「500ミリリットル24本入り」のように書く
 - 数字は算用数字のままでよい
-- 漢字の読みが難しい固有名詞（地名・品種など）はひらがなにする
+- 漢字の読みが難しい固有名詞（地名・品種など）や、美容・商品の造語（例：水光→すいこう）はひらがなにする
 - 出力は書き直した商品名だけ（説明や引用符は付けない）"""
+
+
+# 音声合成が読み間違える言葉（見つけたら足していく）
+READINGS = {"水光": "すいこう", "市田柿": "いちだがき", "干し柿": "ほしがき", "干柿": "ほしがき", "訳あり": "わけあり",
+            "訳有り": "わけあり", "詰替": "つめかえ", "1day": "ワンデー", "1DAY": "ワンデー", "ワンデイ": "ワンデー"}
 
 
 def normalize_reading(text):
     """単位・記号を読み上げ向けに置き換える（Gemini が使えないときの予備にもなる）."""
+    for word, kana in READINGS.items():
+        text = text.replace(word, kana)
     for pat, rep in UNITS:
         text = re.sub(pat, rep, text)
     text = re.sub(r"\s*[×xX＊*]\s*(\d+)\s*(本|個|袋|枚|缶|パック|食|箱)", r" \1\2入り", text)
@@ -824,7 +831,7 @@ def spoken_name(it, cache):
         got = ask_gemini_reading(short_name(it["name"], 80))
         if got:
             cache[code] = normalize_reading(got)
-    return cache.get(code) or normalize_reading(speakable(it["name"]))
+    return normalize_reading(cache.get(code) or speakable(it["name"]))  # 保存済みの読みにも辞書を当てる
 
 
 SEARCH = "https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20260701"
@@ -894,20 +901,20 @@ def topics(cfg, results, budget, fcats, day):
     cheaper = pick3(sorted((x for x in allg if x.get("price_diff", 0) < 0 and not x.get("has_range")),
                            key=lambda x: x["price_diff"]), base, lambda f: not f.get("from") and f["price_diff"] < 0)
     if len(cheaper) == 3:
-        out.append(dict(theme="red", title="今日の楽天\n値下がりTOP3", tag="値下がり", label="楽天の価格",
+        out.append(dict(key="cheaper", theme="red", title="今日の楽天\n値下がりTOP3", tag="値下がり", label="楽天の価格",
                         items=[(it, f"前日より{-it['price_diff']:,}円安い") for it in cheaper],
                         what="今日の楽天で値下がりした商品",
                         fact=lambda it: f"{-it['price_diff']:,}円安くなって、{price_say(it)}"))
     risers = pick3(sorted((x for x in allg if isinstance(x.get("move"), int) and x["move"] >= 3),
                           key=lambda x: -x["move"]), base)
     if len(risers) == 3:
-        out.append(dict(theme="red", title="今日の楽天\n急上昇TOP3", tag="急上昇", label="楽天の価格",
+        out.append(dict(key="rising", theme="red", title="今日の楽天\n急上昇TOP3", tag="急上昇", label="楽天の価格",
                         items=[(it, f"{it['move']}位アップ") for it in risers],
                         what="今日の楽天でランキングが急上昇している商品",
                         fact=lambda it: f"昨日から{it['move']}位も上がって、{price_say(it)}"))
     picks = pick3(budget or [], base, lambda f: 1000 <= f["price"] < 2000)  # 最新の値段でも1000円台のものだけ
     if len(picks) == 3:
-        out.append(dict(theme="red", title="1000円台・送料無料\n売れ筋TOP3", tag="1000円台", label="",
+        out.append(dict(key="budget", theme="red", title="1000円台・送料無料\n売れ筋TOP3", tag="1000円台", label="",
                         items=[(it, "送料無料") for it in picks],
                         what="楽天で今売れている、1000円台で送料無料の商品",
                         fact=lambda it: f"送料無料で{price_say(it)}"))
@@ -916,7 +923,7 @@ def topics(cfg, results, budget, fcats, day):
         c = fcats[k]
         fpicks = pick3(c["items"], base)
         if len(fpicks) == 3:
-            out.append(dict(theme="green", title=f"ふるさと納税\n{c['title']}の人気TOP3", tag="ふるさと納税",
+            out.append(dict(key=f"furusato-{c['slug']}", theme="green", title=f"ふるさと納税\n{c['title']}の人気TOP3", tag="ふるさと納税",
                             label="寄付額", items=[(it, it["shop"]) for it in fpicks],
                             what=f"楽天ふるさと納税でレビューが多い{c['title']}の返礼品",
                             fact=lambda it: f"{it['shop']}の返礼品で、寄付額は{price_say(it)}"))
@@ -1004,7 +1011,8 @@ def build(cfg, results, budget, fcats, day, out_dir, log):
                 else:
                     ev = end_fn(t, sec, work / "f9", end_text, line1, revealed)
                 slides.append((work / "f9", a, sec, ev))
-                name = f"shorts/{day}-{n + 1}.mp4"
+                # ファイル名はテーマごとに決める（同じ日に作り直しても、予約済みのタイトルと中身がずれないように）
+                name = f"shorts/{day}-{t['key']}.mp4"
                 make_video_anim(slides, out_dir / name, work, seed=dt.date.fromisoformat(day).toordinal() + n)
             made.append({"file": name, "title": video_title(t, m, d), "desc": description(t, day, site), "theme": t["theme"],
                          "sec": round(sum(s[2] for s in slides))})
