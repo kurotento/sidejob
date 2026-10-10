@@ -84,9 +84,9 @@ def run():
         if now - due > dt.timedelta(hours=6):  # 大きく遅れたものは出さない（夜のストーリーが翌朝に出るなどを防ぐ）
             ws.update(range_name=f"G{i}:I{i}", values=[["キャンセル", igsheet.now_text(), "予約時刻から6時間以上過ぎたため自動キャンセル"]])
             continue
-        uid = uid or call("GET", "me", token, fields="user_id")["user_id"]
         ws.update(range_name=f"G{i}:H{i}", values=[["投稿中", igsheet.now_text()]])
         try:
+            uid = uid or call("GET", "me", token, fields="user_id")["user_id"]
             mid = publish(token, uid, r["種別"], r["動画URL"], r["キャプション"])
             ws.update(range_name=f"G{i}:I{i}", values=[["完了", igsheet.now_text(), f"media_id={mid}"]])
             log.append(f"{now:%m/%d %H:%M} {r['予約日時']} {r['種別']}: 完了 media_id={mid}")
@@ -144,4 +144,12 @@ def update_secret(name, value):
 
 
 if __name__ == "__main__":
-    run()
+    try:
+        run()
+    except Exception as ex:  # noqa: BLE001  原因を記録に残してから失敗にする
+        import traceback
+        traceback.print_exc()
+        with LOG.open("a", encoding="utf-8") as fh:
+            fh.write(f"{dt.datetime.now(JST):%m/%d %H:%M} 実行エラー: {type(ex).__name__}: {str(ex)[:300]}
+")
+        raise
