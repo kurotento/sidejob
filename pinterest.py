@@ -46,37 +46,43 @@ RED, GREEN = (191, 0, 0), (31, 138, 76)
 
 
 def make_pin(it, kind, path, day="2026-10-12"):
-    """1000x1500 の縦長ピン画像。見た目は design の型で2週間ごとに変わる."""
+    """1000x1500 の縦長ピン画像。作りは design の型で2週間ごとに変わる."""
     import design
-    from PIL import Image, ImageDraw
     pat = design.pattern(day)
+    if pat["key"] == "pop":
+        return make_pin_pop(it, kind, path)
+    import looks
+    looks.pin(pat["key"], it, kind, LABEL[kind], path)
+
+
+def make_pin_pop(it, kind, path):
+    """1000x1500 の縦長ピン画像."""
+    from PIL import Image, ImageDraw
     W, H = 1000, 1500
-    theme = "green" if kind == "furusato" else "red"
-    accent = pat["accent"][theme]
-    img = design.canvas(pat, W, H)
-    design.header(img, pat, theme, LABEL[kind], "楽天で人気", 170, 64, 40, pad=50)
+    accent = GREEN if kind == "furusato" else RED
+    img = Image.new("RGB", (W, H), (246, 244, 240))
     d = ImageDraw.Draw(img)
-    F = lambda n: design.font(pat, n)  # noqa: E731
-    d.rounded_rectangle([50, 210, W - 50, 1060], radius=36 if pat["head"] != "pill" else 60, fill=(255, 255, 255))
+    d.rectangle([0, 0, W, 170], fill=accent)
+    d.text((50, 46), LABEL[kind], font=font(64), fill=(255, 255, 255))
+    d.text((W - 50, 70), "楽天で人気", font=font(40), fill=(255, 230, 230), anchor="ra")
+    d.rounded_rectangle([50, 210, W - 50, 1060], radius=36, fill=(255, 255, 255))
     pic = fetch_image(it.get("image"), 800)
     if pic:  # 楽天の画像は小さめなので、枠いっぱいまで拡大する
         r = min(780 / pic.width, 780 / pic.height)
         pic = pic.resize((int(pic.width * r), int(pic.height * r)), Image.LANCZOS)
         img.paste(pic, ((W - pic.width) // 2, 245 + (780 - pic.height) // 2))
-    for j, line in enumerate(wrap(d, short_name(it["name"], 60), design.font(pat, 46, head=True), W - 100, 3)):
-        d.text((50, 1090 + j * 62), line, font=design.font(pat, 46, head=True), fill=pat["ink"])
+    for j, line in enumerate(wrap(d, short_name(it["name"], 60), font(46), W - 100, 3)):
+        d.text((50, 1090 + j * 62), line, font=font(46), fill=(29, 29, 31))
     info = f"★{it['rating']:.1f}（レビュー{it['reviews']:,}件）" if it.get("reviews", 0) >= 10 else ""
     if kind == "furusato":
         info = (f"{it['shop']}  " + info).strip()
-    d.text((50, 1290), info, font=F(40), fill=accent)
-    d.line([(50, 1365), (W - 50, 1365)], fill=pat["muted"], width=1)
+    d.text((50, 1290), info, font=font(40), fill=accent)
+    d.line([(50, 1365), (W - 50, 1365)], fill=(225, 220, 212), width=2)
     if ICON.exists():
         bear = Image.open(ICON).convert("RGB").resize((90, 90))
-        mask = Image.new("L", (90, 90), 0)
-        ImageDraw.Draw(mask).ellipse([0, 0, 89, 89], fill=255)
-        img.paste(bear, (50, 1385), mask)
-    d.text((160, 1410), "らんくま｜楽天の売れ筋・ふるさと納税", font=F(32), fill=pat["muted"])
-    d.text((W - 50, 1410), "#PR", font=F(32), fill=pat["muted"], anchor="ra")
+        img.paste(bear, (50, 1385))
+    d.text((160, 1410), "らんくま｜楽天の売れ筋・ふるさと納税", font=font(32), fill=(110, 110, 115))
+    d.text((W - 50, 1410), "#PR", font=font(32), fill=(110, 110, 115), anchor="ra")
     path.parent.mkdir(parents=True, exist_ok=True)
     img.save(path, quality=82)
 
