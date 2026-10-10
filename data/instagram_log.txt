@@ -6,3 +6,4 @@
 10/09 21:23 2026-10-09 21:15:00 story: 完了 media_id=18373845229245487
 10/09 21:23 2026-10-09 21:00:00 post: 完了 media_id=18108008090579180
 10/10 14:54 2026-10-10 12:00:00 image: エラー {"error":{"message":"API access blocked.","type":"OAuthException","code":200,"fbtrace_id":"AZYgg7crY-Ge7HP-PrWXeMe"}}
+10/10 15:15 2026-10-10 12:00:00 image: エラー {"error":{"message":"Only photo or video can be accepted as media type.","type":"OAuthException","code":9004,"error_subcode":2207052,"is_transient":false,"error_user_title":"Media download has failed.
