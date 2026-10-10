@@ -63,6 +63,27 @@ def search(keyword, base_url, page=1, min_price=None, max_price=None):
     return out
 
 
+# 検索だけだと別のジャンル（例：フルーツにトイレットペーパー）が混ざるので、名前にこの言葉があるものだけにする
+WORDS = {
+    "meat": "牛 豚 鶏 肉 ハンバーグ ステーキ ウインナー ソーセージ ハム 焼肉 すき焼き しゃぶしゃぶ ホルモン 餃子",
+    "seafood": "カニ 蟹 かに 海老 えび エビ ホタテ 帆立 ほたて いくら イクラ 鮭 サーモン うなぎ 鰻 まぐろ マグロ 鮪 鯛 牡蠣 "
+               "明太子 たらこ 干物 しらす 刺身 海鮮 魚 さば サバ 鯖 ぶり ブリ 鰤 たこ タコ いか イカ 貝 数の子 ネギトロ",
+    "rice": "米 こめ コメ ごはん ご飯",
+    "fruit": "いちご 苺 イチゴ あまおう 桃 もも モモ みかん ミカン 蜜柑 ぶどう ブドウ 葡萄 シャインマスカット マスカット メロン "
+             "りんご リンゴ 林檎 梨 なし 柿 マンゴー さくらんぼ サクランボ 桜桃 フルーツ 果物 くだもの 柑橘 キウイ デコポン 不知火 "
+             "せとか 巨峰 ピオーネ 甘夏 レモン ブルーベリー すいか スイカ びわ いちじく 栗 パイン バナナ 果実",
+    "sweets": "スイーツ ケーキ プリン チョコ アイス クッキー 菓子 どら焼き 大福 バウム タルト 羊羹 ようかん シュー ジェラート "
+              "カステラ チーズ ロール パイ もなか 饅頭 まんじゅう ゼリー ドーナツ マカロン パフェ フィナンシェ ラスク",
+    "daily": "トイレットペーパー ティッシュ 洗剤 柔軟剤 タオル キッチンペーパー 日用品 ゴミ袋 ごみ袋 ボディソープ シャンプー "
+             "マスク 歯ブラシ 電池 ラップ 石鹸 せっけん ハンドソープ 紙おむつ おむつ 生理用品 ペーパータオル 水",
+}
+
+
+def matches(cat, it):
+    words = WORDS.get(cat["slug"])
+    return not words or any(w in it["name"] for w in words.split())
+
+
 def fetch_category(cat, base_url, pages=2):
     seen, items = set(), []
     for p in range(1, pages + 1):
@@ -73,7 +94,7 @@ def fetch_category(cat, base_url, pages=2):
             break
         time.sleep(1.1)
         for it in got:
-            if it["code"] not in seen:
+            if it["code"] not in seen and matches(cat, it):
                 seen.add(it["code"])
                 items.append(it)
     items.sort(key=lambda x: -x["reviews"])
