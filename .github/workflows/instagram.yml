@@ -5,6 +5,9 @@ on:
   schedule:
     - cron: "*/15 * * * *"
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["igpost.py", "igsheet.py", ".github/workflows/instagram.yml"]
 
 permissions:
   contents: write
