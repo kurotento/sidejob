@@ -300,5 +300,5 @@ def render(cfg, results, demo, day, updated, out_dir, budget=None, series=None, 
     social_img = Path(__file__).resolve().parent / "data" / "social_img"
     if social_img.exists():
         (out_dir / "social").mkdir(exist_ok=True)
-        for f in social_img.glob("*.png"):
+        for f in [*social_img.glob("*.png"), *social_img.glob("*.jpg")]:  # jpg は Instagram 用
             shutil.copy(f, out_dir / "social" / f.name)

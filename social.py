@@ -686,7 +686,7 @@ def plan(cfg, results, budget, descs, day, out_dir, fcats=None, videos=None):
                           "due": due.strftime("%Y-%m-%dT%H:%M:%S.000Z"), "text": txt, "image": img, "video": vid,
                           "codes": []})
     items.sort(key=lambda x: x["due"])
-    for f in IMG_DIR.glob("*.png"):  # 3日より前の投稿画像は消す（投稿済みのため不要）
+    for f in [*IMG_DIR.glob("*.png"), *IMG_DIR.glob("*.jpg")]:  # 3日より前の投稿画像は消す（投稿済みのため不要）
         if f.name[:10] < (d - dt.timedelta(days=3)).isoformat():
             f.unlink()
     PLAN.write_text(json.dumps({"day": day, "sale": sale, "posts": items}, ensure_ascii=False, indent=1), encoding="utf-8")

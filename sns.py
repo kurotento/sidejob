@@ -7,6 +7,7 @@
 import datetime as dt
 import json
 import re
+import shutil
 from pathlib import Path
 
 DATA = Path(__file__).resolve().parent / "data"
@@ -89,7 +90,9 @@ def jpeg_url(url, out_dir):
     if not (src.exists() and out_dir):
         return url
     jpg = name.rsplit(".", 1)[0] + ".jpg"
-    Image.open(src).convert("RGB").save(out_dir / "social" / jpg, quality=92)
+    Image.open(src).convert("RGB").save(src.with_name(jpg), quality=92)  # data に残して、作り直しても消えないようにする
+    (out_dir / "social").mkdir(parents=True, exist_ok=True)
+    shutil.copy(src.with_name(jpg), out_dir / "social" / jpg)
     return url.rsplit("/", 1)[0] + "/" + jpg
 
 
