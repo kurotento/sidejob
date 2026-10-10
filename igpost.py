@@ -150,6 +150,5 @@ if __name__ == "__main__":
         import traceback
         traceback.print_exc()
         with LOG.open("a", encoding="utf-8") as fh:
-            fh.write(f"{dt.datetime.now(JST):%m/%d %H:%M} 実行エラー: {type(ex).__name__}: {str(ex)[:300]}
-")
+            fh.write(f"{dt.datetime.now(JST):%m/%d %H:%M} 実行エラー: {type(ex).__name__}: {str(ex)[:300]}\n")
         raise
