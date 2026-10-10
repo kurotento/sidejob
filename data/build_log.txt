@@ -1,6 +1,6 @@
-2026-10-10 model=gemini-3.5-flash-lite 新規0件 / 対象1件
+2026-10-11 model=gemini-3.5-flash-lite 新規0件 / 対象1件
 dondon:10001586: ルール違反または不完全な出力のため不採用
-
+2026-10-11 model=gemini-3.5-flash-lite 新規2件 / 対象2件
 [food] 30件
 [beauty] 30件
 [appliances] 30件
@@ -21,13 +21,11 @@ dondon:10001586: ルール違反または不完全な出力のため不採用
 [threads] 投稿 5本
 生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
 [shorts] 作り：ポップ（らんくまのランキング）／声：ずんだもん
-[shorts] shorts/2026-10-10-1.mp4 35秒 今日の楽天
-急上昇TOP3
-[shorts] shorts/2026-10-10-2.mp4 31秒 1000円台・送料無料
+[shorts] shorts/2026-10-11-budget.mp4 31秒 1000円台・送料無料
 売れ筋TOP3
-[shorts] shorts/2026-10-10-3.mp4 41秒 ふるさと納税
-フルーツの人気TOP3
-[shorts] 動画 3本
+[shorts] shorts/2026-10-11-furusato-sweets.mp4 40秒 ふるさと納税
+スイーツの人気TOP3
+[shorts] 動画 2本
 [pinterest] ピン 0件
-[sns] Instagram 予約表に 0件追加
+[sns] Instagram 予約表に 3件追加
 [sns] Threads・Instagram 計画 5件
