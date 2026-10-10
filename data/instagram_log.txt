@@ -5,3 +5,4 @@
 10/09 20:13 2026-10-09 20:00:00 post: 完了 media_id=17991590189851350
 10/09 21:23 2026-10-09 21:15:00 story: 完了 media_id=18373845229245487
 10/09 21:23 2026-10-09 21:00:00 post: 完了 media_id=18108008090579180
+10/10 14:54 2026-10-10 12:00:00 image: エラー {"error":{"message":"API access blocked.","type":"OAuthException","code":200,"fbtrace_id":"AZYgg7crY-Ge7HP-PrWXeMe"}}
