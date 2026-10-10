@@ -150,7 +150,8 @@
     "kouragumi:10001520",
     "yama-oatmeal-institute:10000024",
     "matsuya:10000085"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -162,7 +163,8 @@
     "f261009-kyoto:10005363",
     "f406058-kawasaki:10000992",
     "f062073-kaminoyama:10001209"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -172,7 +174,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/seedcoms/cabinet/images/thum/sale/lipo-c_1m_1398.jpg?_ex=600x600",
    "codes": [
     "seedcoms:10007657"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-beauty",
@@ -194,7 +197,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/kurashikenkou/cabinet/11663202/13368735/imgrc0105764902.jpg?_ex=600x600",
    "codes": [
     "kurashikenkou:10225574"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -203,7 +207,8 @@
    "text": "楽天 #PR\n🎬ふるさと納税 フルーツの人気TOP3【10/10】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/furusato/\n#ふるさと納税 #楽天ふるさと納税",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-10-2.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -213,7 +218,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/f403458-shingu/cabinet/06153915/imgrc0122322279.jpg?_ex=600x600",
    "codes": [
     "f403458-shingu:10000756"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-appliances",
@@ -225,7 +231,8 @@
     "plywood:10022493",
     "roomy:10015766",
     "roomy:10018139"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "alert",

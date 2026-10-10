@@ -33,3 +33,15 @@
 --- 09:07 予約処理[threads]: 空き枠 7 / 未予約 0
 --- 09:07 予約処理[instagram]: 空き枠 10 / 未予約 0
 --- 09:07 予約処理[youtube]: 空き枠 8 / 未予約 0
+--- 14:24 予約処理[x]: 空き枠 8 / 未予約 10
+16:30 genre-food: 予約 / 283文字
+17:15 furusato-top: 予約 / 266文字
+18:00 single: 予約 / 241文字
+18:45 genre-beauty: 失敗 Invalid post: Twitter / X posts cannot exceed 280 characters.
+19:30 single: 予約 / 275文字
+10/10 19:45 video: 予約 / 137文字
+20:15 furusato-single: 予約 / 262文字
+21:00 genre-appliances: 予約 / 220文字
+--- 14:24 予約処理[threads]: 空き枠 8 / 未予約 0
+--- 14:24 予約処理[instagram]: 空き枠 10 / 未予約 0
+--- 14:24 予約処理[youtube]: 空き枠 8 / 未予約 0
