@@ -28,9 +28,10 @@ jobs:
           IG_TOKEN: ${{ secrets.IG_TOKEN }}
           GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
           GH_PAT: ${{ secrets.GH_PAT }}
+        shell: bash
         run: |
-          pip install --quiet gspread pynacl
-          python igpost.py
+          set -o pipefail
+          { pip install --quiet gspread pynacl && python igpost.py; } 2>&1 | tail -40 | tee data/instagram_run.txt
       - name: Commit Instagram log
         if: always()
         run: |
