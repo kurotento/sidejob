@@ -1,0 +1,4 @@
+  File "/home/runner/work/sidejob/sidejob/igpost.py", line 153
+    fh.write(f"{dt.datetime.now(JST):%m/%d %H:%M} 実行エラー: {type(ex).__name__}: {str(ex)[:300]}
+             ^
+SyntaxError: unterminated f-string literal (detected at line 153)
