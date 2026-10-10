@@ -27,3 +27,9 @@
 --- 08:48 予約処理[threads]: 空き枠 7 / 未予約 0
 --- 08:48 予約処理[instagram]: 空き枠 10 / 未予約 0
 --- 08:48 予約処理[youtube]: 空き枠 8 / 未予約 0
+--- 09:07 予約処理[x]: 空き枠 2 / 未予約 12
+12:45 genre-daily: 失敗 Invalid post: Twitter / X posts cannot exceed 280 characters.
+15:45 single: 予約 / 175文字
+--- 09:07 予約処理[threads]: 空き枠 7 / 未予約 0
+--- 09:07 予約処理[instagram]: 空き枠 10 / 未予約 0
+--- 09:07 予約処理[youtube]: 空き枠 8 / 未予約 0
