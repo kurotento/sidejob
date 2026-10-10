@@ -313,7 +313,7 @@ def main():
             print(f"[room] 失敗: {ex}", file=sys.stderr)
     try:  # X の返信用ネタ帳
         import replies
-        print(f"[replies] 質問 {replies.build(cfg, budget, cats, day, OUT_DIR)}件")
+        print(f"[replies] 質問 {replies.build(cfg, budget, cats, day, OUT_DIR, results)}件")
     except Exception as ex:  # noqa: BLE001
         print(f"[replies] 失敗: {ex}", file=sys.stderr)
     if not args.demo:

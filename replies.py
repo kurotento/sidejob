@@ -46,7 +46,7 @@ def nm(it, n=20):
     return out[: n + 6]
 
 
-def build(cfg, budget, fcats, day, out_dir):
+def build(cfg, budget, fcats, day, out_dir, results=None):
     m, d = int(day[5:7]), int(day[8:10])
     b = budget or []
     cat = {c["slug"]: c["items"] for c in fcats or []}
@@ -72,6 +72,28 @@ def build(cfg, budget, fcats, day, out_dir):
         qa.append(("1000円ちょうどくらいで送料無料のものない？",
                    f"1000円台で送料無料なら「{nm(b[2] if len(b) > 2 else b[0])}」がよく売れてます。"
                    "クーポンで1000円を下回らないよう、少し上の金額を選ぶのがコツです #PR"))
+    # 「収納 どれがいい」「日用品 まとめ買い 迷う」の検索で見つかる人向け（今日のランキング上位から）
+    def two(slug):  # 同じ商品の色違い・サイズ違いが並ばないよう、名前の頭が同じものは1つにする
+        out = []
+        for it in (results or {}).get(slug, []):
+            if it["price"] <= 10000 and all(nm(it, 6)[:4] != nm(x, 6)[:4] for x in out):
+                out.append(it)
+        return out[:2]
+    inter, daily = two("interior"), two("daily")
+    if inter:
+        qa.append(("収納って何がいいですか？",
+                   f"楽天の収納・インテリアのランキングだと「{nm(inter[0], 26)}」{paren(yen(inter[0]))}が今上位です。"
+                   "置く場所の幅と奥行きを先に測っておくと失敗しにくいですよ #PR"))
+    if len(inter) >= 2:
+        qa.append(("クローゼットや部屋の片付け、何から買えばいい？",
+                   f"まずは今ある物の量に合わせて収納を選ぶのがおすすめです。楽天だと「{nm(inter[1], 26)}」{paren(yen(inter[1]))}も人気ですよ #PR"))
+    if daily:
+        qa.append(("日用品のまとめ買い、どこで買ってる？",
+                   f"楽天でまとめ買いしている人も多いです。日用品のランキングだと「{nm(daily[0])}」{paren(yen(daily[0]))}が今上位ですよ。"
+                   "送料無料になる金額に合わせて買うのがコツです #PR"))
+    if len(daily) >= 2:
+        qa.append(("日用品で、まとめて買っておくといいものある？",
+                   f"消耗品はストックしておくと安心です。楽天の日用品ランキングだと「{nm(daily[1])}」{paren(yen(daily[1]))}もよく売れてます #PR"))
     qa.append(("お買い物マラソンっていつから？",
                "開催日は楽天の公式キャンペーンページで確認できます。エントリーが必要なので、始まる前に済ませておくと安心ですよ"))
     if m in (10, 11, 12):
