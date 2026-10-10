@@ -398,34 +398,43 @@ def wrap(draw, text, f, width, lines=2):
 
 
 def make_image(title, rows, day, path, theme="red"):
-    """TOP3 の横長画像（1200x675）。見た目は design の型で2週間ごとに変わる."""
+    """TOP3 の横長画像（1200x675）。作りは design の型で2週間ごとに変わる."""
     import design
-    from PIL import ImageDraw
     pat = design.pattern(day)
+    if pat["key"] == "pop":
+        return make_image_pop(title, rows, day, path, theme)
+    import looks
+    looks.top3(pat["key"], title, rows, day, path, theme)
+
+
+def make_image_pop(title, rows, day, path, theme="red"):
+    from PIL import Image, ImageDraw
     W, H = 1200, 675
-    img = design.canvas(pat, W, H)
-    m, dd = int(day[5:7]), int(day[8:10])
-    design.header(img, pat, theme, title, f"{m}月{dd}日時点", 120, 54 if len(title) <= 18 else 46, 30)
+    img = Image.new("RGB", (W, H), (246, 244, 240))
     d = ImageDraw.Draw(img)
-    F = lambda n: design.font(pat, n)  # noqa: E731
+    for y in range(120):  # 見出しの帯
+        t = y / 120
+        d.line([(0, y), (W, y)], fill=(int(165 + 50 * t), 0, int(47 * t)) if theme == "red" else (6, int(92 + 30 * t), int(56 + 19 * t)))
+    m, dd = int(day[5:7]), int(day[8:10])
+    d.text((40, 28), title, font=font(54), fill=(255, 255, 255))
+    d.text((W - 40, 46), f"{m}月{dd}日時点", font=font(30), fill=(255, 235, 235), anchor="ra")
     medal = [(217, 164, 0), (154, 165, 177), (185, 114, 46)]
-    acc = pat["accent"][theme]
     for i, (it, note) in enumerate(rows):
         x, y, w, h = 30 + i * 390, 145, 360, 500
-        d.rounded_rectangle([x, y, x + w, y + h], radius=22 if pat["head"] != "pill" else 36, fill=pat["card"])
+        d.rounded_rectangle([x, y, x + w, y + h], radius=22, fill=(255, 255, 255))
         pic = fetch_image(it.get("image"))
         if pic:
             pic.thumbnail((260, 260))
             img.paste(pic, (x + (w - pic.width) // 2, y + 20 + (260 - pic.height) // 2))
         d.ellipse([x + 14, y + 14, x + 74, y + 74], fill=medal[i])
-        d.text((x + 44, y + 44), str(i + 1), font=F(34), fill=(255, 255, 255), anchor="mm")
-        for j, line in enumerate(wrap(d, short_name(it["name"], 40), F(24), w - 36)):
-            d.text((x + 18, y + 296 + j * 34), line, font=F(24), fill=pat["ink"])
-        d.text((x + 18, y + 378), yen(it), font=F(44), fill=acc)
-        nf = (232, 89, 12) if "UP" in note else (15, 157, 88) if pat["key"] == "pop" else acc
-        d.rounded_rectangle([x + 18, y + 442, x + 18 + d.textlength(note, font=F(24)) + 28, y + 480], radius=10, fill=nf)
-        d.text((x + 32, y + 447), note, font=F(24), fill=(255, 255, 255) if pat["key"] != "chic" else (26, 26, 30))
-    d.text((W - 30, H - 22), "楽天ランキング速報 ｜ #PR", font=F(20), fill=pat["muted"], anchor="rb")
+        d.text((x + 44, y + 44), str(i + 1), font=font(34), fill=(255, 255, 255), anchor="mm")
+        for j, line in enumerate(wrap(d, short_name(it["name"], 40), font(24), w - 36)):
+            d.text((x + 18, y + 296 + j * 34), line, font=font(24), fill=(29, 29, 31))
+        d.text((x + 18, y + 378), yen(it), font=font(44), fill=(191, 0, 0) if theme == "red" else (11, 122, 75))
+        d.rounded_rectangle([x + 18, y + 442, x + 18 + d.textlength(note, font=font(24)) + 28, y + 480],
+                            radius=10, fill=(232, 89, 12) if "UP" in note else (15, 157, 88))
+        d.text((x + 32, y + 447), note, font=font(24), fill=(255, 255, 255))
+    d.text((W - 30, H - 22), "楽天ランキング速報 ｜ #PR", font=font(20), fill=(110, 110, 115), anchor="rb")
     path.parent.mkdir(parents=True, exist_ok=True)
     img.save(path, optimize=True)
 
@@ -516,35 +525,44 @@ def sale_alerts(names, d, url):
 
 
 def make_top10_image(title, items, day, path, price_prefix=""):
-    """10商品を2列×5段に並べた保存版まとめ画像（1200x1500）."""
+    """10商品の保存版まとめ画像（1200x1500）。作りは design の型で変わる."""
     import design
-    from PIL import ImageDraw
     pat = design.pattern(day)
-    theme = "green" if price_prefix else "red"
+    if pat["key"] == "pop":
+        return make_top10_image_pop(title, items, day, path, price_prefix)
+    import looks
+    looks.top10(pat["key"], title, items, day, path, price_prefix)
+
+
+def make_top10_image_pop(title, items, day, path, price_prefix=""):
+    """10商品を2列×5段に並べた保存版まとめ画像（1200x1500）."""
+    from PIL import Image, ImageDraw
     Wd, Hd = 1200, 1500
-    img = design.canvas(pat, Wd, Hd)
-    m, dd = int(day[5:7]), int(day[8:10])
-    design.header(img, pat, theme, title, f"{m}月{dd}日時点 ｜ 保存版", 150, 54, 26)
+    img = Image.new("RGB", (Wd, Hd), (246, 244, 240))
     d = ImageDraw.Draw(img)
-    F = lambda n: design.font(pat, n)  # noqa: E731
-    acc = pat["accent"][theme]
+    for y in range(150):
+        k = y / 150
+        d.line([(0, y), (Wd, y)], fill=(int(165 + 50 * k), 0, int(47 * k)))
+    m, dd = int(day[5:7]), int(day[8:10])
+    d.text((40, 40), title, font=font(58), fill=(255, 255, 255))
+    d.text((Wd - 40, 110), f"{m}月{dd}日時点 ｜ 保存版", font=font(26), fill=(255, 230, 230), anchor="rs")
     for i, it in enumerate(items[:10]):
         col, row = i % 2, i // 2
         x, y = 30 + col * 590, 175 + row * 262
-        d.rounded_rectangle([x, y, x + 560, y + 245], radius=18 if pat["head"] != "pill" else 32, fill=pat["card"])
+        d.rounded_rectangle([x, y, x + 560, y + 245], radius=18, fill=(255, 255, 255))
         pic = fetch_image(it.get("image"))
         if pic:
             pic.thumbnail((210, 210))
             img.paste(pic, (x + 15 + (210 - pic.width) // 2, y + 18 + (210 - pic.height) // 2))
         badge = (217, 164, 0) if i == 0 else (154, 165, 177) if i == 1 else (185, 114, 46) if i == 2 else (60, 60, 65)
         d.ellipse([x + 8, y + 8, x + 62, y + 62], fill=badge)
-        d.text((x + 35, y + 35), str(i + 1), font=F(30), fill=(255, 255, 255), anchor="mm")
-        for j, line in enumerate(wrap(d, short_name(it["name"], 40), F(24), 310, 3)):
-            d.text((x + 240, y + 22 + j * 34), line, font=F(24), fill=pat["ink"])
-        d.text((x + 240, y + 150), yen(it, price_prefix), font=F(44), fill=acc)
+        d.text((x + 35, y + 35), str(i + 1), font=font(30), fill=(255, 255, 255), anchor="mm")
+        for j, line in enumerate(wrap(d, short_name(it["name"], 40), font(24), 310, 3)):
+            d.text((x + 240, y + 22 + j * 34), line, font=font(24), fill=(29, 29, 31))
+        d.text((x + 240, y + 150), yen(it, price_prefix), font=font(44), fill=(191, 0, 0))
         if price_prefix:
-            d.text((x + 240, y + 205), f"📍{it.get('shop', '')}"[:16], font=F(22), fill=pat["muted"])
-    d.text((Wd - 30, Hd - 18), "楽天ランキング速報 ｜ #PR", font=F(22), fill=pat["muted"], anchor="rb")
+            d.text((x + 240, y + 205), f"📍{it.get('shop', '')}"[:16], font=font(22), fill=(6, 92, 56))
+    d.text((Wd - 30, Hd - 18), "楽天ランキング速報 ｜ #PR", font=font(22), fill=(110, 110, 115), anchor="rb")
     path.parent.mkdir(parents=True, exist_ok=True)
     img.save(path, optimize=True)
 

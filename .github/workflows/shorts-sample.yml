@@ -1,0 +1,41 @@
+name: shorts-sample
+
+# 4つの型のショート動画の見本を作り、samples ブランチに置く（本番の投稿には使わない）
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["tools/shorts_sample.py", ".github/workflows/shorts-sample.yml", "reels.py"]
+
+permissions:
+  contents: write
+
+jobs:
+  sample:
+    runs-on: ubuntu-24.04
+    services:
+      voicevox:
+        image: voicevox/voicevox_engine:cpu-latest
+        ports:
+          - 50021:50021
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install tools
+        run: |
+          pip install --quiet Pillow numpy
+          sudo apt-get install -y -qq fonts-noto-cjk ffmpeg > /dev/null
+      - name: Make samples
+        run: python tools/shorts_sample.py samples
+      - name: Push to samples branch
+        run: |
+          cd samples
+          rm -rf pop magazine notebook news
+          git init -q -b samples
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -qm "shorts samples"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" samples
