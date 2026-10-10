@@ -82,3 +82,8 @@
 --- 15:49 予約処理[threads]: 空き枠 8 / 未予約 0
 --- 15:49 予約処理[instagram]: 空き枠 10 / 未予約 0
 --- 15:49 予約処理[youtube]: 空き枠 8 / 未予約 0
+--- 16:35 予約処理[x]: 空き枠 2 / 未予約 1
+18:45 genre-beauty: 失敗 Invalid post: Twitter / X posts cannot exceed 280 characters.
+--- 16:35 予約処理[threads]: 空き枠 8 / 未予約 0
+--- 16:35 予約処理[instagram]: 空き枠 10 / 未予約 0
+--- 16:35 予約処理[youtube]: 空き枠 8 / 未予約 0
