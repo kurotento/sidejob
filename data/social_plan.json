@@ -129,7 +129,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/0005/9784911880005.gif?_ex=600x600",
    "codes": [
     "book:22109821"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-beauty",
@@ -141,7 +142,8 @@
     "veramoreofficial:10000023",
     "sk-ii:10003066",
     "anuajapan:10000450"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -153,7 +155,8 @@
     "f112216-soka:10000135",
     "f222101-fuji:10000670",
     "f092088-oyama:10000331"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -163,7 +166,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/darkangel/cabinet/12863863/13830759/2536-260909-01.jpg?_ex=600x600",
    "codes": [
     "darkangel:10034443"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-appliances",
@@ -175,7 +179,8 @@
     "vesync:10000001",
     "dyson:10002092",
     "mtgec-beauty:10002142"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -185,7 +190,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/meikou-corp/cabinet/10935767/imgrc0113991101.jpg?_ex=600x600",
    "codes": [
     "meikou-corp:10000058"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "weekly",
@@ -194,7 +200,8 @@
    "text": "楽天 #PR\n保存版📌 今週の1000円台・送料無料 売れ筋TOP10\n買い回りの候補に使ってね\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #1000円台 #買い回り",
    "image": "https://kurotento.github.io/sidejob/social/2026-10-11-weekly-budget.png",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -204,7 +211,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/f016331-kamishihoro/cabinet/1000/015d80_sku.jpg?_ex=600x600",
    "codes": [
     "f016331-kamishihoro:10000095"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -213,7 +221,8 @@
    "text": "楽天 #PR\n🎬ふるさと納税 スイーツの人気TOP3【10/11】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/furusato/\n#ふるさと納税 #楽天ふるさと納税",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-11-furusato-sweets.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "genre-interior",
@@ -225,7 +234,8 @@
     "e-kurashi:10048739",
     "decori:10000575",
     "33taiyo:10000020"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
