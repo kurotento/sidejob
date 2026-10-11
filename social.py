@@ -40,9 +40,21 @@ STOP = {"送料無料", "セット", "公式", "まとめ買い", "大容量", "
 # ---------- 文字数・タグ ----------
 
 def x_len(text):
-    """Xの文字数（全角は2、URLは23として数える）."""
+    """Xの文字数（URLは23、X の決まりで1文字と数える範囲の外は2。絵文字の部品も1つずつ2と数えて多めに見積もる）."""
     text = re.sub(r"https?://\S+", "x" * 23, text)
-    return sum(2 if unicodedata.east_asian_width(c) in "FWA" else 1 for c in text)
+    return sum(1 if (o <= 4351 or 8192 <= o <= 8205 or 8208 <= o <= 8223 or 8242 <= o <= 8247) else 2
+               for o in map(ord, text))
+
+
+def fit_x(text, tags):
+    """280文字に収まるまでタグを外す（一般的なタグ→長いタグの順。PR表記は先頭に残る）."""
+    while x_len(text) > 280 and tags:
+        tl = tags.split()
+        gen = [t for t in ("#買い回り", "#お買い物マラソン", "#楽天ふるさと納税") if t in tl]
+        tl.remove(gen[0] if gen else max(tl, key=len))
+        old, tags = tags, " ".join(tl)
+        text = text.replace("\n" + old, "\n" + tags if tags else "")
+    return text, tags
 
 
 NOUNS = ("ニット", "カットソー", "タオル", "パンツ", "シャツ", "スカート", "ワンピース", "ジャケット", "コート", "クリーム",
@@ -627,7 +639,7 @@ def plan(cfg, results, budget, descs, day, out_dir, fcats=None, videos=None):
     for n, t in enumerate(events):  # 朝いちばんと夕方にお知らせを入れる
         cands.insert(min(n * 10, len(cands)), ("event", t, [], ""))
     base = cfg["base_url"].rstrip("/")
-    items = []
+    items, item_tags = [], []
     for n, ((h, m), (kind, title, rows, url)) in enumerate(zip(slots, cands)):
         tags = build_tags([it for it, _ in rows], sale, descs)
         if kind == "event":
@@ -657,22 +669,19 @@ def plan(cfg, results, budget, descs, day, out_dir, fcats=None, videos=None):
             shutil.copy(IMG_DIR / Path(img_name).name, out_dir / img_name)
             text = compose_text(title, rows, url, tags, day, kind)
             image = f"{base}/{img_name}"
-        while x_len(text) > 280 and tags:  # 長すぎるときは一般的なタグ→長いタグの順に外す（PR表記は先頭に残る）
-            tl = tags.split()
-            gen = [t for t in ("#買い回り", "#お買い物マラソン", "#楽天ふるさと納税") if t in tl]
-            tl.remove(gen[0] if gen else max(tl, key=len))
-            old, tags = tags, " ".join(tl)
-            text = text.replace("\n" + old, "\n" + tags if tags else "")
+        text, tags = fit_x(text, tags)
         due = dt.datetime(d.year, d.month, d.day, h, m, tzinfo=JST).astimezone(dt.timezone.utc)
         items.append({"kind": kind, "time": f"{h:02d}:{m:02d}", "due": due.strftime("%Y-%m-%dT%H:%M:%S.000Z"),
                       "text": text, "image": image, "codes": [it["code"] for it, _ in rows]})
+        item_tags.append(tags)
     # 1) TOP3 系の投稿は1つおきにリンクなしにする（X は外部リンク付きの投稿の表示を抑えがちなため）
     alt = 0
-    for it_, (kind, _, _, url) in zip(items, cands):
+    for it_, tags, (kind, _, _, url) in zip(items, item_tags, cands):
         if kind in ("cheaper", "risers", "budget", "furusato-top") or kind.startswith("genre"):
             alt += 1
             if alt % 2 == 0 and url:
                 it_["text"] = it_["text"].replace("👇\n" + url, "📌くわしくはプロフィールのリンクから")
+                it_["text"], _ = fit_x(it_["text"], tags)  # 差し替えで長くなるので数え直す
     # 2) セール速報・週1回のまとめ・ショート動画（通常の枠とは別に追加）
     later = now - dt.timedelta(minutes=10)
     extra = [(t, txt, "", "") for t, txt in sale_alerts(names, d, f"{base}/{cfg['budget']['slug']}.html")]
