@@ -18,11 +18,13 @@ import roomtext
 
 DATA = Path(__file__).resolve().parent / "data"
 HISTORY = DATA / "room_list.json"
+# 一度リストに出した商品（ROOM は同じ商品を2回コレ！できないので、二度と出さない）
+POSTED = DATA / "room_posted.json"
 PER_DAY = 12           # 1000円台・送料無料（買い回り向け）
 NICHE_PER_GENRE = 5    # ROOM の中心層（30〜40代女性）に強いジャンルから
 NICHE_GENRES = ("interior", "daily")  # インテリア・収納 / 日用品
 FURUSATO_PER_DAY = 5
-REPEAT_DAYS = 3  # 同じ商品をもう一度リストに出すまでの日数
+REPEAT_DAYS = 3  # room_list.json に残す日数（もう一度出さないかどうかは room_posted.json で決める）
 e = html.escape
 
 
@@ -127,7 +129,9 @@ def build(cfg, budget, descs, day, out_dir, save=True, fcats=None, fdescs=None, 
     hist = json.loads(HISTORY.read_text(encoding="utf-8")) if HISTORY.exists() else {}
     cutoff = (dt.date.fromisoformat(day) - dt.timedelta(days=REPEAT_DAYS)).isoformat()
     hist = {k: v for k, v in hist.items() if k >= cutoff}
-    recent = {c for k, codes in hist.items() if k != day for c in codes}
+    posted = json.loads(POSTED.read_text(encoding="utf-8")) if POSTED.exists() else {}
+    # 同じ日に作り直したときも、先に出したリストの商品は出さない（もう投稿済みのことが多いため）
+    recent = {c for codes in hist.values() for c in codes} | set(posted)
     picks = [it for it in budget or [] if it["code"] not in recent and descs.get(it["code"])][:PER_DAY]
     budget_codes = seen = {it["code"] for it in picks}
     seen = set(seen)
@@ -153,6 +157,9 @@ def build(cfg, budget, descs, day, out_dir, save=True, fcats=None, fdescs=None, 
     hist[day] = [it["code"] for it in picks]
     if save:
         HISTORY.write_text(json.dumps(hist, ensure_ascii=False, indent=0), encoding="utf-8")
+        for it in picks:
+            posted.setdefault(it["code"], day)
+        POSTED.write_text(json.dumps(posted, ensure_ascii=False, indent=0), encoding="utf-8")
 
     tags = {it["code"]: product_tag(it["name"], descs.get(it["code"])) for it in picks}
     bodies = roomtext.write(picks, descs, day, tags) if save else {}
