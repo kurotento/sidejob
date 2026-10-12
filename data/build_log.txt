@@ -1,5 +1,21 @@
-2026-10-12 model=gemini-3.5-flash-lite 新規9件 / 対象10件
-e-zakkamania:10082339: ルール違反または不完全な出力のため不採用
+2026-10-12 model=gemini-3.5-flash-lite 新規15件 / 対象18件
+diydiy:10000050: ルール違反または不完全な出力のため不採用
+e-zakkamania:10082339: HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+shade:10000928: HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
 
 [food] 30件
 [beauty] 29件
@@ -7,7 +23,7 @@ e-zakkamania:10082339: ルール違反または不完全な出力のため不採
 [interior] 30件
 [daily] 30件
 [baby] 30件
-[budget] 総合598件中 55件が条件に一致
+[budget] 総合599件中 64件が条件に一致
 [gemini] キーの確認: OK（gemini-3.5-flash-lite）
 [furusato:meat] 30件
 [furusato:seafood] 30件
@@ -21,11 +37,13 @@ e-zakkamania:10082339: ルール違反または不完全な出力のため不採
 [threads] 投稿 5本
 生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
 [shorts] 作り：マガジン（写真と明朝体の特集ページ）／声：冥鳴ひまり
-[shorts] shorts/2026-10-12-budget.mp4 31秒 1000円台・送料無料
+[shorts] shorts/2026-10-12-rising.mp4 35秒 今日の楽天
+急上昇TOP3
+[shorts] shorts/2026-10-12-budget.mp4 29秒 1000円台・送料無料
 売れ筋TOP3
 [shorts] shorts/2026-10-12-furusato-daily.mp4 35秒 ふるさと納税
 日用品の人気TOP3
-[shorts] 動画 2本
-[pinterest] ピン 35件
-[sns] Instagram 予約表に 3件追加
+[shorts] 動画 3本
+[pinterest] ピン 0件
+[sns] Instagram 予約表に 0件追加
 [sns] Threads・Instagram 計画 5件
