@@ -1,0 +1,33 @@
+name: buffer-fix
+
+# 一回限りの手直し（tools/buffer_fix.py）。中身を変えて push すると動く
+on:
+  push:
+    branches: [main]
+    paths: ["tools/buffer_fix.py", ".github/workflows/buffer-fix.yml"]
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run
+        env:
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+        run: |
+          pip install --quiet Pillow
+          python tools/buffer_fix.py schema
+      - name: Commit log
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          git diff --cached --quiet || git commit -m "data: buffer fix log"
+          for i in 1 2 3; do git pull --rebase -q origin main && git push && break; sleep 5; done
