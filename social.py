@@ -808,7 +808,7 @@ def schedule(key, posts, service, log, posted, day):
             meta = "{youtube: {title: %s, categoryId: \"26\", privacy: public, madeForKids: false, notifySubscribers: true}}" % json.dumps(post.get("title", ""))
         if service == "threads" and post.get("reply"):  # 本文＋自分への返信（リンク）のスレッドにする
             items = ", ".join("{text: %s, assets: []}" % json.dumps(t) for t in (post["text"], post["reply"]))
-            meta = "{threads: {type: thread, thread: [%s]}}" % items
+            meta = "{threads: {type: post, thread: [%s]}}" % items  # Buffer の仕様変更で type は post だけになった
         send = post
         try:
             try:
