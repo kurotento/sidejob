@@ -22,7 +22,7 @@ jobs:
           BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
         run: |
           pip install --quiet Pillow
-          python tools/buffer_fix.py schema
+          python tools/buffer_fix.py singles
       - name: Commit log
         if: always()
         run: |
