@@ -129,7 +129,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/apr-japan/cabinet/13763018/13792806/imgrc0141017823.jpg?_ex=600x600",
    "codes": [
     "apr-japan:10000376"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-appliances",
@@ -141,7 +142,8 @@
     "ulike-store:10000046",
     "leapgrow:10000648",
     "nissoplus:10000178"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -153,7 +155,8 @@
     "f402052-iizuka:10000315",
     "f253847-ryuo:10001383",
     "f032051-hanamaki:10000827"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -163,7 +166,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/3725/2100015243725.gif?_ex=600x600",
    "codes": [
     "book:22130977"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-interior",
@@ -175,7 +179,8 @@
     "tansu:10049866",
     "tansu:10057796",
     "dondon:10001821"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -185,7 +190,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/kurashikenkou/cabinet/viby2/imgrc0111617325.jpg?_ex=600x600",
    "codes": [
     "kurashikenkou:10220307"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -195,7 +201,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/f272132-izumisano/cabinet/13936040/sn021r_1_1001.jpg?_ex=600x600",
    "codes": [
     "f272132-izumisano:10005128"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -204,7 +211,8 @@
    "text": "楽天 #PR\n🎬ふるさと納税 日用品の人気TOP3【10/12】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/furusato/\n#ふるさと納税 #楽天ふるさと納税",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-12-furusato-daily.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "genre-daily",
@@ -216,7 +224,8 @@
     "e-kit:10042872",
     "rakuten24:11148573",
     "rakuten24:11348605"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -226,7 +235,8 @@
    "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/auc-kaei-trading/cabinet/microrg/shikaku/araeru-main.jpg?_ex=600x600",
    "codes": [
     "auc-kaei-trading:10000243"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "alert",
