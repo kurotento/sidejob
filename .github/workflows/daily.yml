@@ -2,7 +2,7 @@ name: daily-build
 
 on:
   schedule:
-    - cron: "0 22 * * *"   # 毎日 7:00 JST
+    - cron: "0 22 * * *"   # 毎日 7:00 JST（手で更新したいときは、このファイルを少し変えて push する）
   workflow_dispatch:
   push:
     branches: [main]
