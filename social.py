@@ -409,6 +409,23 @@ def wrap(draw, text, f, width, lines=2):
     return out
 
 
+def own_image(it, name, out_dir, base):
+    """商品画像をこちらのサイトに置いて、その URL を返す.
+
+    楽天の画像を直接渡すと、Buffer が取りに行ったときにたまに取れず投稿が失敗するため。
+    取れなかったときは楽天の URL のまま返す。
+    """
+    url = re.sub(r"_ex=\d+x\d+", "_ex=600x600", it.get("image", ""))
+    pic = fetch_image(url, 600)
+    if not pic:
+        return url
+    IMG_DIR.mkdir(parents=True, exist_ok=True)
+    pic.save(IMG_DIR / Path(name).name, quality=90)
+    (out_dir / "social").mkdir(parents=True, exist_ok=True)
+    shutil.copy(IMG_DIR / Path(name).name, out_dir / name)
+    return f"{base}/{name}"
+
+
 def make_image(title, rows, day, path, theme="red"):
     """TOP3 の横長画像（1200x675）。作りは design の型で2週間ごとに変わる."""
     import design
@@ -648,7 +665,7 @@ def plan(cfg, results, budget, descs, day, out_dir, fcats=None, videos=None):
             it = rows[0][0]
             tags = furusato_tags([it], descs or {})
             text = compose_furusato_single(it, (descs or {}).get(it["code"]), url, tags, day)
-            image = re.sub(r"_ex=\d+x\d+", "_ex=600x600", it.get("image", ""))
+            image = own_image(it, f"social/{day}-{n:02d}-{kind}.jpg", out_dir, base)
         elif kind == "furusato-top":
             img_name = f"social/{day}-{n:02d}-{kind}.png"
             make_image(f"ふるさと納税 {title}の人気TOP3", rows, day, IMG_DIR / Path(img_name).name, "green")
@@ -660,7 +677,7 @@ def plan(cfg, results, budget, descs, day, out_dir, fcats=None, videos=None):
         elif kind == "single":
             it = rows[0][0]
             text = compose_single(it, (descs or {}).get(it["code"]), url, tags, day)
-            image = re.sub(r"_ex=\d+x\d+", "_ex=600x600", it.get("image", ""))
+            image = own_image(it, f"social/{day}-{n:02d}-{kind}.jpg", out_dir, base)
         else:
             img_name = f"social/{day}-{n:02d}-{kind}.png"
             # 画像は data/social_img に保存し（コミットされて残る）、サイトを作るたびに public/social へ公開する
