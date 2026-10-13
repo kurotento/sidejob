@@ -12,7 +12,8 @@
     "coming:10000440",
     "rakuten24:11148574",
     "babytown:10023284"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -22,7 +23,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-14-01-single.jpg",
    "codes": [
     "book:22084800"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "budget",
@@ -34,7 +36,8 @@
     "book:22084808",
     "h2o-0902-shop:10000001",
     "book:22084804"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -46,7 +49,8 @@
     "f016683-shiranuka:10000214",
     "f012190-mombetsu:10000000",
     "f464686-osaki:10000102"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -56,7 +60,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-14-04-single.jpg",
    "codes": [
     "yokadoh-shop:10000257"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-beauty",
@@ -68,7 +73,8 @@
     "ntvshop:10008341",
     "sk-ii:10003015",
     "sk-ii:10003011"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -77,7 +83,8 @@
    "text": "楽天 #PR\n🎬今日の楽天 急上昇TOP3【10/14】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-14-rising.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -87,7 +94,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-14-06-single.jpg",
    "codes": [
     "book:22130073"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -97,7 +105,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-14-07-furusato-single.jpg",
    "codes": [
     "f016918-betsukai:10000359"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-appliances",
@@ -109,7 +118,8 @@
     "yamada-denki:10643174",
     "store-ecovacs-japan:10000502",
     "plywood:10017400"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
