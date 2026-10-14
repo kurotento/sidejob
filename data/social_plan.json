@@ -11,7 +11,8 @@
    "due": "2026-10-14T23:15:00.000Z",
    "text": "楽天 #PR\n今日は5と0のつく日！\n楽天カードで買う人はエントリーを忘れずに✍️\n（条件は楽天の公式ページで確認してね）\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html",
    "image": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "risers",
@@ -23,7 +24,8 @@
     "rs-takeo:10000132",
     "tenkapas:10010258",
     "chibo-netshop:10000079"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -33,7 +35,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-15-02-single.jpg",
    "codes": [
     "naturein-store:10000003"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "budget",
@@ -45,7 +48,8 @@
     "d-ray:10000001",
     "pierrot:10017656",
     "book:21701996"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -57,7 +61,8 @@
     "f413453-kamimine:10000940",
     "f062065-sagae:10000556",
     "f014583-higashikawa:10000140"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -67,7 +72,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-15-05-single.jpg",
    "codes": [
     "snnm-shop:10005246"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -76,7 +82,8 @@
    "text": "楽天 #PR\n🎬今日の楽天 急上昇TOP3【10/15】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-15-rising.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "genre-appliances",
@@ -88,7 +95,8 @@
     "nobu-house:10000002",
     "mtgec-beauty:10002330",
     "brita:10000052"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -98,7 +106,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-15-07-single.jpg",
    "codes": [
     "darkangel:10038332"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -108,7 +117,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-15-08-furusato-single.jpg",
    "codes": [
     "f013030-tobetsu:10000010"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-interior",
