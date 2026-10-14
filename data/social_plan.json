@@ -129,7 +129,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-14-09-single.jpg",
    "codes": [
     "shade:10000954"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-interior",
@@ -141,7 +142,8 @@
     "tansu:10057010",
     "diydiy:10000050",
     "futon-colors:10000194"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -153,7 +155,8 @@
     "f434281-takamori:10000628",
     "f234451-minamichita:10000856",
     "f085464-sakai:10001114"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -163,7 +166,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-14-12-single.jpg",
    "codes": [
     "diydiy:10000066"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-daily",
@@ -175,7 +179,8 @@
     "kurashi-zakka:10002366",
     "handmade-amane:10001224",
     "rakutensokuhaimart:10034227"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -185,7 +190,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-14-14-single.jpg",
    "codes": [
     "kanagawa-store:10000001"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -195,7 +201,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-14-15-furusato-single.jpg",
    "codes": [
     "f182028-tsuruga:10000394"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -204,7 +211,8 @@
    "text": "楽天 #PR\n🎬1000円台・送料無料 売れ筋TOP3【10/14】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-14-budget.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "genre-baby",
@@ -216,7 +224,8 @@
     "naturavie:10000289",
     "baby-alice:10006664",
     "pigeon-shop:10002137"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -226,7 +235,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-14-17-single.jpg",
    "codes": [
     "sanchya:10066321"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "alert",
