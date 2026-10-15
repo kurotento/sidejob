@@ -242,7 +242,8 @@
    "text": "楽天 #PR\n今日の売れ筋、楽天ROOMにもまとめたよ🛍\n1000円台・送料無料の買い回り候補はこちら\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "genre-food",
@@ -254,7 +255,8 @@
     "ajinomoto:10000623",
     "kumamoto-food:10004089",
     "nishikinokonnyaku:10000007"
-   ]
+   ],
+   "scheduled": true
   }
  ]
 }
