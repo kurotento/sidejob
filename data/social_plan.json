@@ -130,7 +130,8 @@
     "e-kurashi:10007962",
     "futon-colors:10000021",
     "eunicedress:10001863"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "event",
@@ -138,7 +139,8 @@
    "due": "2026-10-15T06:45:00.000Z",
    "text": "楽天 #PR\nお買い物マラソン開催中！\n1ショップ1,000円以上の買い回りでポイント倍率が上がるやつ\n送料無料の1000円台、まとめてます\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#お買い物マラソン",
    "image": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -148,7 +150,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-15-11-single.jpg",
    "codes": [
     "shade:10000928"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-daily",
@@ -160,7 +163,8 @@
     "bunbougu-shibuya:10160053",
     "angelingg:10001028",
     "aromaspray:10001238"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -172,7 +176,8 @@
     "f404021-kurate:10000265",
     "f205907-iizuna:10001210",
     "f303810-mihama:10000738"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -182,7 +187,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-15-14-single.jpg",
    "codes": [
     "oga:10267779"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-baby",
@@ -194,7 +200,8 @@
     "bayeryakuhin:10000008",
     "rakutensokuhaimart:10039668",
     "netbaby:10023957"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -203,7 +210,8 @@
    "text": "楽天 #PR\n🎬1000円台・送料無料 売れ筋TOP3【10/15】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-15-budget.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -213,7 +221,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-15-16-single.jpg",
    "codes": [
     "kurashikenkou:10217349"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -223,7 +232,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-15-17-furusato-single.jpg",
    "codes": [
     "f212148-kani:10000462"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "alert",
