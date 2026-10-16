@@ -25,10 +25,16 @@ YOUTUBE_TIMES = [(17, 30), (20, 30)]  # ショート動画を YouTube に（Buff
 # Instagram の検索は投稿文の言葉でも探されるので、1行目に検索される言葉を入れ、タグは内容に合う数個にしぼる
 INSTA_TAGS = {
     "red": "#楽天購入品 #楽天お買い物マラソン #送料無料 #PR",
+    "budget": "#楽天購入品 #楽天お買い物マラソン #送料無料 #PR",
+    "rising": "#楽天購入品 #楽天ランキング #楽天市場 #PR",
+    "cheaper": "#楽天購入品 #楽天セール #楽天市場 #PR",
     "green": "#ふるさと納税 #ふるさと納税返礼品 #楽天ふるさと納税 #PR",
 }
 INSTA_LEAD = {
     "red": "楽天 1000円台 送料無料 おすすめ｜買い回りの候補に",
+    "budget": "楽天 1000円台 送料無料 おすすめ｜買い回りの候補に",
+    "rising": "楽天ランキング 急上昇｜今日注目されている商品",
+    "cheaper": "楽天 値下がり｜前の日より安くなった人気商品",
     "green": "ふるさと納税 おすすめ 返礼品｜レビューの多い人気どころ",
 }
 
@@ -58,10 +64,12 @@ def insta_posts(cfg, day, videos, at):
     base = cfg["base_url"].rstrip("/")
     out = []
     for (h, m), v in zip(INSTA_REEL_TIMES, videos or []):
-        theme = v.get("theme") if v.get("theme") in INSTA_TAGS else "red"
+        # 1行目とタグは動画のテーマに合わせる（急上昇・値下がりの動画に「1000円台」と書かないように）
+        kind = v.get("key", "") if v.get("key") in INSTA_TAGS else ("green" if v.get("theme") == "green" else "budget")
+        kind = "green" if kind.startswith("furusato") else kind
         title = re.sub(r"\s*#\S+", "", v["title"]).strip()
-        cap = (f"{INSTA_LEAD[theme]}\n{title}\n\nらんくまが30秒で紹介するよ🧸 気になったら保存しておいてね\n"
-               f"商品はプロフィールのリンク（楽天ROOM）からまとめて見られます\n\n{INSTA_TAGS[theme]}")
+        cap = (f"{INSTA_LEAD[kind]}\n{title}\n\n30秒でまとめて紹介しています。気になったら保存しておいてね\n"
+               f"商品はプロフィールのリンク（楽天ROOM）からまとめて見られます\n\n{INSTA_TAGS[kind]}")
         out.append(item("instagram", "reel", at(h, m), cap, video=f"{base}/{v['file']}"))
     for (h, m), v in zip(INSTA_STORY_TIMES, videos or []):
         out.append(item("instagram", "story", at(h, m), "", video=f"{base}/{v['file']}"))
