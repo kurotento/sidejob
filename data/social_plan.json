@@ -129,7 +129,8 @@
     "bungushop:10335149",
     "eunicedress:10002123",
     "eunicedress:10001812"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -139,7 +140,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-16-10-single.jpg",
    "codes": [
     "darkangel:10035762"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-baby",
@@ -151,7 +153,8 @@
     "soyott-camp:10000016",
     "auc-risecreation:10005198",
     "devirockstore:10030402"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -163,7 +166,8 @@
     "f472085-urasoe:10000001",
     "f462217-shibushi:10001628",
     "f232092-hekinan:10000120"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -173,7 +177,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-16-13-single.jpg",
    "codes": [
     "kenkocom:12079545"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-food",
@@ -185,7 +190,8 @@
     "sonoshokuan:10000006",
     "maguronoyamashita:10000001",
     "qgift:10000008"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -195,7 +201,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-16-15-single.jpg",
    "codes": [
     "darkangel:10038067"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -204,7 +211,8 @@
    "text": "楽天 #PR\n🎬1000円台・送料無料 売れ筋TOP3【10/16】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-16-budget.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -214,7 +222,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-16-16-furusato-single.jpg",
    "codes": [
     "f452025-miyakonojo:10000288"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-beauty",
@@ -226,7 +235,8 @@
     "attenir:10000252",
     "tfitofficial:10000059",
     "f-netclub:10000296"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "alert",
