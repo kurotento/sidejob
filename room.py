@@ -20,6 +20,7 @@ DATA = Path(__file__).resolve().parent / "data"
 HISTORY = DATA / "room_list.json"
 # 一度リストに出した商品（ROOM は同じ商品を2回コレ！できないので、二度と出さない）
 POSTED = DATA / "room_posted.json"
+MANUAL = DATA / "room_manual.json"  # 手で書いたコメント本文 {商品コード: 本文}
 PER_DAY = 12           # 1000円台・送料無料（買い回り向け）
 NICHE_PER_GENRE = 5    # ROOM の中心層（30〜40代女性）に強いジャンルから
 NICHE_GENRES = ("interior", "daily")  # インテリア・収納 / 日用品
@@ -69,7 +70,12 @@ def room_comment(it, desc, tag, furusato=False, budget=False, body=None, n=0):
     """
     if not body and desc:
         body = fallback_body(desc, n)
-    parts = [body or ""]
+    if not body:  # 紹介文もAIの本文もないとき（ランキングの商品は説明が取れないことがある）は、商品名から短く
+        from articles import short_name
+        name = short_name(it["name"], 40)
+        body = [f"{tag}を探している人に。\n{name}。\n楽天のランキングで上位に入っている商品です。",
+                f"楽天ランキングで人気の{tag}。\n{name}。\nサイズや内容量は商品ページで確認してね。"][n % 2] if tag else name
+    parts = [body]
     stars = f"★{it['rating']:.1f}（{it['reviews']:,}件）" if it["reviews"] >= 10 else ""
     # サイズ・色などで値段が変わる商品は、ROOM の表示（最安値〜）とずれるので値段を書かない
     yen = "" if it.get("has_range") else f"{it['price']:,}円"
@@ -163,6 +169,11 @@ def build(cfg, budget, descs, day, out_dir, save=True, fcats=None, fdescs=None, 
 
     tags = {it["code"]: product_tag(it["name"], descs.get(it["code"])) for it in picks}
     bodies = roomtext.write(picks, descs, day, tags) if save else {}
+    manual = json.loads(MANUAL.read_text(encoding="utf-8")) if MANUAL.exists() else {}
+    bodies = {**bodies, **manual}  # 手で書いたコメントがあればそれを優先
+    missing = [it["code"] for it in picks if not bodies.get(it["code"]) and not descs.get(it["code"])]
+    if missing:
+        print(f"[room] AIの本文も紹介文もない商品 {len(missing)}件（商品名から短く作成）: {', '.join(missing)}")
     rows = []
     for n, it in enumerate(picks):
         tag = tags[it["code"]]
