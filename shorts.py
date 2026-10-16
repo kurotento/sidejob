@@ -1014,7 +1014,7 @@ def build(cfg, results, budget, fcats, day, out_dir, log):
                 # ファイル名はテーマごとに決める（同じ日に作り直しても、予約済みのタイトルと中身がずれないように）
                 name = f"shorts/{day}-{t['key']}.mp4"
                 make_video_anim(slides, out_dir / name, work, seed=dt.date.fromisoformat(day).toordinal() + n)
-            made.append({"file": name, "title": video_title(t, m, d), "desc": description(t, day, site), "theme": t["theme"],
+            made.append({"file": name, "title": video_title(t, m, d), "desc": description(t, day, site), "theme": t["theme"], "key": t["key"],
                          "sec": round(sum(s[2] for s in slides))})
             log.append(f"[shorts] {name} {made[-1]['sec']}秒 {t['title']}")
         except Exception as ex:  # noqa: BLE001
