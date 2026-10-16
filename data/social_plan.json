@@ -11,7 +11,8 @@
    "due": "2026-10-16T23:15:00.000Z",
    "text": "楽天 #PR\nお買い物マラソン開催中！\n1ショップ1,000円以上の買い回りでポイント倍率が上がるやつ\n送料無料の1000円台、まとめてます\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#お買い物マラソン",
    "image": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "risers",
@@ -23,7 +24,8 @@
     "rakuten24:11128650",
     "takami-labo:10000519",
     "rakuten24:11386627"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -33,7 +35,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-17-02-single.jpg",
    "codes": [
     "rakkenshop:10000083"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "budget",
@@ -45,7 +48,8 @@
     "nuthyougo:10000672",
     "sosuke:10000226",
     "rakkenshop:10000017"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -57,7 +61,8 @@
     "f404012-kotake:10000550",
     "f016918-betsukai:10000041",
     "f082333-namegata:10001424"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -67,7 +72,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-17-05-single.jpg",
    "codes": [
     "cicib:10002043"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -76,7 +82,8 @@
    "text": "楽天 #PR\n🎬今日の楽天 急上昇TOP3【10/17】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-17-rising.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "genre-daily",
@@ -88,7 +95,8 @@
     "rakuten24:11128644",
     "rakuten24:11200559",
     "rakuten24:11279561"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -98,7 +106,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-17-07-single.jpg",
    "codes": [
     "fancl-shop:10009046"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -108,7 +117,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-17-08-furusato-single.jpg",
    "codes": [
     "f272132-izumisano:10006785"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-baby",
