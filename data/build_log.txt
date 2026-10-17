@@ -1,14 +1,14 @@
-2026-10-17 model=gemini-3.5-flash-lite 新規9件 / 対象11件
-kumamoto-food:10002270: ルール違反または不完全な出力のため不採用
-kamachu:10001812: ルール違反または不完全な出力のため不採用
-2026-10-17 model=gemini-3.5-flash-lite 新規1件 / 対象1件
-[food] 30件
+2026-10-18 model=gemini-3.5-flash-lite 新規14件 / 対象16件
+seedcoms:10006694: ルール違反または不完全な出力のため不採用
+tsurunishi:10001191: ルール違反または不完全な出力のため不採用
+
+[food] 29件
 [beauty] 30件
 [appliances] 30件
 [interior] 30件
 [daily] 30件
 [baby] 30件
-[budget] 総合597件中 86件が条件に一致
+[budget] 総合599件中 81件が条件に一致
 [gemini] キーの確認: OK（gemini-3.5-flash-lite）
 [furusato:meat] 30件
 [furusato:seafood] 30件
@@ -17,17 +17,17 @@ kamachu:10001812: ルール違反または不完全な出力のため不採用
 [furusato:sweets] 30件
 [furusato:daily] 30件
 [furusato] 69ページ
-[room] 投稿リスト 27件
+[room] 投稿リスト 26件
 [replies] 質問 15件
 [threads] 投稿 5本
 生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
 [shorts] 作り：マガジン（写真と明朝体の特集ページ）／声：冥鳴ひまり
-[shorts] shorts/2026-10-17-rising.mp4 36秒 今日の楽天
+[shorts] shorts/2026-10-18-rising.mp4 32秒 今日の楽天
 急上昇TOP3
-[shorts] shorts/2026-10-17-budget.mp4 30秒 1000円台・送料無料
+[shorts] shorts/2026-10-18-budget.mp4 30秒 1000円台・送料無料
 売れ筋TOP3
-[shorts] shorts/2026-10-17-furusato-sweets.mp4 36秒 ふるさと納税
-スイーツの人気TOP3
+[shorts] shorts/2026-10-18-furusato-daily.mp4 35秒 ふるさと納税
+日用品の人気TOP3
 [shorts] 動画 3本
 [pinterest] ピン 0件
 [sns] Instagram 予約表に 5件追加
