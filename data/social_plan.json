@@ -11,7 +11,8 @@
    "due": "2026-10-17T23:15:00.000Z",
    "text": "楽天 #PR\n今日は楽天のご愛顧感謝デー！\n会員ランクによってポイントが変わる日だよ\n（条件は楽天の公式ページで確認してね）\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html",
    "image": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "risers",
@@ -23,7 +24,8 @@
     "renngekesyousui:10000002",
     "rack-kan:10029626",
     "babycareshop:10000000"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -33,7 +35,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-18-02-single.jpg",
    "codes": [
     "karatsu-iwamoto:10000321"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "budget",
@@ -45,7 +48,8 @@
     "tarunoaji:10000484",
     "auc-kaei-trading:10000769",
     "velus:10000124"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -57,7 +61,8 @@
     "f032093-ichinoseki:10000216",
     "f222071-fujinomiya:10000025",
     "f382132-shikokuchuo:10000036"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -67,7 +72,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-18-05-single.jpg",
    "codes": [
     "duen1102:10000016"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -76,7 +82,8 @@
    "text": "楽天 #PR\n🎬今日の楽天 急上昇TOP3【10/18】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-18-rising.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "genre-baby",
@@ -88,7 +95,8 @@
     "netbaby:10028506",
     "netbaby:10028658",
     "netbaby:10035957"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -98,7 +106,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-18-07-single.jpg",
    "codes": [
     "darkangel:10036320"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -108,7 +117,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-18-08-furusato-single.jpg",
    "codes": [
     "f173860-hodatsushimizu:10000450"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-food",
