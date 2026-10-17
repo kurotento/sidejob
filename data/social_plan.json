@@ -246,7 +246,8 @@
    "text": "楽天 #PR\nふるさと納税の人気返礼品も楽天ROOMで一覧にしてるよ🎁\nレビューが多い定番を中心に\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -256,7 +257,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-17-18-single.jpg",
    "codes": [
     "queeneyes:10000429"
-   ]
+   ],
+   "scheduled": true
   }
  ]
 }
