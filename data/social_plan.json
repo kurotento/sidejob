@@ -23,7 +23,8 @@
     "rakuten24:11354091",
     "anuajapan:10000450",
     "vesync:10000114"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -33,7 +34,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-19-02-single.jpg",
    "codes": [
     "linoulu:10000507"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "budget",
@@ -45,7 +47,8 @@
     "book:22130082",
     "darkangel:10036257",
     "darkangel:10034443"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -57,7 +60,8 @@
     "f452025-miyakonojo:10004145",
     "f016918-betsukai:10004947",
     "f042056-kesennuma:10001385"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -67,7 +71,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-19-05-single.jpg",
    "codes": [
     "morecon2:10001867"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -76,7 +81,8 @@
    "text": "楽天 #PR\n🎬今日の楽天 急上昇TOP3【10/19】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-19-rising.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "genre-food",
@@ -88,7 +94,8 @@
     "kouragumi:10001552",
     "nichimaclub:10000654",
     "zenbofficial:10000158"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -98,7 +105,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-19-07-single.jpg",
    "codes": [
     "queeneyes:10000479"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -108,7 +116,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-19-08-furusato-single.jpg",
    "codes": [
     "f406091-aka:10000539"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-beauty",
