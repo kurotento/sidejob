@@ -129,7 +129,8 @@
     "pycno:10007568",
     "rakuten24:11354093",
     "sk-ii:10003857"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -139,7 +140,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-19-10-single.jpg",
    "codes": [
     "rakkenshop:10000003"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-appliances",
@@ -151,7 +153,8 @@
     "vesync:10000001",
     "dinos-tv:10011548",
     "mtgec-beauty:10002142"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -163,7 +166,8 @@
     "f016918-betsukai:10004314",
     "f404012-kotake:10000241",
     "f393070-geisei:10000307"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -173,7 +177,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-19-13-single.jpg",
    "codes": [
     "irisplaza-r:10163799"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-interior",
@@ -185,7 +190,8 @@
     "e-kurashi:10048736",
     "33taiyo:10000020",
     "e-kurashi:10048739"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -195,7 +201,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-19-15-single.jpg",
    "codes": [
     "irisplaza-r:10151238"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -204,7 +211,8 @@
    "text": "楽天 #PR\n🎬1000円台・送料無料 売れ筋TOP3【10/19】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-19-budget.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -214,7 +222,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-19-16-furusato-single.jpg",
    "codes": [
     "f434418-mifune:10000461"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-daily",
@@ -226,7 +235,8 @@
     "bunbougu-shibuya:10160096",
     "toucher-home:10000264",
     "rakuten24:11348602"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "alert",
