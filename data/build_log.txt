@@ -1,4 +1,4 @@
-2026-10-19 model=gemini-3.5-flash-lite 新規4件 / 対象4件
+2026-10-20 model=gemini-3.5-flash-lite 新規3件 / 対象3件
 
 [food] 30件
 [beauty] 30件
@@ -6,7 +6,7 @@
 [interior] 30件
 [daily] 30件
 [baby] 30件
-[budget] 総合599件中 73件が条件に一致
+[budget] 総合596件中 61件が条件に一致
 [gemini] キーの確認: OK（gemini-3.5-flash-lite）
 [furusato:meat] 30件
 [furusato:seafood] 30件
@@ -15,18 +15,19 @@
 [furusato:sweets] 30件
 [furusato:daily] 30件
 [furusato] 69ページ
-[room] 投稿リスト 14件
+[room] AIの本文も紹介文もない商品 3件（商品名から短く作成）: dondon:10003667, rakuten24:11206670, auc-epsomsalt:10000222
+[room] 投稿リスト 13件
 [replies] 質問 15件
 [threads] 投稿 5本
 生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
 [shorts] 作り：マガジン（写真と明朝体の特集ページ）／声：冥鳴ひまり
-[shorts] shorts/2026-10-19-rising.mp4 29秒 今日の楽天
+[shorts] shorts/2026-10-20-rising.mp4 36秒 今日の楽天
 急上昇TOP3
-[shorts] shorts/2026-10-19-budget.mp4 26秒 1000円台・送料無料
+[shorts] shorts/2026-10-20-budget.mp4 30秒 1000円台・送料無料
 売れ筋TOP3
-[shorts] shorts/2026-10-19-furusato-meat.mp4 35秒 ふるさと納税
-肉の人気TOP3
+[shorts] shorts/2026-10-20-furusato-seafood.mp4 38秒 ふるさと納税
+海鮮・魚介の人気TOP3
 [shorts] 動画 3本
-[pinterest] ピン 35件
+[pinterest] ピン 0件
 [sns] Instagram 予約表に 5件追加
 [sns] Threads・Instagram 計画 5件
