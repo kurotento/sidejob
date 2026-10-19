@@ -8,7 +8,8 @@
    "due": "2026-10-19T23:15:00.000Z",
    "text": "楽天 #PR\n今日は5と0のつく日！\n楽天カードで買う人はエントリーを忘れずに✍️\n（条件は楽天の公式ページで確認してね）\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html",
    "image": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "risers",
@@ -20,7 +21,8 @@
     "sk-ii:10003757",
     "attenir:10000250",
     "masuyone:10000016"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -30,7 +32,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-20-02-single.jpg",
    "codes": [
     "high-high:10000174"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "budget",
@@ -42,7 +45,8 @@
     "book:22130971",
     "calinuts:10000078",
     "classical:10016868"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -54,7 +58,8 @@
     "f016683-shiranuka:10000564",
     "f016683-shiranuka:10000227",
     "f122025-choshi:10001721"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -64,7 +69,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-20-05-single.jpg",
    "codes": [
     "book:22109557"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -73,7 +79,8 @@
    "text": "楽天 #PR\n🎬今日の楽天 急上昇TOP3【10/20】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-20-rising.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "genre-beauty",
@@ -85,7 +92,8 @@
     "tvert:10000485",
     "yayoi-cosme:10007685",
     "rakuten24:11405953"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -95,7 +103,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-20-07-single.jpg",
    "codes": [
     "queeneyes:10000228"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -105,7 +114,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-20-08-furusato-single.jpg",
    "codes": [
     "f302082-kinokawa:10000688"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-appliances",
