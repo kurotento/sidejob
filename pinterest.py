@@ -142,12 +142,15 @@ def build(cfg, results, budget, fcats, descs, day, out_dir, force=False):
     pools = {k: [x for x in v if not SKIP.search(x["name"])] for k, v in pools.items()}
     picks = []
     used = set(recent)
+    titles = set()
     for n in range(7 * len(TIMES)):
         kind = order[n % len(order)]
-        it = next((x for x in pools[kind] if x["code"] not in used), None)
+        # 同じタイトルのピンは Pinterest が受け付けない（CD の通常盤と初回盤など、名前がほぼ同じ商品がある）
+        it = next((x for x in pools[kind] if x["code"] not in used and pin_text(x, kind, None)[0] not in titles), None)
         if not it:
             continue
         used.add(it["code"])
+        titles.add(pin_text(it, kind, None)[0])
         day_i, slot = divmod(len(picks), len(TIMES))
         h, m = TIMES[slot]
         when = dt.datetime(d.year, d.month, d.day, h, m, tzinfo=JST) + dt.timedelta(days=day_i + 1)
