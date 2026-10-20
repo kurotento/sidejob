@@ -302,7 +302,7 @@ h2{{font-size:.98rem;margin:0 0 6px}}.s{{display:inline-block;margin:0 6px 8px 0
 <div class="cnt">フォローした数 <b id="f">0</b> / {FOLLOW_GOAL}<button onclick="add('f')">＋1</button></div></section>
 <section><h2>③ いいね回り（目標 {LIKE_GOAL}件）</h2>
 <p>今日のリストの商品ジャンルで探すと、同じものに興味がある人に届く。オリジナル写真の投稿を優先して、気に入ったものだけに。</p>
-<p class="ng">⚠ 検索結果の一覧で♡を押すと、スクロールしたときに消えて記録されないことがあります。<b>投稿をタップして開いてから</b>♡を押してください。②で見つけた人の ROOM を開いて、その人の投稿にいいねするのもおすすめ。</p>
+<p class="ng">⚠ 検索結果の一覧で♡を押すと、スクロールしたときに消えて記録されないことがあります。<b>投稿を開いてから</b>♡を押してください。パソコンなら <b>Ctrl を押しながらクリック</b>（スマホなら長押し→新しいタブ）で開くと、一覧の位置がずれずに次へ進めます。フォロー回り（②）とは別の人にいいねすると、それぞれからフォロバが来やすい。</p>
 {items}
 <div class="cnt">いいねした数 <b id="l">0</b> / {LIKE_GOAL}<button onclick="add('l')">＋1</button></div></section>
 <section><h2>やらないこと</h2>
