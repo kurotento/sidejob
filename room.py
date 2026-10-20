@@ -24,6 +24,9 @@ MANUAL = DATA / "room_manual.json"  # 手で書いたコメント本文 {商品�
 PER_DAY = 12           # 1000円台・送料無料（買い回り向け）
 NICHE_PER_GENRE = 5    # ROOM の中心層（30〜40代女性）に強いジャンルから
 NICHE_GENRES = ("interior", "daily")  # インテリア・収納 / 日用品
+# 1000円台がもう出しきって足りない日は、ROOM の中心層（30〜40代女性）に強いほかのジャンルからも足す
+MORE_GENRES = ("beauty", "food", "baby", "appliances")
+TARGET = 22            # ふるさと納税以外で、1日に出したい件数
 FURUSATO_PER_DAY = 5
 REPEAT_DAYS = 3  # room_list.json に残す日数（もう一度出さないかどうかは room_posted.json で決める）
 e = html.escape
@@ -70,12 +73,7 @@ def room_comment(it, desc, tag, furusato=False, budget=False, body=None, n=0):
     """
     if not body and desc:
         body = fallback_body(desc, n)
-    if not body:  # 紹介文もAIの本文もないとき（ランキングの商品は説明が取れないことがある）は、商品名から短く
-        from articles import short_name
-        name = short_name(it["name"], 40)
-        body = [f"{tag}を探している人に。\n{name}。\n楽天のランキングで上位に入っている商品です。",
-                f"楽天ランキングで人気の{tag}。\n{name}。\nサイズや内容量は商品ページで確認してね。"][n % 2] if tag else name
-    parts = [body]
+    parts = [body or ""]
     stars = f"★{it['rating']:.1f}（{it['reviews']:,}件）" if it["reviews"] >= 10 else ""
     # サイズ・色などで値段が変わる商品は、ROOM の表示（最安値〜）とずれるので値段を書かない
     yen = "" if it.get("has_range") else f"{it['price']:,}円"
@@ -129,6 +127,37 @@ def plan_box(day, budget):
 </details>"""
 
 
+def more_descs(items, cfg, day, limit=30):
+    """ランキングの商品には商品説明が付いていないので、商品検索で説明を取ってから紹介文を作る."""
+    import os
+    import time
+    import urllib.request
+
+    import writer
+    if not (items and os.environ.get("RAKUTEN_APP_ID") and os.environ.get("GEMINI_API_KEY")):
+        return {}
+    base = cfg["base_url"].rstrip("/")
+    search = "https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20260701"
+    full = []
+    for it in items[:limit]:
+        params = {"applicationId": os.environ["RAKUTEN_APP_ID"], "accessKey": os.environ.get("RAKUTEN_ACCESS_KEY", ""),
+                  "itemCode": it["code"], "formatVersion": 2}
+        req = urllib.request.Request(search + "?" + urllib.parse.urlencode(params), headers={
+            "Referer": base + "/", "User-Agent": "rakuten-ranking-site/1.0",
+            "Origin": urllib.parse.urlsplit(base)._replace(path="").geturl()})
+        try:
+            with urllib.request.urlopen(req, timeout=30) as res:
+                found = json.load(res).get("Items", [])
+            raw = found[0].get("Item", found[0]) if found else {}
+            full.append({**it, "caption": raw.get("itemCaption", ""), "catch": raw.get("catchcopy", "")})
+        except Exception:  # noqa: BLE001
+            pass
+        time.sleep(1)  # 商品検索の毎秒の上限を避ける
+    got = writer.describe(full, day, limit=limit)
+    print(f"[room] 説明を取って紹介文を作成: {sum(1 for it in full if got.get(it['code']))}/{len(items)}件")
+    return got
+
+
 def build(cfg, budget, descs, day, out_dir, save=True, fcats=None, fdescs=None, results=None):
     from social import product_tag
 
@@ -138,16 +167,25 @@ def build(cfg, budget, descs, day, out_dir, save=True, fcats=None, fdescs=None, 
     posted = json.loads(POSTED.read_text(encoding="utf-8")) if POSTED.exists() else {}
     # 同じ日に作り直したときも、先に出したリストの商品は出さない（もう投稿済みのことが多いため）
     recent = {c for codes in hist.values() for c in codes} | set(posted)
-    picks = [it for it in budget or [] if it["code"] not in recent and descs.get(it["code"])][:PER_DAY]
-    budget_codes = seen = {it["code"] for it in picks}
-    seen = set(seen)
-    for g in NICHE_GENRES:  # インテリア・収納／日用品のランキングから（ROOM でいちばん投稿・購入が多いジャンル）
-        n = 0
-        for it in (results or {}).get(g, []):
-            if n < NICHE_PER_GENRE and it["code"] not in recent and it["code"] not in seen:
-                picks.append(it)
+    # 候補を多めに集め、紹介文が作れたものだけを使う（「〇〇を探している人に」のような中身のない文は出さない）
+    fresh = lambda it: it["code"] not in recent and it["price"] <= 10000  # noqa: E731
+    cands = [it for it in budget or [] if fresh(it)][:PER_DAY]
+    budget_codes = {it["code"] for it in cands}
+    pools = [[it for it in (results or {}).get(g, []) if fresh(it)] for g in NICHE_GENRES + MORE_GENRES]
+    seen = set(budget_codes)
+    k = 0
+    while len(cands) < TARGET + 12 and any(pools):  # ジャンルを順番に1つずつ（インテリア・日用品を先に）
+        pool = pools[k % len(pools)]
+        k += 1
+        while pool:
+            it = pool.pop(0)
+            if it["code"] not in seen:
+                cands.append(it)
                 seen.add(it["code"])
-                n += 1
+                break
+    descs = {**descs, **more_descs([it for it in cands if not descs.get(it["code"])], cfg, day)}
+    picks = [it for it in cands if descs.get(it["code"])][:TARGET]
+    budget_codes = budget_codes & {it["code"] for it in picks}
     # ふるさと納税の返礼品を3件（各ジャンル上位から順に）
     fdescs = fdescs or {}
     fpicks = []
@@ -171,9 +209,7 @@ def build(cfg, budget, descs, day, out_dir, save=True, fcats=None, fdescs=None, 
     bodies = roomtext.write(picks, descs, day, tags) if save else {}
     manual = json.loads(MANUAL.read_text(encoding="utf-8")) if MANUAL.exists() else {}
     bodies = {**bodies, **manual}  # 手で書いたコメントがあればそれを優先
-    missing = [it["code"] for it in picks if not bodies.get(it["code"]) and not descs.get(it["code"])]
-    if missing:
-        print(f"[room] AIの本文も紹介文もない商品 {len(missing)}件（商品名から短く作成）: {', '.join(missing)}")
+    print(f"[room] 1000円台 {len(budget_codes)}件・ほかのジャンル {len(picks) - len(budget_codes) - len(furusato_codes)}件・ふるさと納税 {len(furusato_codes)}件")
     rows = []
     for n, it in enumerate(picks):
         tag = tags[it["code"]]
@@ -266,6 +302,7 @@ h2{{font-size:.98rem;margin:0 0 6px}}.s{{display:inline-block;margin:0 6px 8px 0
 <div class="cnt">フォローした数 <b id="f">0</b> / {FOLLOW_GOAL}<button onclick="add('f')">＋1</button></div></section>
 <section><h2>③ いいね回り（目標 {LIKE_GOAL}件）</h2>
 <p>今日のリストの商品ジャンルで探すと、同じものに興味がある人に届く。オリジナル写真の投稿を優先して、気に入ったものだけに。</p>
+<p class="ng">⚠ 検索結果の一覧で♡を押すと、スクロールしたときに消えて記録されないことがあります。<b>投稿をタップして開いてから</b>♡を押してください。②で見つけた人の ROOM を開いて、その人の投稿にいいねするのもおすすめ。</p>
 {items}
 <div class="cnt">いいねした数 <b id="l">0</b> / {LIKE_GOAL}<button onclick="add('l')">＋1</button></div></section>
 <section><h2>やらないこと</h2>
