@@ -12,7 +12,8 @@
     "nene777:10000018",
     "itsube-souken:10000309",
     "sfd-ymt:10000345"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -22,7 +23,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-21-01-single.jpg",
    "codes": [
     "book:22140219"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "budget",
@@ -34,7 +36,8 @@
     "book:22140035",
     "darkangel:10002101",
     "book:22051634"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -46,7 +49,8 @@
     "f332054-kasaoka:10001070",
     "f413275-yoshinogari:10000591",
     "f261009-kyoto:10001494"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -56,7 +60,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-21-04-single.jpg",
    "codes": [
     "book:22110964"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-appliances",
@@ -68,7 +73,8 @@
     "azusa:10000195",
     "dyson:10002134",
     "wide02:10022807"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -77,7 +83,8 @@
    "text": "楽天 #PR\n🎬今日の楽天 急上昇TOP3【10/21】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-21-rising.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -87,7 +94,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-21-06-single.jpg",
    "codes": [
     "book:22110965"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -97,7 +105,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-21-07-furusato-single.jpg",
    "codes": [
     "f403458-shingu:10000756"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-interior",
@@ -109,7 +118,8 @@
     "apoloce:10000016",
     "dondon:10001821",
     "luckyspread:10000001"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
