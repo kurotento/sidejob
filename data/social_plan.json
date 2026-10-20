@@ -127,7 +127,8 @@
     "quads:10000095",
     "roomy:10015766",
     "doshisha-marche:10000266"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -137,7 +138,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-20-10-single.jpg",
    "codes": [
     "meikou-corp:10000058"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-interior",
@@ -149,7 +151,8 @@
     "t-interior:10000256",
     "tansu:10043927",
     "auc-kaei-trading:10000740"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -161,7 +164,8 @@
     "f434337-minamiaso:10000737",
     "f302015-wakayama:10000658",
     "f433691-nagomi:10000740"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -171,7 +175,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-20-13-single.jpg",
    "codes": [
     "kiroran:10000205"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-daily",
@@ -183,7 +188,8 @@
     "rakuten24:11148573",
     "rakuten24:11319035",
     "rakuten24:11342601"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -193,7 +199,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-20-15-single.jpg",
    "codes": [
     "book:22063721"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -202,7 +209,8 @@
    "text": "楽天 #PR\n🎬1000円台・送料無料 売れ筋TOP3【10/20】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-20-budget.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -212,7 +220,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-20-16-furusato-single.jpg",
    "codes": [
     "f202118-nakano:10000622"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-baby",
@@ -224,7 +233,8 @@
     "netbaby:10027922",
     "netbaby:10037814",
     "netbaby:10051424"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "alert",
