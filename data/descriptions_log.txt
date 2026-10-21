@@ -1,2 +1,1 @@
-2026-10-21 model=gemini-3.5-flash-lite 新規17件 / 対象18件
-yukyostore:10000040: ルール違反または不完全な出力のため不採用
+2026-10-22 model=gemini-3.5-flash-lite 新規22件 / 対象22件
