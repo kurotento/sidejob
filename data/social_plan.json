@@ -245,7 +245,8 @@
    "text": "楽天 #PR\nふるさと納税の人気返礼品も楽天ROOMで一覧にしてるよ🎁\nレビューが多い定番を中心に\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "genre-beauty",
@@ -257,7 +258,8 @@
     "brighte-onlineshop:10000000",
     "lunasol:10000924",
     "beautypark2017:10002719"
-   ]
+   ],
+   "scheduled": true
   }
  ]
 }
