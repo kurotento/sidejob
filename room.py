@@ -28,6 +28,11 @@ NICHE_GENRES = ("interior", "daily")  # インテリア・収納 / 日用品
 MORE_GENRES = ("beauty", "food", "baby", "appliances")
 TARGET = 22            # ふるさと納税以外で、1日に出したい件数
 FURUSATO_PER_DAY = 5
+# 本・CD・DVD など（好みが分かれて「1000円台だから載せた」ようにしか見えない／ROOM の投稿画面で写真が出ないことが多い）と
+# たばこ関連は出さない
+SKIP_SHOPS = {"book", "ploom"}
+SKIP_NAME = re.compile(r"CD|DVD|Blu-?ray|ブルーレイ|アルバム|写真集|月号|ムック|コミック|文庫|単行本|書籍|"
+                       r"VOLUME|カレンダー|トレカ|たばこ|タバコ", re.I)
 REPEAT_DAYS = 3  # room_list.json に残す日数（もう一度出さないかどうかは room_posted.json で決める）
 e = html.escape
 
@@ -168,7 +173,8 @@ def build(cfg, budget, descs, day, out_dir, save=True, fcats=None, fdescs=None, 
     # 同じ日に作り直したときも、先に出したリストの商品は出さない（もう投稿済みのことが多いため）
     recent = {c for codes in hist.values() for c in codes} | set(posted)
     # 候補を多めに集め、紹介文が作れたものだけを使う（「〇〇を探している人に」のような中身のない文は出さない）
-    fresh = lambda it: it["code"] not in recent and it["price"] <= 10000  # noqa: E731
+    fresh = lambda it: (it["code"] not in recent and it["price"] <= 10000  # noqa: E731
+                        and it["code"].split(":")[0] not in SKIP_SHOPS and not SKIP_NAME.search(it["name"]))
     cands = [it for it in budget or [] if fresh(it)][:PER_DAY]
     budget_codes = {it["code"] for it in cands}
     pools = [[it for it in (results or {}).get(g, []) if fresh(it)] for g in NICHE_GENRES + MORE_GENRES]
