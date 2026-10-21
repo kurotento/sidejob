@@ -129,7 +129,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-21-09-single.jpg",
    "codes": [
     "naireseisakusho:10000819"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-daily",
@@ -141,7 +142,8 @@
     "legendonlineshop:10000049",
     "mtgec-beauty:10002177",
     "wtw-cctv-camera:10000924"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -153,7 +155,8 @@
     "f303810-mihama:10000544",
     "f385069-ainan:10000343",
     "f192023-fujiyoshida:10000414"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -163,7 +166,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-21-12-single.jpg",
    "codes": [
     "book:22082298"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-baby",
@@ -175,7 +179,8 @@
     "netbaby:10018748",
     "kanseikukan:10000006",
     "sanho-store:10000068"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -185,7 +190,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-21-14-single.jpg",
    "codes": [
     "niccou-store:10000179"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -195,7 +201,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-21-15-furusato-single.jpg",
    "codes": [
     "f261009-kyoto:10005363"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -204,7 +211,8 @@
    "text": "楽天 #PR\n🎬1000円台・送料無料 売れ筋TOP3【10/21】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-21-budget.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "genre-food",
@@ -216,7 +224,8 @@
     "honjien-3:10003362",
     "once-in:10000163",
     "kanidokoro:10001911"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -226,7 +235,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-21-17-single.jpg",
    "codes": [
     "auc-kaei-trading:10000243"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "alert",
