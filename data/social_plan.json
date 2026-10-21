@@ -12,7 +12,8 @@
     "kouragumi:10000855",
     "superdeal:10004833",
     "netbaby:10037830"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -22,7 +23,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-22-01-single.jpg",
    "codes": [
     "book:22141033"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "budget",
@@ -34,7 +36,8 @@
     "q1st:10000348",
     "book:22141030",
     "fancl-shop:10009421"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -46,7 +49,8 @@
     "f406058-kawasaki:10000992",
     "f192082-minamiarupusu:10000080",
     "f092096-moka:10000046"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -56,7 +60,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-22-04-single.jpg",
    "codes": [
     "tsurunishi:10000281"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-interior",
@@ -68,7 +73,8 @@
     "cellutane:10001324",
     "tansu:10057010",
     "futon-colors:10000194"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -77,7 +83,8 @@
    "text": "楽天 #PR\n🎬今日の楽天 急上昇TOP3【10/22】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-22-rising.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -87,7 +94,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-22-06-single.jpg",
    "codes": [
     "book:22141031"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -97,7 +105,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-22-07-furusato-single.jpg",
    "codes": [
     "f016331-kamishihoro:10000134"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-daily",
@@ -109,7 +118,8 @@
     "cliffhangar:10002754",
     "toucher-home:10000396",
     "rakuten24:11348605"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
