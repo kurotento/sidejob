@@ -129,7 +129,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-22-09-single.jpg",
    "codes": [
     "book:22139469"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-baby",
@@ -141,7 +142,8 @@
     "netbaby:10053894",
     "irisplaza-r:10163793",
     "netbaby:10029707"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -153,7 +155,8 @@
     "f062073-kaminoyama:10001209",
     "f462012-kagoshima:10002108",
     "f352012-shimonoseki:10001282"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -163,7 +166,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-22-12-single.jpg",
    "codes": [
     "kurashikenkou:10220307"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-food",
@@ -175,7 +179,8 @@
     "yoshinoya-shop:10000973",
     "e-mon-p:10000575",
     "omosan:10000665"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -185,7 +190,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-22-14-single.jpg",
    "codes": [
     "anker:10000963"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -195,7 +201,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-22-15-furusato-single.jpg",
    "codes": [
     "f016446-ikeda:10000021"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -204,7 +211,8 @@
    "text": "楽天 #PR\n🎬1000円台・送料無料 売れ筋TOP3【10/22】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-22-budget.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "genre-beauty",
@@ -216,7 +224,8 @@
     "brandshiseido:10000124",
     "sk-ii:10003858",
     "lancome:10000136"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -226,7 +235,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-22-17-single.jpg",
    "codes": [
     "morecon2:10001798"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "alert",
