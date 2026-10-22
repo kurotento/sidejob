@@ -1,1 +1,5 @@
+
+[notice] A new release of pip is available: 26.2.1 -> 26.2.2
+[notice] To update, run: pip install --upgrade pip
 予約表に接続しました
+DM 送信 0件
