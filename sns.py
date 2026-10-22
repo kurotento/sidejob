@@ -39,6 +39,35 @@ INSTA_LEAD = {
 }
 
 
+IG_DM = DATA / "instagram_dm.json"  # 動画のURL → コメントに DM で返す文（igdm.py が使う）
+DM_KEYWORD = "リスト"
+
+
+def dm_text(cfg, v):
+    """リールに「リスト」とコメントした人へ送る DM。商品ページへ直接行けるリンクを入れる（ROOM は「まとめて見る」用）."""
+    head = "コメントありがとうございます！\n動画で紹介した商品のリンクです👇\n"
+    tail = (f"\nほかのおすすめはROOMにまとめています\n{cfg.get('room_url', '')}\n"
+            "※楽天アフィリエイトのリンクです（PR）\n※価格は動画を作った時点のものです")
+    body = ""
+    for i, it in enumerate(v.get("items") or []):
+        add = f"\n{i + 1}. {it['name']}（{it['price']}）\n{it['url']}\n"
+        if len(head + body + add + tail) > 950:  # DM は1000字まで
+            break
+        body += add
+    return head + body + tail
+
+
+def save_dm(cfg, day, videos):
+    base = cfg["base_url"].rstrip("/")
+    old = json.loads(IG_DM.read_text(encoding="utf-8")) if IG_DM.exists() else {}
+    keep = (dt.date.fromisoformat(day) - dt.timedelta(days=14)).isoformat()
+    out = {k: v for k, v in old.items() if v.get("day", "") >= keep}
+    for v in videos or []:
+        if v.get("items"):
+            out[f"{base}/{v['file']}"] = {"day": day, "text": dm_text(cfg, v)}
+    IG_DM.write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
+
+
 def item(service, kind, t, text, image="", video=""):
     return {"service": service, "kind": kind, "time": t.strftime("%m/%d %H:%M"),
             "due": t.astimezone(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z"),
@@ -68,7 +97,9 @@ def insta_posts(cfg, day, videos, at):
         kind = v.get("key", "") if v.get("key") in INSTA_TAGS else ("green" if v.get("theme") == "green" else "budget")
         kind = "green" if kind.startswith("furusato") else kind
         title = re.sub(r"\s*#\S+", "", v["title"]).strip()
-        cap = (f"{INSTA_LEAD[kind]}\n{title}\n\n30秒でまとめて紹介しています。気になったら保存しておいてね\n"
+        ask = (f"商品のリンクがほしい人は「{DM_KEYWORD}」とコメントしてね。DMで送ります\n"
+               if cfg.get("ig_dm") and v.get("items") else "")
+        cap = (f"{INSTA_LEAD[kind]}\n{title}\n\n30秒でまとめて紹介しています。気になったら保存しておいてね\n{ask}"
                f"商品はプロフィールのリンク（楽天ROOM）からまとめて見られます\n\n{INSTA_TAGS[kind]}")
         out.append(item("instagram", "reel", at(h, m), cap, video=f"{base}/{v['file']}"))
     for (h, m), v in zip(INSTA_STORY_TIMES, videos or []):
@@ -139,6 +170,7 @@ def build(cfg, day, videos, out_dir=None):
     else:
         posts = []
     have = {(x["service"], x["kind"], x["time"]) for x in posts}
+    save_dm(cfg, day, videos)
     insta = insta_posts(cfg, day, videos, at)
     if cfg.get("instagram_via") == "sheet":  # Instagram はスプレッドシートの予約表から投稿する（Buffer は使わない）
         to_sheet(cfg, day, insta, out_dir)

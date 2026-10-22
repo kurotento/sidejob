@@ -34,6 +34,7 @@ def tasks(day, videos):
     if week == day:
         out.append(("今日中", "Pinterest に今週のピン（pins.csv）をアップロード", "pins.csv",
                     "保存 → Pinterest の「ピンをまとめて作成」から取り込む（1週間分が自動で順に公開）"))
+    out.append(("18〜21時", "Instagram ストーリーにリンク付きで1〜3本", "story.html", "画像を保存 → リンクをコピー → スタンプに貼る"))
     out.append(("20〜22時", "楽天ROOM に投稿", "room.html", "新しい会員でログインしているか確認してから"))
     out.append(("20〜22時", "ROOM のいいね・フォロー回り", "room-engage.html", "フォロー20人・いいね50件まで"))
     if d.weekday() == 0:
