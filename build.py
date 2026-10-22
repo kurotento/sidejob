@@ -311,6 +311,11 @@ def main():
             print(f"[room] 投稿リスト {n}件")
         except Exception as ex:  # noqa: BLE001
             print(f"[room] 失敗: {ex}", file=sys.stderr)
+        try:  # Instagram ストーリー（リンクスタンプは手で付ける）の素材
+            import story
+            print(f"[story] 素材 {story.build(cfg, budget, results, day, OUT_DIR)}件")
+        except Exception as ex:  # noqa: BLE001
+            print(f"[story] 失敗: {ex}", file=sys.stderr)
     try:  # X の返信用ネタ帳
         import replies
         print(f"[replies] 質問 {replies.build(cfg, budget, cats, day, OUT_DIR, results)}件")

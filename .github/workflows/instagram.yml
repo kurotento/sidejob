@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ["igpost.py", "igsheet.py", ".github/workflows/instagram.yml"]
+    paths: ["igpost.py", "igsheet.py", "igdm.py", ".github/workflows/instagram.yml"]
 
 permissions:
   contents: write
@@ -35,6 +35,12 @@ jobs:
         run: |
           set -o pipefail
           { pip install --quiet gspread pynacl && python igpost.py; } 2>&1 | tail -40 | tee data/instagram_run.txt
+      - name: Reply to "リスト" comments by DM
+        if: always()
+        continue-on-error: true
+        env:
+          IG_TOKEN: ${{ secrets.IG_TOKEN }}
+        run: python igdm.py 2>&1 | tail -20 | tee -a data/instagram_run.txt
       - name: Commit Instagram log
         if: always()
         run: |

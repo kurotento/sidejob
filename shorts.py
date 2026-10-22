@@ -1015,7 +1015,10 @@ def build(cfg, results, budget, fcats, day, out_dir, log):
                 name = f"shorts/{day}-{t['key']}.mp4"
                 make_video_anim(slides, out_dir / name, work, seed=dt.date.fromisoformat(day).toordinal() + n)
             made.append({"file": name, "title": video_title(t, m, d), "desc": description(t, day, site), "theme": t["theme"], "key": t["key"],
-                         "sec": round(sum(s[2] for s in slides))})
+                         "sec": round(sum(s[2] for s in slides)),
+                         # Instagram のコメントに DM で返すときの商品リンク（動画と同じ順）
+                         "items": [{"name": short_name(it["name"], 30), "price": price_text(it), "url": it["url"]}
+                                   for it, _ in t["items"]]})
             log.append(f"[shorts] {name} {made[-1]['sec']}秒 {t['title']}")
         except Exception as ex:  # noqa: BLE001
             log.append(f"[shorts] 失敗 {t['title']}: {ex}")
