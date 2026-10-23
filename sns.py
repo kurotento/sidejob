@@ -57,6 +57,42 @@ def dm_text(cfg, v):
     return head + body + tail
 
 
+def story_name(file):
+    return file.replace(".mp4", "-story.mp4")
+
+
+def make_story_video(out_dir, file, sec=0):
+    """ストーリー用に「DMで『リスト』と送ってね」の帯を重ねた動画を作る（ストーリーはリンクを貼れないので DM に来てもらう）."""
+    import subprocess
+
+    from PIL import Image, ImageDraw
+
+    import design
+    src, dst = out_dir / file, out_dir / story_name(file)
+    if not src.exists():
+        return False
+    band = Image.new("RGBA", (1080, 1920), (0, 0, 0, 0))
+    d = ImageDraw.Draw(band)
+    # 最後の4秒だけ、画面の真ん中に出す（動画の型によって字幕の位置が違うので、ずっと出すと重なる）
+    d.rectangle((0, 0, 1080, 1920), fill=(0, 0, 0, 110))
+    d.rounded_rectangle((70, 780, 1010, 1140), 48, fill=(193, 53, 132, 245))
+    d.text((540, 880), "商品のリンクがほしい人は", font=design.font("sans", 50), fill="white", anchor="mm")
+    d.text((540, 980), f"DMで「{DM_KEYWORD}」と送ってね", font=design.font("sans", 72), fill="white", anchor="mm")
+    d.text((540, 1075), "すぐにリンクが届きます", font=design.font("sans", 44), fill="white", anchor="mm")
+    png = dst.with_suffix(".png")
+    band.save(png)
+    try:
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(src), "-i", str(png),
+                        "-filter_complex", f"[0:v][1:v]overlay=0:0:enable='gte(t,{max(sec - 4, 0)})'", "-c:a", "copy", "-c:v", "libx264", "-preset", "veryfast",
+                        "-crf", "23", "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(dst)], check=True)
+    except (OSError, subprocess.CalledProcessError) as ex:
+        print(f"[sns] ストーリー動画の作成に失敗: {ex}")
+        return False
+    finally:
+        png.unlink(missing_ok=True)
+    return True
+
+
 def save_dm(cfg, day, videos):
     base = cfg["base_url"].rstrip("/")
     old = json.loads(IG_DM.read_text(encoding="utf-8")) if IG_DM.exists() else {}
@@ -64,7 +100,7 @@ def save_dm(cfg, day, videos):
     out = {k: v for k, v in old.items() if v.get("day", "") >= keep}
     for v in videos or []:
         if v.get("items"):
-            out[f"{base}/{v['file']}"] = {"day": day, "text": dm_text(cfg, v)}
+            out[f"{base}/{v['file']}"] = out[f"{base}/{story_name(v['file'])}"] = {"day": day, "text": dm_text(cfg, v)}
     IG_DM.write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
 
 
@@ -89,7 +125,7 @@ def threads_posts(day, at):
     return out
 
 
-def insta_posts(cfg, day, videos, at):
+def insta_posts(cfg, day, videos, at, out_dir=None):
     base = cfg["base_url"].rstrip("/")
     out = []
     for (h, m), v in zip(INSTA_REEL_TIMES, videos or []):
@@ -103,7 +139,10 @@ def insta_posts(cfg, day, videos, at):
                f"商品はプロフィールのリンク（楽天ROOM）からまとめて見られます\n\n{INSTA_TAGS[kind]}")
         out.append(item("instagram", "reel", at(h, m), cap, video=f"{base}/{v['file']}"))
     for (h, m), v in zip(INSTA_STORY_TIMES, videos or []):
-        out.append(item("instagram", "story", at(h, m), "", video=f"{base}/{v['file']}"))
+        # DM の自動返信がオンなら、「DMで『リスト』と送ってね」の帯を重ねた動画を使う
+        file = (story_name(v["file"]) if cfg.get("ig_dm") and v.get("items") and out_dir and make_story_video(out_dir, v["file"], v.get("sec", 0))
+                else v["file"])
+        out.append(item("instagram", "story", at(h, m), "", video=f"{base}/{file}"))
     plan = DATA / "social_plan.json"
     if plan.exists():
         p = json.loads(plan.read_text(encoding="utf-8"))
@@ -171,7 +210,7 @@ def build(cfg, day, videos, out_dir=None):
         posts = []
     have = {(x["service"], x["kind"], x["time"]) for x in posts}
     save_dm(cfg, day, videos)
-    insta = insta_posts(cfg, day, videos, at)
+    insta = insta_posts(cfg, day, videos, at, out_dir)
     if cfg.get("instagram_via") == "sheet":  # Instagram はスプレッドシートの予約表から投稿する（Buffer は使わない）
         to_sheet(cfg, day, insta, out_dir)
         insta = []
