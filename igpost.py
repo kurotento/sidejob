@@ -91,9 +91,9 @@ def run():
             mid = publish(token, uid, r["種別"], r["動画URL"], r["キャプション"])
             ws.update(range_name=f"G{i}:I{i}", values=[["完了", igsheet.now_text(), f"media_id={mid}"]])
             log.append(f"{now:%m/%d %H:%M} {r['予約日時']} {r['種別']}: 完了 media_id={mid}")
-            if r["種別"] == "post":  # コメントへの DM 返信（igdm.py）で、どの動画の商品を送るか分かるように
+            if r["種別"] in ("post", "story"):  # DM 返信（igdm.py）で、どの動画の商品を送るか分かるように
                 media = json.loads(MEDIA.read_text(encoding="utf-8")) if MEDIA.exists() else {}
-                media[mid] = {"url": r["動画URL"], "at": now.isoformat()}
+                media[mid] = {"url": r["動画URL"], "at": now.isoformat(), "kind": r["種別"]}
                 MEDIA.write_text(json.dumps(media, ensure_ascii=False, indent=1), encoding="utf-8")
         except Exception as ex:  # noqa: BLE001
             ws.update(range_name=f"G{i}:I{i}", values=[["エラー", igsheet.now_text(), f"投稿処理エラー: {ex}"[:400]]])
