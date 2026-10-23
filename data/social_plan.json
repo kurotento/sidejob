@@ -11,7 +11,8 @@
    "due": "2026-10-24T00:00:00.000Z",
    "text": "楽天 #PR\nお買い物マラソン開催中！\n1ショップ1,000円以上の買い回りでポイント倍率が上がるやつ\n送料無料の1000円台、まとめてます\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#お買い物マラソン",
    "image": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "risers",
@@ -23,7 +24,8 @@
     "corlant:10000339",
     "attenir:10000252",
     "quads:10000127"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -33,7 +35,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-24-02-single.jpg",
    "codes": [
     "cocopeak:10000939"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "budget",
@@ -45,7 +48,8 @@
     "kenkocom:12148912",
     "isimaruudon:10000078",
     "kenkocom:12079545"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -57,7 +61,8 @@
     "f222101-fuji:10000911",
     "f222101-fuji:10000389",
     "f272132-izumisano:10005128"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -66,7 +71,8 @@
    "text": "楽天 #PR\n🎬今日の楽天 急上昇TOP3【10/24】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-24-rising.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -76,7 +82,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-24-05-single.jpg",
    "codes": [
     "book:22142562"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-baby",
@@ -88,7 +95,8 @@
     "rakutensokuhaimart:10046457",
     "bayeryakuhin:10000008",
     "netbaby:10023957"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -98,7 +106,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-24-07-single.jpg",
    "codes": [
     "rakutenoriginal-daily:10000001"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -108,7 +117,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-24-08-furusato-single.jpg",
    "codes": [
     "f212148-kani:10000462"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-food",
