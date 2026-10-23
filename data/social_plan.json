@@ -234,7 +234,8 @@
    "text": "楽天 #PR\n今日の売れ筋、楽天ROOMにもまとめたよ🛍\n1000円台・送料無料の買い回り候補はこちら\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -244,7 +245,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-23-17-single.jpg",
    "codes": [
     "kurashikenkou:10202026"
-   ]
+   ],
+   "scheduled": true
   }
  ]
 }
