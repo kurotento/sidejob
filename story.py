@@ -94,11 +94,17 @@ h2{{font-size:.9rem;margin:8px 0}}.b{{display:block;width:100%;box-sizing:border
 border:0;background:#c13584;color:#fff;font-size:.95rem;text-decoration:none;font-family:inherit}}.b.ok{{background:#2f8f3a}}
 ol{{font-size:.85rem;padding-left:20px}}</style></head><body>
 <header><h1>📷 Instagram ストーリー素材（{m}月{d}日）</h1><p>1日1〜3本。リンク付きストーリーで、見た人が商品ページへ直接行けます</p></header><main>
+<div id="pc" style="display:none;background:#fff3cd;border-radius:8px;padding:12px;margin:0 0 12px;font-size:.9rem">
+⚠ ストーリーはスマホの Instagram アプリでしか投稿できません。<b>スマホのカメラでこのQRコードを読んで</b>、スマホでこのページを開いてください。
+<div id="qr" style="margin:10px auto 0;width:180px"></div></div>
 <ol><li>①で画像を保存（スマホは長押し→「写真に保存」でもOK）</li><li>②でリンクをコピー</li>
 <li>③でInstagramを開き、保存した画像を選ぶ → 上のスタンプ → 「リンク」に貼り付け</li>
 <li>スタンプは「▼ 商品ページはこちら ▼」のすぐ下に置き、表示する文字を「商品を見る」に変える</li></ol>
 {cards or '<p>今日の素材はありません</p>'}</main>
-<script>document.querySelectorAll("button[data-u]").forEach(b=>b.onclick=async()=>{{
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>if(!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){{document.getElementById("pc").style.display="block";
+try{{new QRCode(document.getElementById("qr"),{{text:location.href,width:180,height:180}})}}catch(e){{}}}}
+document.querySelectorAll("button[data-u]").forEach(b=>b.onclick=async()=>{{
 try{{await navigator.clipboard.writeText(b.dataset.u);b.textContent="✓ コピーしました";b.classList.add("ok")}}catch(e){{prompt("コピーしてください",b.dataset.u)}}}});</script>
 </body></html>"""
     (out_dir / "story.html").write_text(page, encoding="utf-8")
