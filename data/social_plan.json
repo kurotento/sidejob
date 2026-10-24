@@ -233,7 +233,8 @@
    "text": "楽天 #PR\n収納・日用品の人気どころを楽天ROOMに集めてます📦\n寝る前のお買い物チェックにどうぞ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "genre-interior",
@@ -245,7 +246,8 @@
     "bedandmat:10013442",
     "futon-colors:10000021",
     "lgcity:10001537"
-   ]
+   ],
+   "scheduled": true
   }
  ]
 }
