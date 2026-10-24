@@ -11,7 +11,8 @@
    "due": "2026-10-24T23:15:00.000Z",
    "text": "楽天 #PR\n今日は5と0のつく日！\n楽天カードで買う人はエントリーを忘れずに✍️\n（条件は楽天の公式ページで確認してね）\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html",
    "image": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "risers",
@@ -23,7 +24,8 @@
     "e-kurashi:10039909",
     "kainomahou:10000163",
     "kurashikenkou:10229583"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -45,7 +47,8 @@
     "and-a-me:10000023",
     "i-d-collection:10000081",
     "otsumami-gallery:10000861"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -57,7 +60,8 @@
     "f016918-betsukai:10002938",
     "f272132-izumisano:10005033",
     "f122025-choshi:10000370"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -67,7 +71,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-25-05-single.jpg",
    "codes": [
     "book:22139164"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -76,7 +81,8 @@
    "text": "楽天 #PR\n🎬今日の楽天 急上昇TOP3【10/25】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-25-rising.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "genre-food",
@@ -88,7 +94,8 @@
     "kanidokoro:10001780",
     "kanidokoro:10001852",
     "kouragumi:10000367"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -98,7 +105,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-25-07-single.jpg",
    "codes": [
     "book:22082302"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -108,7 +116,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-25-08-furusato-single.jpg",
    "codes": [
     "f452025-miyakonojo:10007362"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-beauty",
