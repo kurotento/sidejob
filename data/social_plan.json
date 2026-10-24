@@ -130,7 +130,8 @@
     "wataberu:10000001",
     "ricetanaka:10000004",
     "komatirain:10000001"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -140,7 +141,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-24-10-single.jpg",
    "codes": [
     "kanagawa-store:10000001"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-beauty",
@@ -152,7 +154,8 @@
     "tvert:10000064",
     "kao-haircare:10000003",
     "stylife:15348833"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -164,7 +167,8 @@
     "f402052-iizuka:10000315",
     "f253847-ryuo:10001383",
     "f032051-hanamaki:10000827"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -174,7 +178,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-24-13-single.jpg",
    "codes": [
     "darkangel:10033494"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-appliances",
@@ -186,7 +191,8 @@
     "mycosmeticbox:10000390",
     "drip-pod:10000253",
     "dinos-tv:10011772"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -195,7 +201,8 @@
    "text": "楽天 #PR\n🎬1000円台・送料無料 売れ筋TOP3【10/24】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-24-budget.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -205,7 +212,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-24-15-single.jpg",
    "codes": [
     "market-place-osaka:10000308"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -215,7 +223,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-24-16-furusato-single.jpg",
    "codes": [
     "f452017-miyazaki:10002014"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "alert",
