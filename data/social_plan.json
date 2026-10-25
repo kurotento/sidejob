@@ -23,7 +23,8 @@
     "darkangel:10036320",
     "kiso:10000153",
     "kurashikenkou:10225574"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -33,7 +34,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-26-02-single.jpg",
    "codes": [
     "hanwha:10001756"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-beauty",
@@ -45,7 +47,8 @@
     "asiabnc:10000396",
     "asiabnc:10000078",
     "dalba:10000493"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -57,7 +60,8 @@
     "f016683-shiranuka:10000214",
     "f012190-mombetsu:10000000",
     "f464686-osaki:10000102"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -67,7 +71,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-26-05-single.jpg",
    "codes": [
     "hello-brillo:10000202"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -76,7 +81,8 @@
    "text": "楽天 #PR\n🎬今日の楽天 急上昇TOP3【10/26】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-26-rising.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "genre-appliances",
@@ -88,7 +94,8 @@
     "azusa:10000193",
     "kobe-beauty-labo:10000074",
     "auc-risecreation:10003276"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -98,7 +105,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-26-07-single.jpg",
    "codes": [
     "devirockstore:10030402"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -108,7 +116,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-26-08-furusato-single.jpg",
    "codes": [
     "f016918-betsukai:10000359"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-interior",
