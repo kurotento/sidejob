@@ -129,7 +129,8 @@
     "yunth:10000137",
     "whithwhite:10000218",
     "vtcosmetic-official:10002394"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "event",
@@ -137,7 +138,8 @@
    "due": "2026-10-25T06:45:00.000Z",
    "text": "楽天 #PR\nお買い物マラソン開催中！\n1ショップ1,000円以上の買い回りでポイント倍率が上がるやつ\n送料無料の1000円台、まとめてます\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#お買い物マラソン",
    "image": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -147,7 +149,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-25-11-single.jpg",
    "codes": [
     "kobe-beauty-labo:10002807"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-appliances",
@@ -159,7 +162,8 @@
     "auc-risecreation:10004620",
     "vesync:10000022",
     "brita:10000161"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -171,7 +175,8 @@
     "f016918-betsukai:10003150",
     "f222038-numazu:10000120",
     "f016683-shiranuka:10000354"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -181,7 +186,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-25-14-single.jpg",
    "codes": [
     "queeneyes:10000429"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "weekly",
@@ -190,7 +196,8 @@
    "text": "楽天 #PR\n保存版📌 今週の1000円台・送料無料 売れ筋TOP10\n買い回りの候補に使ってね\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #1000円台 #買い回り",
    "image": "https://kurotento.github.io/sidejob/social/2026-10-25-weekly-budget.png",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "genre-interior",
@@ -202,7 +209,8 @@
     "e-kurashi:10007962",
     "eunicedress:10001863",
     "t-interior:10000113"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -211,7 +219,8 @@
    "text": "楽天 #PR\n🎬1000円台・送料無料 売れ筋TOP3【10/25】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-25-budget.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -221,7 +230,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-25-16-single.jpg",
    "codes": [
     "beach8002:10008677"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
