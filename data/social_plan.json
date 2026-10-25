@@ -241,7 +241,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-25-17-furusato-single.jpg",
    "codes": [
     "f452076-kushima:10000747"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "alert",
@@ -250,7 +251,8 @@
    "text": "楽天 #PR\nふるさと納税の人気返礼品も楽天ROOMで一覧にしてるよ🎁\nレビューが多い定番を中心に\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "weekly",
@@ -259,7 +261,8 @@
    "text": "楽天 #PR\n保存版📌 ふるさと納税 寄付1万円以下の人気返礼品TOP10\nレビューの多い定番から選べるよ\n👇\nhttps://kurotento.github.io/sidejob/furusato/price.html\n#ふるさと納税 #楽天ふるさと納税 #返礼品",
    "image": "https://kurotento.github.io/sidejob/social/2026-10-25-weekly-furusato.png",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "genre-daily",
