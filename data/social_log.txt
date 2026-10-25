@@ -1,1 +1,20 @@
 2026-10-26 計画 22件（セール判定: ['お買い物マラソン', '買い回り'] / 残り枠 19 / 候補 47）
+--- 07:34 予約処理[x]: 空き枠 10 / 未予約 22
+08:15 event: 失敗 Invalid post: Whoops, it looks like you've already got this one scheduled or posted around the same time. We're not able to post the same thing twice so close together.
+09:00 budget: 予約 / 274文字
+09:45 single: 予約 / 203文字
+10:30 genre-beauty: 予約 / 280文字
+11:15 furusato-top: 予約 / 276文字
+12:00 single: 予約 / 216文字
+10/26 12:30 video: 予約 / 121文字
+12:45 genre-appliances: 予約 / 274文字
+13:30 single: 予約 / 264文字
+14:15 furusato-single: 予約 / 211文字
+--- 07:34 予約処理[threads]: 空き枠 10 / 未予約 3
+10/26 12:15 threads: 予約（返信つき） / 188文字
+10/26 19:00 threads: 予約（返信つき） / 202文字
+10/26 21:30 threads: 予約（返信つき） / 223文字
+--- 07:34 予約処理[instagram]: 空き枠 10 / 未予約 0
+--- 07:34 予約処理[youtube]: 空き枠 10 / 未予約 2
+10/26 17:30 short: 予約 / 508文字
+10/26 20:30 short: 予約 / 506文字
