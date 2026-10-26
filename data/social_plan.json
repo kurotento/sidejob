@@ -1,5 +1,5 @@
 {
- "day": "2026-10-26",
+ "day": "2026-10-27",
  "sale": [
   "お買い物マラソン",
   "買い回り"
@@ -7,256 +7,226 @@
  "posts": [
   {
    "kind": "event",
-   "time": "08:15",
-   "due": "2026-10-25T23:15:00.000Z",
+   "time": "09:00",
+   "due": "2026-10-27T00:00:00.000Z",
    "text": "楽天 #PR\nお買い物マラソン開催中！\n1ショップ1,000円以上の買い回りでポイント倍率が上がるやつ\n送料無料の1000円台、まとめてます\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#お買い物マラソン",
    "image": "",
    "codes": []
   },
   {
-   "kind": "budget",
-   "time": "09:00",
-   "due": "2026-10-26T00:00:00.000Z",
-   "text": "楽天 #PR\n1000円台・送料無料で今売れてるやつ\n1️⃣パンツ 元祖裏起毛 裏起毛…（送料無料）\n2️⃣KISO CARE 高濃度美…（送料無料）\n3️⃣訳あり焙じ茶が激熱価格（送料無料）\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#ダンボールニット #ヒト幹細胞 #訳あり焙じ茶が激熱価格 #お買い物マラソン #買い回り",
-   "image": "https://kurotento.github.io/sidejob/social/2026-10-26-01-budget.png",
-   "codes": [
-    "darkangel:10036320",
-    "kiso:10000153",
-    "kurashikenkou:10225574"
-   ],
-   "scheduled": true
-  },
-  {
-   "kind": "single",
+   "kind": "risers",
    "time": "09:45",
-   "due": "2026-10-26T00:45:00.000Z",
-   "text": "楽天 #PR\nレビュー5,000件超えの定番\n\nはちみつ紅茶 ハチミツティー 2箱 50包 25袋入り2箱セット はちみつ紅茶…\n1,000円、送料無料！（★4.5）\n👇\nhttps://kurotento.github.io/sidejob/item-hanwha-10001756.html\n#はちみつ紅茶 #お買い物マラソン #買い回り",
-   "image": "https://kurotento.github.io/sidejob/social/2026-10-26-02-single.jpg",
+   "due": "2026-10-27T00:45:00.000Z",
+   "text": "楽天 #PR\n今これ急に売れてる📈\n1️⃣浄水器のブリタ 交換用カート… 4,082円（25位UP）\n2️⃣レコルト スープメーカー 豆… 19,800円（21位UP）\n3️⃣アタックZERO 洗濯洗剤… 10,794円（18位UP）\n👇\nhttps://kurotento.github.io/sidejob/\n#浄水器のブリタ #レコルト #洗濯洗剤 #お買い物マラソン #買い回り",
+   "image": "https://kurotento.github.io/sidejob/social/2026-10-27-01-risers.png",
    "codes": [
-    "hanwha:10001756"
-   ],
-   "scheduled": true
-  },
-  {
-   "kind": "genre-beauty",
-   "time": "10:30",
-   "due": "2026-10-26T01:30:00.000Z",
-   "text": "楽天 #PR\n美容・コスメ・香水の売れ筋チェック✍️\n1️⃣10周年記念エディション メガパレッ…（1位）\n2️⃣ベターザンパレット rom&nd o…（3位）\n3️⃣d'Alba ( ダルバ ) 5,530円（4位）\n📌くわしくはプロフィールのリンクから\n#周年記念エディション #ベターザンパレット #ダルバ #お買い物マラソン",
-   "image": "https://kurotento.github.io/sidejob/social/2026-10-26-03-genre-beauty.png",
-   "codes": [
-    "asiabnc:10000396",
-    "asiabnc:10000078",
-    "dalba:10000493"
-   ],
-   "scheduled": true
-  },
-  {
-   "kind": "furusato-top",
-   "time": "11:15",
-   "due": "2026-10-26T02:15:00.000Z",
-   "text": "楽天 #PR\nふるさと納税、海鮮・魚介ならこのへんが人気\n1️⃣4.70 サーモ… 寄付11,000円（北海道白糠町）\n2️⃣北海道 オホーツ… 寄付11,000円（北海道紋別市）\n3️⃣うなぎ 国産 鰻… 寄付9,000円（鹿児島県大崎町）\n👇\nhttps://kurotento.github.io/sidejob/furusato/seafood.html\n#エンペラーサーモン #ホタテ玉冷 #ふるさと納税",
-   "image": "https://kurotento.github.io/sidejob/social/2026-10-26-04-furusato-top.png",
-   "codes": [
-    "f016683-shiranuka:10000214",
-    "f012190-mombetsu:10000000",
-    "f464686-osaki:10000102"
-   ],
-   "scheduled": true
-  },
-  {
-   "kind": "single",
-   "time": "12:00",
-   "due": "2026-10-26T03:00:00.000Z",
-   "text": "楽天 #PR\nレビュー1,000件超えの定番\n\nMagSafe対応 iphone17 ケース iPhoneケース スマホケース…\n送料無料！（★4.5）\nMagSafe対応のスマートフォン用ケースだよ。\n👇\nhttps://kurotento.github.io/sidejob/item-hello-brillo-10000202.html\n#ケース #お買い物マラソン #買い回り",
-   "image": "https://kurotento.github.io/sidejob/social/2026-10-26-05-single.jpg",
-   "codes": [
-    "hello-brillo:10000202"
-   ],
-   "scheduled": true
-  },
-  {
-   "kind": "video",
-   "time": "10/26 12:30",
-   "due": "2026-10-26T03:30:00.000Z",
-   "text": "楽天 #PR\n🎬今日の楽天 急上昇TOP3【10/26】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
-   "image": "",
-   "video": "https://kurotento.github.io/sidejob/shorts/2026-10-26-rising.mp4",
-   "codes": [],
-   "scheduled": true
-  },
-  {
-   "kind": "genre-appliances",
-   "time": "12:45",
-   "due": "2026-10-26T03:45:00.000Z",
-   "text": "楽天 #PR\n家電で今いちばん売れてるのはこの3つ\n1️⃣ヘアアイロン ストレート アイロ… 5,980円（3位）\n2️⃣SALONIA ストレート ヘア… 3,062円（5位）\n3️⃣強力6枚刃 毛玉取り器 充電式… 3,280円（8位）\n📌くわしくはプロフィールのリンクから\n#ヘアアイロン #毛玉取り器 #お買い物マラソン",
-   "image": "https://kurotento.github.io/sidejob/social/2026-10-26-06-genre-appliances.png",
-   "codes": [
-    "azusa:10000193",
-    "kobe-beauty-labo:10000074",
-    "auc-risecreation:10003276"
-   ],
-   "scheduled": true
-  },
-  {
-   "kind": "single",
-   "time": "13:30",
-   "due": "2026-10-26T04:30:00.000Z",
-   "text": "楽天 #PR\nこれ1000円台なのに送料無料\n\nデビラボ ROOM 長袖パジャマ 子供服 キッズ 男の子 女の子 パジャマ 長袖…\n送料無料！（★4.7）\nデビラボのROOM長袖パジャマは、キッズ向けの綿100％ルームウェアだよ。\n👇\nhttps://kurotento.github.io/sidejob/item-devirockstore-10030402.html\n#長袖パジャマ #お買い物マラソン #買い回り",
-   "image": "https://kurotento.github.io/sidejob/social/2026-10-26-07-single.jpg",
-   "codes": [
-    "devirockstore:10030402"
-   ],
-   "scheduled": true
-  },
-  {
-   "kind": "furusato-single",
-   "time": "14:15",
-   "due": "2026-10-26T05:15:00.000Z",
-   "text": "楽天 #PR\n📍北海道別海町の人気返礼品\n\n北海道産 新物 いくら 醤油漬け\n寄付額28,000円｜北海道別海町\n北海道産の鮭卵を使った、醤油漬けのいくらだよ。\n👇\nhttps://kurotento.github.io/sidejob/furusato/item-f016918-betsukai-10000359.html\n#醤油漬け #ふるさと納税 #楽天ふるさと納税",
-   "image": "https://kurotento.github.io/sidejob/social/2026-10-26-08-furusato-single.jpg",
-   "codes": [
-    "f016918-betsukai:10000359"
-   ],
-   "scheduled": true
-  },
-  {
-   "kind": "genre-interior",
-   "time": "15:00",
-   "due": "2026-10-26T06:00:00.000Z",
-   "text": "楽天 #PR\nインテリア・寝具・収納で今いちばん売れてるのはこの3つ\n1️⃣ラグ カーペット ラグマット シ…（4位）\n2️⃣ふわとろ 毛布 選べる AIR・…（5位）\n3️⃣20時～ NERUS マルチスロ… 4,980円（6位）\n👇\nhttps://kurotento.github.io/sidejob/interior.html\n#ラグ #ふわとろ #マルチスロー #お買い物マラソン #買い回り",
-   "image": "https://kurotento.github.io/sidejob/social/2026-10-26-09-genre-interior.png",
-   "codes": [
-    "t-interior:10000338",
-    "decori:10000575",
-    "t-interior:10000275"
+    "brita:10000052",
+    "roomy:10018139",
+    "rakuten24:11128650"
    ]
   },
   {
    "kind": "single",
-   "time": "15:45",
-   "due": "2026-10-26T06:45:00.000Z",
-   "text": "楽天 #PR\n送料無料の1000円台、買い回りの1店舗に\n\nダンボールニット トップス レディース 長袖 Aライン プルオーバー チュニック…\n送料無料！（★4.0）\n👇\nhttps://kurotento.github.io/sidejob/item-darkangel-10035762.html\n#ダンボールニット #お買い物マラソン #買い回り",
-   "image": "https://kurotento.github.io/sidejob/social/2026-10-26-10-single.jpg",
+   "time": "10:30",
+   "due": "2026-10-27T01:30:00.000Z",
+   "text": "楽天 #PR\nレビュー4,000件超えの定番\n\nサーティワン\n1,000円、送料無料！（★4.7）\nこれは、日本国内のサーティワン アイスクリーム店舗で使える1000円分の楽券eギフトだよ。\n👇\nhttps://kurotento.github.io/sidejob/item-rakkenshop-10000003.html\n#サーティワン #お買い物マラソン #買い回り",
+   "image": "https://kurotento.github.io/sidejob/social/2026-10-27-02-single.jpg",
    "codes": [
-    "darkangel:10035762"
-   ],
-   "scheduled": true
+    "rakkenshop:10000003"
+   ]
   },
   {
-   "kind": "genre-daily",
-   "time": "16:30",
-   "due": "2026-10-26T07:30:00.000Z",
-   "text": "楽天 #PR\n日用品雑貨・文房具・手芸で今いちばん売れてるのはこの3つ\n1️⃣Nissyプロデュース… 3,446円（1位）\n2️⃣NISHIZARC 隙間… 1,280円（2位）\n3️⃣滑らないハンガー スリム…（5位）\n📌くわしくはプロフィールのリンクから\n#柔軟剤 #隙間掃除ブラシ #滑らないハンガー #お買い物マラソン",
-   "image": "https://kurotento.github.io/sidejob/social/2026-10-26-11-genre-daily.png",
+   "kind": "budget",
+   "time": "11:15",
+   "due": "2026-10-27T02:15:00.000Z",
+   "text": "楽天 #PR\n買い回りの1店舗に使える1000円台\n1️⃣ファミリーマート 1,000円（送料無料）\n2️⃣パンツ ワイドパンツ レ…（送料無料）\n3️⃣履くホカロン 冷えとり… 1,692円（送料無料）\n📌くわしくはプロフィールのリンクから\n#ファミリーマート #ワイドパンツ #ミニクルー #お買い物マラソン",
+   "image": "https://kurotento.github.io/sidejob/social/2026-10-27-03-budget.png",
    "codes": [
-    "contribution:10000960",
-    "decori:10000583",
-    "eunicedress:10001812"
-   ],
-   "scheduled": true
+    "rakkenshop:10000083",
+    "darkangel:10034443",
+    "renfrojapan:10000244"
+   ]
   },
   {
    "kind": "furusato-top",
-   "time": "17:15",
-   "due": "2026-10-26T08:15:00.000Z",
-   "text": "楽天 #PR\n今年のふるさと納税に。お米の定番返礼品\n1️⃣令和8年熊本地震… 寄付4,000円（熊本県高森町）\n2️⃣新米 予約 米… 寄付1,500円（石川県宝達志水町）\n3️⃣お米豚セット -… 寄付15,000円（宮崎県都城市）\n👇\nhttps://kurotento.github.io/sidejob/furusato/rice.html\n#お米 #能登米 #ふるさと納税 #楽天ふるさと納税",
-   "image": "https://kurotento.github.io/sidejob/social/2026-10-26-12-furusato-top.png",
+   "time": "12:00",
+   "due": "2026-10-27T03:00:00.000Z",
+   "text": "楽天 #PR\nふるさと納税、お米ならこのへんが人気\n1️⃣累計487万kg出荷 寄付6,000円（福岡県赤村）\n2️⃣熊本 無洗米 高レビ… 寄付6,500円（熊本県御船町）\n3️⃣令和8年熊本地震復興… 寄付6,000円（熊本県高森町）\n👇\nhttps://kurotento.github.io/sidejob/furusato/rice.html\n#無洗米 #容量 #ふるさと納税 #楽天ふるさと納税",
+   "image": "https://kurotento.github.io/sidejob/social/2026-10-27-04-furusato-top.png",
    "codes": [
-    "f434281-takamori:10000542",
-    "f173860-hodatsushimizu:10000450",
-    "f452025-miyakonojo:10003918"
-   ],
-   "scheduled": true
-  },
-  {
-   "kind": "single",
-   "time": "18:00",
-   "due": "2026-10-26T09:00:00.000Z",
-   "text": "楽天 #PR\n送料無料の1000円台、買い回りの1店舗に\n\n乾燥機OK えらべるデザイン アソートパンツ 子供服 キッズ 男の子 女の子 吸…\n送料無料！（★4.7）\n👇\nhttps://kurotento.github.io/sidejob/item-devirockstore-10031954.html\n#えらべるデザイン #お買い物マラソン #買い回り",
-   "image": "https://kurotento.github.io/sidejob/social/2026-10-26-13-single.jpg",
-   "codes": [
-    "devirockstore:10031954"
-   ],
-   "scheduled": true
-  },
-  {
-   "kind": "genre-baby",
-   "time": "18:45",
-   "due": "2026-10-26T09:45:00.000Z",
-   "text": "楽天 #PR\nキッズ・ベビー・マタニティで今いちばん売れてるのはこの3つ\n1️⃣アライさん楽天ROOMコラボ（1位）\n2️⃣マミーポコパンツ 大きめで長〜く…（2位）\n3️⃣パンパース オムツ さらさらケア…（3位）\n📌くわしくはプロフィールのリンクから\n#マミーポコパンツ #パンパース #お買い物マラソン",
-   "image": "https://kurotento.github.io/sidejob/social/2026-10-26-14-genre-baby.png",
-   "codes": [
-    "evercloset:10001644",
-    "netbaby:10028506",
-    "netbaby:10028658"
-   ],
-   "scheduled": true
-  },
-  {
-   "kind": "single",
-   "time": "19:30",
-   "due": "2026-10-26T10:30:00.000Z",
-   "text": "楽天 #PR\nこれ1000円台なのに送料無料\n\nそのロンT、本当に透けない？ロンT レディース トップス 長袖 綿100 Tシャ…\n1,980円、送料無料！（★4.3）\n👇\nhttps://kurotento.github.io/sidejob/item-antiqua-a-10025922.html\n#カットソー #お買い物マラソン #買い回り",
-   "image": "https://kurotento.github.io/sidejob/social/2026-10-26-15-single.jpg",
-   "codes": [
-    "antiqua-a:10025922"
-   ],
-   "scheduled": true
+    "f406091-aka:10000539",
+    "f434418-mifune:10000461",
+    "f434281-takamori:10000628"
+   ]
   },
   {
    "kind": "video",
-   "time": "10/26 19:45",
-   "due": "2026-10-26T10:45:00.000Z",
-   "text": "楽天 #PR\n🎬1000円台・送料無料 売れ筋TOP3【10/26】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
+   "time": "10/27 12:30",
+   "due": "2026-10-27T03:30:00.000Z",
+   "text": "楽天 #PR\n🎬今日の楽天 急上昇TOP3【10/27】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
-   "video": "https://kurotento.github.io/sidejob/shorts/2026-10-26-budget.mp4",
-   "codes": [],
-   "scheduled": true
-  },
-  {
-   "kind": "furusato-single",
-   "time": "20:15",
-   "due": "2026-10-26T11:15:00.000Z",
-   "text": "楽天 #PR\nふるさと納税の定番返礼品\n\n甲羅組 背ワタなし 高級ブラックタイガー（大型むきえび） 300g〜5kg（1k…\n寄付額7,000円｜福井県敦賀市\n👇\nhttps://kurotento.github.io/sidejob/furusato/item-f182028-tsuruga-10000394.html\n#高級ブラックタイガー #ふるさと納税 #楽天ふるさと納税",
-   "image": "https://kurotento.github.io/sidejob/social/2026-10-26-16-furusato-single.jpg",
-   "codes": [
-    "f182028-tsuruga:10000394"
-   ],
-   "scheduled": true
-  },
-  {
-   "kind": "genre-food",
-   "time": "21:00",
-   "due": "2026-10-26T12:00:00.000Z",
-   "text": "楽天 #PR\n食品、今日はこれが売れてる\n1️⃣〈無塩〉 骨取りさば 北欧産 訳あり（…（1位）\n2️⃣〈無塩〉骨取り銀さけ 訳あり 鮭（選べる…（2位）\n3️⃣骨とり 骨なし 鯖 さば 冷凍食品 お中…（3位）\n👇\nhttps://kurotento.github.io/sidejob/food.html\n#骨取りさば #骨取り銀さけ #冷凍食品 #お買い物マラソン #買い回り",
-   "image": "https://kurotento.github.io/sidejob/social/2026-10-26-17-genre-food.png",
-   "codes": [
-    "yamagoiida:10000077",
-    "yamagoiida:10000148",
-    "kouragumi:10001520"
-   ],
-   "scheduled": true
-  },
-  {
-   "kind": "alert",
-   "time": "10/26 21:00",
-   "due": "2026-10-26T12:00:00.000Z",
-   "text": "楽天 #PR\n楽天ROOMを更新したよ✨\n今日ランキングに入っていたものを追加しました\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
-   "image": "",
-   "video": "",
-   "codes": [],
-   "scheduled": true
+   "video": "https://kurotento.github.io/sidejob/shorts/2026-10-27-rising.mp4",
+   "codes": []
   },
   {
    "kind": "single",
-   "time": "22:00",
-   "due": "2026-10-26T13:00:00.000Z",
-   "text": "楽天 #PR\nレビュー3,000件超えの定番\n\nyuki × CRAIFE コラボ ニコピアス イヤリング 金属アレルギー対応…\n1,680円、送料無料！（★4.7）\n👇\nhttps://kurotento.github.io/sidejob/item-craife-10000859.html\n#ニコピアス #お買い物マラソン #買い回り",
-   "image": "https://kurotento.github.io/sidejob/social/2026-10-26-18-single.jpg",
+   "time": "12:45",
+   "due": "2026-10-27T03:45:00.000Z",
+   "text": "楽天 #PR\n昨日から158位も上がってる📈\n\nミックスナッツ 1kg 素焼きミックスナッツ 大人気3種類素焼きナッツ プレミア…\n1,899円、送料無料！（★4.5）\n👇\nhttps://kurotento.github.io/sidejob/item-nuthyougo-10000672.html\n#ミックスナッツ #お買い物マラソン #買い回り",
+   "image": "https://kurotento.github.io/sidejob/social/2026-10-27-05-single.jpg",
    "codes": [
-    "craife:10000859"
-   ],
-   "scheduled": true
+    "nuthyougo:10000672"
+   ]
+  },
+  {
+   "kind": "genre-appliances",
+   "time": "13:30",
+   "due": "2026-10-27T04:30:00.000Z",
+   "text": "楽天 #PR\n家電、今日はこれが売れてる\n1️⃣レコルト 自動調理ポット ラ… 19,800円（8位）\n2️⃣COSORI ノンフライヤー… 13,980円（10位）\n3️⃣ソーダストリーム 交換用 ク… 4,980円（11位）\n📌くわしくはプロフィールのリンクから\n#レコルト #ノンフライヤー #ソーダストリーム #お買い物マラソン",
+   "image": "https://kurotento.github.io/sidejob/social/2026-10-27-06-genre-appliances.png",
+   "codes": [
+    "plywood:10022493",
+    "vesync:10000001",
+    "sodastream:10000423"
+   ]
+  },
+  {
+   "kind": "single",
+   "time": "14:15",
+   "due": "2026-10-27T05:15:00.000Z",
+   "text": "楽天 #PR\n昨日から241位も上がってる📈\n\nサンサンスポンジ 4個セット 全9色 キッチンスポンジ 長持ち 洗いやすい 食器…\n1,584円、送料無料！（★4.7）\n👇\nhttps://kurotento.github.io/sidejob/item-dainichi-corp-10000046.html\n#サンサンスポンジ #お買い物マラソン #買い回り",
+   "image": "https://kurotento.github.io/sidejob/social/2026-10-27-07-single.jpg",
+   "codes": [
+    "dainichi-corp:10000046"
+   ]
+  },
+  {
+   "kind": "furusato-single",
+   "time": "15:00",
+   "due": "2026-10-27T06:00:00.000Z",
+   "text": "楽天 #PR\n📍愛知県南知多町の人気返礼品\n\n選べる 国産しらす 500g - 4kg 訳あり 贈答 ギフト 生しらす しらす…\n寄付額5,000円｜愛知県南知多町\n愛知県南知多町の師崎漁港で水揚げされた国産のしらすだよ。\n👇\nhttps://kurotento.github.io/sidejob/furusato/item-f234451-minamichita-10000856.html\n#しらす #ふるさと納税 #楽天ふるさと納税",
+   "image": "https://kurotento.github.io/sidejob/social/2026-10-27-08-furusato-single.jpg",
+   "codes": [
+    "f234451-minamichita:10000856"
+   ]
+  },
+  {
+   "kind": "genre-interior",
+   "time": "15:45",
+   "due": "2026-10-27T06:45:00.000Z",
+   "text": "楽天 #PR\nインテリア・寝具・収納、今日はこれが売れてる\n1️⃣コロ脚 中が透けない 壁付き チ…（2位）\n2️⃣ヒツジのいらない枕 枕 枕カバー…（6位）\n3️⃣ふわとろ 毛布 選べる AIR・…（7位）\n👇\nhttps://kurotento.github.io/sidejob/interior.html\n#コロ脚 #ヒツジのいらない枕 #ふわとろ #お買い物マラソン #買い回り",
+   "image": "https://kurotento.github.io/sidejob/social/2026-10-27-09-genre-interior.png",
+   "codes": [
+    "e-kurashi:10048736",
+    "33taiyo:10000020",
+    "decori:10000575"
+   ]
+  },
+  {
+   "kind": "single",
+   "time": "16:30",
+   "due": "2026-10-27T07:30:00.000Z",
+   "text": "楽天 #PR\n昨日から239位も上がってる📈\n\n炭酸水 500ml 24本 アイリスオーヤマ 強炭酸水 選べる ラベルレス プレ…\n送料無料！（★4.6）\nこれはアイリスオーヤマのクリスタルスパークという強炭酸水だよ。\n👇\nhttps://kurotento.github.io/sidejob/item-irisplaza-r-10158174.html\n#アイリスオーヤマ #お買い物マラソン #買い回り",
+   "image": "https://kurotento.github.io/sidejob/social/2026-10-27-10-single.jpg",
+   "codes": [
+    "irisplaza-r:10158174"
+   ]
+  },
+  {
+   "kind": "genre-daily",
+   "time": "17:15",
+   "due": "2026-10-27T08:15:00.000Z",
+   "text": "楽天 #PR\n日用品雑貨・文房具・手芸、今日はこれが売れてる\n1️⃣日本製 ホテルスタイ… 890円（1位）\n2️⃣アタック抗菌EX つ… 6,171円（2位）\n3️⃣アタック 抗菌EX… 6,171円（3位）\n📌くわしくはプロフィールのリンクから\n#ホテルスタイルタオル #つめかえ用 #アタック #お買い物マラソン",
+   "image": "https://kurotento.github.io/sidejob/social/2026-10-27-11-genre-daily.png",
+   "codes": [
+    "toucher-home:10000264",
+    "rakuten24:11348602",
+    "rakuten24:11128644"
+   ]
+  },
+  {
+   "kind": "furusato-top",
+   "time": "18:00",
+   "due": "2026-10-27T09:00:00.000Z",
+   "text": "楽天 #PR\nフルーツの返礼品、レビューが多いのはこの3つ\n1️⃣2027出荷 い… 寄付6,500円（福岡県小竹町）\n2️⃣トイレットペーパ… 寄付7,500円（静岡県沼津市）\n3️⃣いちご あまおう… 寄付6,000円（福岡県鞍手町）\n👇\nhttps://kurotento.github.io/sidejob/furusato/fruit.html\n#あまおう #トイレットペーパー #ふるさと納税",
+   "image": "https://kurotento.github.io/sidejob/social/2026-10-27-12-furusato-top.png",
+   "codes": [
+    "f404012-kotake:10000550",
+    "f222038-numazu:10000205",
+    "f404021-kurate:10000265"
+   ]
+  },
+  {
+   "kind": "single",
+   "time": "18:45",
+   "due": "2026-10-27T09:45:00.000Z",
+   "text": "楽天 #PR\nレビュー11,000件超えの定番\n\n市田柿 干し柿 500g 新物 ご自宅用 長野県産\n1,980円、送料無料！（★4.7）\n長野県産の渋柿を原材料に使って丁寧に仕上げた干し柿、市田柿が届くよ。\n👇\nhttps://kurotento.github.io/sidejob/item-sosuke-10000226.html\n#市田柿 #お買い物マラソン #買い回り",
+   "image": "https://kurotento.github.io/sidejob/social/2026-10-27-13-single.jpg",
+   "codes": [
+    "sosuke:10000226"
+   ]
+  },
+  {
+   "kind": "genre-baby",
+   "time": "19:30",
+   "due": "2026-10-27T10:30:00.000Z",
+   "text": "楽天 #PR\nキッズ・ベビー・マタニティ、今日はこれが売れてる\n1️⃣メリーズ エアスルー… 6,460円（3位）\n2️⃣ウェットティッシュ… 2,390円（9位）\n3️⃣オムツ M 150枚… 2,480円（11位）\n📌くわしくはプロフィールのリンクから\n#メリーズ #ウェットティッシュ #オムツ #お買い物マラソン",
+   "image": "https://kurotento.github.io/sidejob/social/2026-10-27-14-genre-baby.png",
+   "codes": [
+    "netbaby:10035957",
+    "lecdirect:10001752",
+    "kurashikenkou:10225492"
+   ]
+  },
+  {
+   "kind": "video",
+   "time": "10/27 19:45",
+   "due": "2026-10-27T10:45:00.000Z",
+   "text": "楽天 #PR\n🎬1000円台・送料無料 売れ筋TOP3【10/27】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
+   "image": "",
+   "video": "https://kurotento.github.io/sidejob/shorts/2026-10-27-budget.mp4",
+   "codes": []
+  },
+  {
+   "kind": "single",
+   "time": "20:15",
+   "due": "2026-10-27T11:15:00.000Z",
+   "text": "楽天 #PR\nレビュー1,000件超えの定番\n\nコメダ珈琲店\n1,000円、送料無料！（★4.5）\nコメダ珈琲店で使える1000円分のデジタルチケット、楽券_eギフトだよ。\n👇\nhttps://kurotento.github.io/sidejob/item-rakkenshop-10000017.html\n#コメダ珈琲店 #お買い物マラソン #買い回り",
+   "image": "https://kurotento.github.io/sidejob/social/2026-10-27-15-single.jpg",
+   "codes": [
+    "rakkenshop:10000017"
+   ]
+  },
+  {
+   "kind": "furusato-single",
+   "time": "21:00",
+   "due": "2026-10-27T12:00:00.000Z",
+   "text": "楽天 #PR\n📍茨城県境町の人気返礼品\n\n米 5kg 10kg 12kg 20kg コシヒカリ 令和8年産 茨城県産 お米…\n寄付額8,000円｜茨城県境町\n茨城県産の令和8年産新米が届く、白米の返礼品だよ。\n👇\nhttps://kurotento.github.io/sidejob/furusato/item-f085464-sakai-10001114.html\n#コシヒカリ #ふるさと納税 #楽天ふるさと納税",
+   "image": "https://kurotento.github.io/sidejob/social/2026-10-27-16-furusato-single.jpg",
+   "codes": [
+    "f085464-sakai:10001114"
+   ]
+  },
+  {
+   "kind": "alert",
+   "time": "10/27 21:00",
+   "due": "2026-10-27T12:00:00.000Z",
+   "text": "楽天 #PR\n今日の売れ筋、楽天ROOMにもまとめたよ🛍\n1000円台・送料無料の買い回り候補はこちら\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
+   "image": "",
+   "video": "",
+   "codes": []
+  },
+  {
+   "kind": "genre-food",
+   "time": "22:00",
+   "due": "2026-10-27T13:00:00.000Z",
+   "text": "楽天 #PR\n食品の売れ筋チェック✍️\n1️⃣〈有塩〉骨取り銀さけ 訳あり 鮭（選べる1…（5位）\n2️⃣⇒脂のり抜群の銀鮭 切り身 業務用 1kg…（6位）\n3️⃣令和8年産 国産 ブレンド米 極味精米 5k…（7位）\n👇\nhttps://kurotento.github.io/sidejob/food.html\n#骨取り銀さけ #切り身 #ブレンド米 #お買い物マラソン #買い回り",
+   "image": "https://kurotento.github.io/sidejob/social/2026-10-27-17-genre-food.png",
+   "codes": [
+    "yamagoiida:10000149",
+    "kouragumi:10001552",
+    "yama-oatmeal-institute:10000024"
+   ]
   }
  ]
 }
