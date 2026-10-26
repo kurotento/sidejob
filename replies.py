@@ -23,13 +23,7 @@ SEARCHES = [
     ("ふるさと納税 どれにしよう", '"ふるさと納税" ("迷う" OR "迷って" OR "決まらない" OR "どれにしよう" OR "悩む" OR "悩んで")'),
     ("ふるさと納税 おすすめ教えて", '"ふるさと納税" ("おすすめ教えて" OR "オススメ教えて" OR "おすすめある" OR "おすすめありますか" OR "何がいい")'),
     ("ふるさと納税 よくわからない", '"ふるさと納税" ("わからない" OR "分からない" OR "よくわからん" OR "初めて" OR "やり方")'),
-    # 「楽天」「収納」だけだと楽天モバイル・イーグルス・収納代行などが混ざるので、買い物の言い回しごと探す
-    ("楽天で何買う？", '("楽天で何買" OR "楽天で買うなら" OR "楽天のおすすめ" OR "楽天でおすすめ" OR "楽天で買ってよかった物")'
-                     ' -モバイル -イーグルス -証券 -カード -ポイ活'),
-    ("収納グッズ どれがいい", '("収納グッズ" OR "収納ボックス" OR "収納ケース" OR "収納用品" OR "収納アイテム")'
-                          ' ("おすすめ" OR "どれがいい" OR "何がいい" OR "迷う" OR "迷って" OR "探してる" OR "買い替え")'),
-    ("日用品 どこで買ってる？", '("日用品" OR "洗剤" OR "トイレットペーパー" OR "ティッシュ" OR "柔軟剤" OR "おむつ")'
-                           ' ("どこで買って" OR "どこが安い" OR "どこで買うのが" OR "安く買える" OR "まとめ買いするなら")'),
+    # 楽天・収納・日用品のような広い言葉は当たらなかったので、商品ごとの検索（xqa.py）に置き換えた
 ]
 # 時期・セールに合わせて足す検索
 SEASON_SEARCHES = {
@@ -50,7 +44,8 @@ def nm(it, n=20):
     return out[: n + 6]
 
 
-def build(cfg, budget, fcats, day, out_dir, results=None):
+def build(cfg, budget, fcats, day, out_dir, results=None, featured=None, descs=None):
+    """featured: その日に ROOM・動画で紹介している商品（商品ごとの検索と返信例を作る）."""
     m, d = int(day[5:7]), int(day[8:10])
     b = budget or []
     cat = {c["slug"]: c["items"] for c in fcats or []}
@@ -76,28 +71,6 @@ def build(cfg, budget, fcats, day, out_dir, results=None):
         qa.append(("1000円ちょうどくらいで送料無料のものない？",
                    f"1000円台で送料無料なら「{nm(b[2] if len(b) > 2 else b[0])}」がよく売れてます。"
                    "クーポンで1000円を下回らないよう、少し上の金額を選ぶのがコツです #PR"))
-    # 「収納グッズ どれがいい」「日用品 どこで買ってる？」の検索で見つかる人向け（今日のランキング上位から）
-    def two(slug):  # 同じ商品の色違い・サイズ違いが並ばないよう、名前の頭が同じものは1つにする
-        out = []
-        for it in (results or {}).get(slug, []):
-            if it["price"] <= 10000 and all(nm(it, 6)[:4] != nm(x, 6)[:4] for x in out):
-                out.append(it)
-        return out[:2]
-    inter, daily = two("interior"), two("daily")
-    if inter:
-        qa.append(("収納って何がいいですか？",
-                   f"楽天の収納・インテリアのランキングだと「{nm(inter[0], 26)}」{paren(yen(inter[0]))}が今上位です。"
-                   "置く場所の幅と奥行きを先に測っておくと失敗しにくいですよ #PR"))
-    if len(inter) >= 2:
-        qa.append(("クローゼットや部屋の片付け、何から買えばいい？",
-                   f"まずは今ある物の量に合わせて収納を選ぶのがおすすめです。楽天だと「{nm(inter[1], 26)}」{paren(yen(inter[1]))}も人気ですよ #PR"))
-    if daily:
-        qa.append(("日用品のまとめ買い、どこで買ってる？",
-                   f"楽天でまとめ買いしている人も多いです。日用品のランキングだと「{nm(daily[0])}」{paren(yen(daily[0]))}が今上位ですよ。"
-                   "送料無料になる金額に合わせて買うのがコツです #PR"))
-    if len(daily) >= 2:
-        qa.append(("日用品で、まとめて買っておくといいものある？",
-                   f"消耗品はストックしておくと安心です。楽天の日用品ランキングだと「{nm(daily[1])}」{paren(yen(daily[1]))}もよく売れてます #PR"))
     qa.append(("お買い物マラソンっていつから？",
                "開催日は楽天の公式キャンペーンページで確認できます。エントリーが必要なので、始まる前に済ませておくと安心ですよ"))
     if m in (10, 11, 12):
@@ -136,6 +109,13 @@ def build(cfg, budget, fcats, day, out_dir, results=None):
         for label, q in searches)
     cards = "".join(f"""<article class="c"><p class="q">Q. {e(q)}</p><textarea readonly rows="4">{e(a)}</textarea>
 <button onclick="cp(this)">返信文をコピー</button></article>""" for q, a in qa)
+    # 今日 ROOM・動画で紹介している商品ごとに「探す → 答える」をセットにする
+    import xqa
+    pairs = xqa.build(featured or [], descs or {}, day) if featured else []
+    products = "".join(f"""<article class="c"><a class="s" href="https://x.com/search?q={urllib.parse.quote(xqa.search_query(x['word']) + NOISE)}&f=live"
+target="_blank" rel="noopener">🔍 「{e(x['word'])}」で迷っている人を探す</a>
+<p class="q">Q. {e(x['question'])}</p><small>紹介中：{e(short_name(it['name'], 30))}</small><textarea readonly rows="4">{e(x['answer'])}</textarea>
+<button onclick="cp(this)">返信文をコピー</button></article>""" for it, x in pairs)
     page = f"""<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow"><title>返信ネタ帳 {m}/{d}</title><style>
 body{{margin:0;font-family:system-ui,"Hiragino Sans",sans-serif;background:#f6f4f0;color:#1d1d1f}}
@@ -153,10 +133,11 @@ button{{width:100%;margin-top:6px;padding:10px;border:0;border-radius:10px;backg
 <li>商品をすすめる返信には「#PR」を残す（ステマ規制）</li>
 <li>リンクは貼らないのが基本。気になった人はプロフィールを見に来てくれます</li>
 <li>1日5〜10件、相手の質問にちゃんと答えるのがコツ</li></ul></div>
-<h2>① 探す（X の最新の投稿を開きます）</h2><p style="font-size:.8rem;margin:0 0 8px">リンク付き・#PR・プレゼント企画などの宣伝投稿は除いて検索します。出てこない日は、少し時間をおいて開き直してね</p>{search_links}
-<h2>② 答える（今日の売れ筋入り）</h2>{cards}
+{f'<h2>① 今日紹介している商品で探して答える</h2><p style="font-size:.8rem;margin:0 0 8px">🔍を押すと、その商品で迷っている人の最新の投稿が出ます。質問に合っていたら返信例をコピーして少し直してね</p>{products}' if products else ''}
+<h2>② ふるさと納税・セールで探す</h2><p style="font-size:.8rem;margin:0 0 8px">リンク付き・#PR・プレゼント企画などの宣伝投稿は除いて検索します。出てこない日は、少し時間をおいて開き直してね</p>{search_links}
+<h2>③ ②の検索で見つけた人への答え</h2>{cards}
 </main>
 <script>async function cp(b){{const t=b.previousElementSibling;try{{await navigator.clipboard.writeText(t.value)}}catch(e){{t.select();document.execCommand('copy')}}b.textContent='コピーしました';setTimeout(()=>b.textContent='返信文をコピー',1500)}}</script>
 </body></html>"""
     (out_dir / "replies.html").write_text(page, encoding="utf-8")
-    return len(qa)
+    return len(qa) + len(pairs)

@@ -227,6 +227,22 @@ def add_to_sitemap(cfg, paths, day):
     sm.write_text(sm.read_text(encoding="utf-8").replace("</urlset>", extra + "</urlset>"), encoding="utf-8")
 
 
+def featured_items(day, videos, budget, results):
+    """その日に動画・ROOM で紹介している商品（動画を先に、重複なし）."""
+    pool = {it["code"]: it for it in (budget or []) + [x for g in (results or {}).values() for x in g]}
+    codes = [x.get("code") for v in videos or [] for x in v.get("items", [])]
+    try:
+        codes += json.loads((ROOT / "data" / "room_list.json").read_text(encoding="utf-8")).get(day, [])
+    except (OSError, ValueError):
+        pass
+    out, seen = [], set()
+    for c in codes:
+        if c in pool and c not in seen:
+            seen.add(c)
+            out.append(pool[c])
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--demo", action="store_true", help="APIを使わずダミーデータで生成")
@@ -316,11 +332,6 @@ def main():
             print(f"[story] 素材 {story.build(cfg, budget, results, day, OUT_DIR)}件")
         except Exception as ex:  # noqa: BLE001
             print(f"[story] 失敗: {ex}", file=sys.stderr)
-    try:  # X の返信用ネタ帳
-        import replies
-        print(f"[replies] 質問 {replies.build(cfg, budget, cats, day, OUT_DIR, results)}件")
-    except Exception as ex:  # noqa: BLE001
-        print(f"[replies] 失敗: {ex}", file=sys.stderr)
     if not args.demo:
         try:  # Threads 用の投稿（悩み別・3案から採点で選ぶ）
             import threads
@@ -353,6 +364,11 @@ def main():
             print(f"[sns] Threads・Instagram 計画 {sns.build(cfg, day, videos, OUT_DIR)}件")
         except Exception as ex:  # noqa: BLE001
             print(f"[sns] 失敗: {ex}", file=sys.stderr)
+    try:  # X の返信用ネタ帳（動画・ROOM で紹介している商品ごとに、探す言葉と返信例を作る）
+        import replies
+        print(f"[replies] 質問 {replies.build(cfg, budget, cats, day, OUT_DIR, results, featured_items(day, videos, budget, results), {**descs, **fdescs})}件")
+    except Exception as ex:  # noqa: BLE001
+        print(f"[replies] 失敗: {ex}", file=sys.stderr)
     try:  # 自分用のポータル（手作業のチェックリスト・自動投稿の状態・管理画面のリンク）
         import portal
         portal.build(cfg, day, videos, OUT_DIR)
