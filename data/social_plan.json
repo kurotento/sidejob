@@ -11,7 +11,8 @@
    "due": "2026-10-27T00:00:00.000Z",
    "text": "楽天 #PR\nお買い物マラソン開催中！\n1ショップ1,000円以上の買い回りでポイント倍率が上がるやつ\n送料無料の1000円台、まとめてます\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#お買い物マラソン",
    "image": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "risers",
@@ -23,7 +24,8 @@
     "brita:10000052",
     "roomy:10018139",
     "rakuten24:11128650"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -33,7 +35,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-27-02-single.jpg",
    "codes": [
     "rakkenshop:10000003"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "budget",
@@ -45,7 +48,8 @@
     "rakkenshop:10000083",
     "darkangel:10034443",
     "renfrojapan:10000244"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -57,7 +61,8 @@
     "f406091-aka:10000539",
     "f434418-mifune:10000461",
     "f434281-takamori:10000628"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -66,7 +71,8 @@
    "text": "楽天 #PR\n🎬今日の楽天 急上昇TOP3【10/27】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-27-rising.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -76,7 +82,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-27-05-single.jpg",
    "codes": [
     "nuthyougo:10000672"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-appliances",
@@ -88,7 +95,8 @@
     "plywood:10022493",
     "vesync:10000001",
     "sodastream:10000423"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -98,7 +106,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-27-07-single.jpg",
    "codes": [
     "dainichi-corp:10000046"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -108,7 +117,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-27-08-furusato-single.jpg",
    "codes": [
     "f234451-minamichita:10000856"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-interior",
