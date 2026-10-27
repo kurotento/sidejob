@@ -1,38 +1,40 @@
-2026-10-27 model=gemini-3.5-flash-lite 新規5件 / 対象6件
-kan-etsubussan:10000031: ルール違反または不完全な出力のため不採用
-2026-10-27 model=gemini-3.5-flash-lite 新規1件 / 対象1件
-2026-10-27 model=gemini-3.5-flash-lite 新規13件 / 対象14件
-anuajapan:10000450: ルール違反または不完全な出力のため不採用
+2026-10-28 model=gemini-3.5-flash-lite 新規8件 / 対象9件
+book:22098615: Expecting property name enclosed in double quotes: line 2 column 3 (char 156)
+[furusato:rice] HTTP 503: {"error_description":"response error","error":"service_unavailable"}
+
+2026-10-28 model=gemini-3.5-flash-lite 新規16件 / 対象18件
+sonoshokuan:10000006: ルール違反または不完全な出力のため不採用
+riceforce:10000204: ルール違反または不完全な出力のため不採用
 [food] 30件
-[beauty] 19件
+[beauty] 30件
 [appliances] 30件
 [interior] 30件
 [daily] 30件
 [baby] 30件
-[budget] 総合584件中 83件が条件に一致
+[budget] 総合598件中 83件が条件に一致
 [gemini] キーの確認: OK（gemini-3.5-flash-lite）
 [furusato:meat] 30件
 [furusato:seafood] 30件
-[furusato:rice] 30件
+[furusato:rice] 0件
 [furusato:fruit] 30件
 [furusato:sweets] 30件
 [furusato:daily] 30件
-[furusato] 69ページ
-[room] 説明を取って紹介文を作成: 17/27件
-[room] 1000円台 8件・ほかのジャンル 15件・ふるさと納税 1件
-[room] 投稿リスト 24件
+[furusato] 58ページ
+[room] 説明を取って紹介文を作成: 18/29件
+[room] 1000円台 5件・ほかのジャンル 17件・ふるさと納税 0件
+[room] 投稿リスト 22件
 [story] 素材 3件
 [threads] 投稿 5本
 生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
 [shorts] 作り：イラスト（集中線といらすとや／画像は手書きメモ風）／声：春日部つむぎ
-[shorts] shorts/2026-10-27-rising.mp4 32秒 今日の楽天
+[shorts] shorts/2026-10-28-rising.mp4 30秒 今日の楽天
 急上昇TOP3
-[shorts] shorts/2026-10-27-budget.mp4 24秒 1000円台・送料無料
+[shorts] shorts/2026-10-28-budget.mp4 28秒 1000円台・送料無料
 売れ筋TOP3
-[shorts] shorts/2026-10-27-furusato-rice.mp4 35秒 ふるさと納税
-お米の人気TOP3
+[shorts] shorts/2026-10-28-furusato-fruit.mp4 36秒 ふるさと納税
+フルーツの人気TOP3
 [shorts] 動画 3本
 [pinterest] ピン 0件
 [sns] Instagram 予約表に 5件追加
 [sns] Threads・Instagram 計画 5件
-[replies] 質問 24件
+[replies] 質問 23件
