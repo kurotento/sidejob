@@ -86,3 +86,4 @@
 10/27 18:12 2026-10-27 18:00:00 story: 完了 media_id=18343796392286403
 10/27 21:05 2026-10-27 21:00:00 post: 完了 media_id=17974986732153995
 10/27 21:58 2026-10-27 21:15:00 story: 完了 media_id=17867399553678781
+10/28 12:13 2026-10-28 12:00:00 image: エラー {"error":{"message":"Media ID is not available","type":"OAuthException","code":9007,"error_subcode":2207027,"is_transient":false,"error_user_title":"Cannot Publish","error_user_msg":"The media is not 
