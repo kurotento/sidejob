@@ -89,3 +89,5 @@
 10/28 12:13 2026-10-28 12:00:00 image: エラー {"error":{"message":"Media ID is not available","type":"OAuthException","code":9007,"error_subcode":2207027,"is_transient":false,"error_user_title":"Cannot Publish","error_user_msg":"The media is not 
 10/28 18:21 2026-10-28 18:00:00 post: 完了 media_id=17953798476275334
 10/28 18:21 2026-10-28 18:00:00 story: 完了 media_id=17935143012404948
+10/28 21:47 2026-10-28 21:00:00 post: 完了 media_id=18127157942295795
+10/28 21:47 2026-10-28 21:15:00 story: 完了 media_id=18412963672093367
