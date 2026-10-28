@@ -71,14 +71,14 @@ def slug_of(code):
 # 含まれていたら区間ごと捨てる宣伝文句
 PROMO = re.compile(r"エントリー|SALE|セール|OFF|[%％円]オフ|クーポン|限定|予定|期間|マラソン|最大|半額|先着|まで|迄|\d+[%％]|"
                    r"ランキング|\d+位|連続|常連|当店|お得|ぽっきり|TV|放送|\d+/\d+|\d+:\d+|今だけ|本日|楽券|ふるさと納税|発送|営業日|総合|寄付|お届け|配送|[\d,]+円|"
-                   r"特典|販売台数|販売数|\d+時[～〜~\-ー]|\d+時(から|まで|開始|スタート)|No\.?\s?1|受賞|購入で|レシピ付|紹介|チャンネル|楽天Brand ?Day|高評価")
+                   r"特典|販売台数|販売数|\d+時[～〜~\-ー]|\d+時(から|まで|開始|スタート)|No\.?\s?1|受賞|購入で|レシピ付|紹介|チャンネル|楽天Brand ?Day|高評価|\d+冠|累計|突破|公認|ショップ|レビュー[\d,]+件|件超|件越")
 # 区間の中から取り除くだけでよい語
 SOFT = re.compile(r"送料無料|ポイント\d+倍|P\d+倍|まとめ買い|お得用|【|】|公式")
 
 
 def short_name(name, limit=42):
     """商品名から宣伝文句を除き、商品そのものを表す部分を取り出す."""
-    parts = re.split(r"[【】\[\]［］≪≫＜＞<>＼／★☆※●■◆♪!！│｜|]", name)
+    parts = re.split(r"[《》【】\[\]［］≪≫＜＞<>＼／★☆※●■◆♪!！│｜|]", name)
     parts = [re.sub(r"\s+", " ", SOFT.sub(" ", x)).strip(" 　/・") for x in parts]
 
     def strip_promo(x):
@@ -96,7 +96,11 @@ def short_name(name, limit=42):
         good += [y for y in map(strip_promo, parts) if usable(y) and y not in good]
     # 先頭側の十分な長さの区間を優先し、なければ最長の区間（キーワードの羅列）を使う
     first = [x for x in good if len(x) >= 10]
-    if first:
+    rest = [x for x in good if len(x) >= 20 and x not in first[:1]]
+    if first and re.fullmatch(r"[^ ]+ ?[(（][A-Za-z0-9&'. ]+[)）]", first[0]) and rest:
+        # ブランド名だけ（「ママ&キッズ (Mama&Kids)」）のときは、後ろの商品の説明を付ける
+        n = re.sub(r" ?[(（].*", "", first[0]) + " " + rest[0]
+    elif first:
         n = first[0]
     elif good:
         n = max(good, key=len)
