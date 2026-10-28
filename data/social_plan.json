@@ -139,7 +139,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-28-10-single.jpg",
    "codes": [
     "irisplaza-r:10163799"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-baby",
@@ -151,7 +152,8 @@
     "netbaby:10037814",
     "netbaby:10051424",
     "netbaby:10027922"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -163,7 +165,8 @@
     "f472085-urasoe:10000001",
     "f462217-shibushi:10001628",
     "f232092-hekinan:10000120"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -173,7 +176,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-28-13-single.jpg",
    "codes": [
     "cicib:10002043"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-food",
@@ -185,7 +189,8 @@
     "yamagoiida:10000084",
     "kouragumi:10000207",
     "yoshinoya-shop:10000945"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -195,7 +200,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-28-15-single.jpg",
    "codes": [
     "kiroran:10000205"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -204,7 +210,8 @@
    "text": "楽天 #PR\n🎬1000円台・送料無料 売れ筋TOP3【10/28】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-28-budget.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -214,7 +221,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-28-16-furusato-single.jpg",
    "codes": [
     "f272132-izumisano:10006785"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-beauty",
@@ -226,7 +234,8 @@
     "shuuemura:10000018",
     "takami-labo:10000519",
     "abemashopping:10000126"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "alert",
@@ -235,7 +244,8 @@
    "text": "楽天 #PR\n収納・日用品の人気どころを楽天ROOMに集めてます📦\n寝る前のお買い物チェックにどうぞ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "single",
