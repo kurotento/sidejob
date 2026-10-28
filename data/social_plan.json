@@ -12,7 +12,8 @@
     "akol:10000484",
     "brighte-onlineshop:10000000",
     "itsube-souken:10000309"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -22,7 +23,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-29-01-single.jpg",
    "codes": [
     "irisplaza-r:10151238"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "budget",
@@ -34,7 +36,8 @@
     "dajie:10000003",
     "r1-shop:10000062",
     "hiromifashionhouse:10005004"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -46,7 +49,8 @@
     "f261009-kyoto:10005363",
     "f016918-betsukai:10000041",
     "f082333-namegata:10001424"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -56,7 +60,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-29-04-single.jpg",
    "codes": [
     "rakutenoriginal-daily:10000000"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-daily",
@@ -68,7 +73,8 @@
     "kaihyaku:10007195",
     "pykespeak:10002322",
     "h2brothers:10001880"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -77,7 +83,8 @@
    "text": "楽天 #PR\n🎬今日の楽天 急上昇TOP3【10/29】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-29-rising.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -87,7 +94,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-29-06-single.jpg",
    "codes": [
     "peaceup:10020901"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -97,7 +105,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-29-07-furusato-single.jpg",
    "codes": [
     "f413453-kamimine:10000940"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-baby",
@@ -109,7 +118,8 @@
     "netbaby:10018748",
     "kanseikukan:10000006",
     "naireseisakusho:10000819"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
