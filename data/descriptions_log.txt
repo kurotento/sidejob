@@ -1,2 +1,12 @@
-2026-10-29 model=gemini-3.5-flash-lite 新規15件 / 対象16件
-aooka:10000433: ルール違反または不完全な出力のため不採用
+2026-10-30 model=gemini-3.5-flash-lite 新規26件 / 対象47件
+dondon:10003669: ルール違反または不完全な出力のため不採用
+inscent:10002510: HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+cheeryshop:10000061: ルール違反または不完全な出力のため不採用
+low-ya:10008396: ルール違反または不完全な出力のため不採用

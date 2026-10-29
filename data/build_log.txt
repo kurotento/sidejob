@@ -1,38 +1,71 @@
-2026-10-29 model=gemini-3.5-flash-lite 新規9件 / 対象9件
+2026-10-30 model=gemini-3.5-flash-lite 新規8件 / 対象9件
+mizuomoi:10000004: Extra data: line 1 column 373 (char 372)
 
-2026-10-29 model=gemini-3.5-flash-lite 新規15件 / 対象16件
-aooka:10000433: ルール違反または不完全な出力のため不採用
-[food] 29件
+2026-10-30 model=gemini-3.5-flash-lite 新規13件 / 対象17件
+bobbibrown:10001609: HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+world-free-store:10003093: HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+ricetanaka:10000004: ルール違反または不完全な出力のため不採用
+dolce-gusto:10000273: ルール違反または不完全な出力のため不採用
+2026-10-30 model=gemini-3.5-flash-lite 新規26件 / 対象47件
+dondon:10003669: ルール違反または不完全な出力のため不採用
+inscent:10002510: HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+cheeryshop:10000061: ルール違反または不完全な出力のため不採用
+low-ya:10008396: ルール違反または不完全な出力のため不採用
+[food] 30件
 [beauty] 30件
 [appliances] 30件
 [interior] 30件
-[daily] 30件
+[daily] 29件
 [baby] 30件
 [budget] 総合598件中 64件が条件に一致
 [gemini] キーの確認: OK（gemini-3.5-flash-lite）
+[names] gemini-3.5-flash-lite 失敗: HTTP Error 503: Service Unavailable
+[names] gemini-3.8-flash 失敗: HTTP Error 503: Service Unavailable
+[names] 短い名前 新規145件 / 対象227件
 [furusato:meat] 30件
 [furusato:seafood] 30件
 [furusato:rice] 30件
 [furusato:fruit] 30件
 [furusato:sweets] 30件
 [furusato:daily] 30件
+[names] 短い名前 新規137件 / 対象172件
 [furusato] 69ページ
-[room] 説明を取って紹介文を作成: 16/26件
-[room] 1000円台 8件・ほかのジャンル 14件・ふるさと納税 0件
+[room] 説明を取って紹介文を作成: 16/28件
+[room] 1000円台 7件・ほかのジャンル 15件・ふるさと納税 0件
 [room] 投稿リスト 22件
 [story] 素材 3件
 [threads] 投稿 5本
 生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
 [shorts] 作り：イラスト（集中線といらすとや／画像は手書きメモ風）／声：春日部つむぎ
-[shorts] shorts/2026-10-29-rising.mp4 32秒 今日の楽天
+[shorts] shorts/2026-10-30-rising.mp4 33秒 今日の楽天
 急上昇TOP3
-[shorts] shorts/2026-10-29-budget.mp4 31秒 1000円台・送料無料
+[shorts] shorts/2026-10-30-budget.mp4 29秒 1000円台・送料無料
 売れ筋TOP3
-[shorts] shorts/2026-10-29-furusato-sweets.mp4 35秒 ふるさと納税
-スイーツの人気TOP3
+[shorts] shorts/2026-10-30-furusato-daily.mp4 37秒 ふるさと納税
+日用品の人気TOP3
 [shorts] 動画 3本
 [pinterest] ピン 0件
 [sns] Instagram 予約表に 5件追加
 [sns] Threads・Instagram 計画 5件
-[xqa] gemini-3.5-flash-lite 失敗: Expecting property name enclosed in double quotes: line 3 column 5 (char 20)
-[replies] 質問 23件
+[replies] 質問 59件
