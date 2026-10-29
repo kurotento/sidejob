@@ -141,7 +141,8 @@
     "onsenken-oita:10001946",
     "matsuya:10000095",
     "masuyone:10000016"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -153,7 +154,8 @@
     "f222071-fujinomiya:10000018",
     "f222038-numazu:10000208",
     "f032093-ichinoseki:10000216"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -163,7 +165,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-29-12-single.jpg",
    "codes": [
     "morecon2:10001867"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-beauty",
@@ -175,7 +178,8 @@
     "bs-cosme:10000899",
     "beautypark2017:10002719",
     "the-beautopia:10000111"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -185,7 +189,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-29-14-single.jpg",
    "codes": [
     "cocodecow:10058666"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -195,7 +200,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-29-15-furusato-single.jpg",
    "codes": [
     "f062065-sagae:10000556"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -204,7 +210,8 @@
    "text": "楽天 #PR\n🎬1000円台・送料無料 売れ筋TOP3【10/29】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-29-budget.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "genre-appliances",
@@ -216,7 +223,8 @@
     "quads:10000095",
     "insair:10051433",
     "irisplaza-r:10149259"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -226,7 +234,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-29-17-single.jpg",
    "codes": [
     "linoulu:10000507"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "alert",
@@ -235,7 +244,8 @@
    "text": "楽天 #PR\nふるさと納税の人気返礼品も楽天ROOMで一覧にしてるよ🎁\nレビューが多い定番を中心に\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "genre-interior",
