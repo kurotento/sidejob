@@ -72,6 +72,36 @@ def make_image(it, path, theme):
 THEMES = [("#fff4e8", "#e2541b"), ("#eef6ff", "#1f6fd1"), ("#f3fbef", "#2f8f3a")]
 
 
+def build_muse_page(cfg, items, day, out_dir):
+    """Muse が読む用のページ。みくすろいど側の today.html と同じ形にそろえてある。
+
+    人が見る story.html とは別に出す。Muse への指示を両方で同じ文面にできるようにするため。
+    """
+    base = cfg["base_url"].rstrip("/")
+    rows = ""
+    for n, it in enumerate(items, 1):
+        url = f"{base}/story/{day}-{n}.jpg"
+        rows += (f'<li><h2>{n}. {e(short_name(it["name"], 40))}</h2>'
+                 f'<p>素材URL: <a href="{e(url)}">{e(url)}</a>（画像）</p>'
+                 f'<p class="link">リンクスタンプ: <b>商品を見る</b><br>'
+                 f'<a href="{e(it["url"])}">{e(it["url"])}</a></p></li>')
+    page = f"""<!doctype html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>今日のストーリー {day}</title>
+<style>
+ body{{font-family:system-ui,sans-serif;margin:24px;line-height:1.7}}
+ li{{margin-bottom:28px}} h2{{font-size:1.05rem;margin:0 0 6px}}
+ .link b{{color:#0a7}}
+</style></head><body>
+<h1>今日のストーリー（{day}）</h1>
+<p>全{len(items)}件。上から順に投稿してください。テキストは入れず、リンクスタンプの指定があるものだけ付けてください。</p>
+<ol>{rows}</ol>
+</body></html>"""
+    (out_dir / "story-muse.html").write_text(page, encoding="utf-8")
+
+
 def build(cfg, budget, results, day, out_dir):
     items = pick(budget, results, day)
     (out_dir / "story").mkdir(parents=True, exist_ok=True)
@@ -108,4 +138,5 @@ document.querySelectorAll("button[data-u]").forEach(b=>b.onclick=async()=>{{
 try{{await navigator.clipboard.writeText(b.dataset.u);b.textContent="✓ コピーしました";b.classList.add("ok")}}catch(e){{prompt("コピーしてください",b.dataset.u)}}}});</script>
 </body></html>"""
     (out_dir / "story.html").write_text(page, encoding="utf-8")
+    build_muse_page(cfg, items, day, out_dir)
     return len(items)
