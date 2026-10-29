@@ -1,37 +1,7 @@
-2026-10-30 model=gemini-3.5-flash-lite 新規8件 / 対象9件
-mizuomoi:10000004: Extra data: line 1 column 373 (char 372)
 
-2026-10-30 model=gemini-3.5-flash-lite 新規13件 / 対象17件
-bobbibrown:10001609: HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
 
-world-free-store:10003093: HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
+2026-10-30 model=gemini-3.5-flash-lite 新規15件 / 対象16件
 ricetanaka:10000004: ルール違反または不完全な出力のため不採用
-dolce-gusto:10000273: ルール違反または不完全な出力のため不採用
-2026-10-30 model=gemini-3.5-flash-lite 新規26件 / 対象47件
-dondon:10003669: ルール違反または不完全な出力のため不採用
-inscent:10002510: HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-cheeryshop:10000061: ルール違反または不完全な出力のため不採用
-low-ya:10008396: ルール違反または不完全な出力のため不採用
 [food] 30件
 [beauty] 30件
 [appliances] 30件
@@ -40,20 +10,18 @@ low-ya:10008396: ルール違反または不完全な出力のため不採用
 [baby] 30件
 [budget] 総合598件中 64件が条件に一致
 [gemini] キーの確認: OK（gemini-3.5-flash-lite）
-[names] gemini-3.5-flash-lite 失敗: HTTP Error 503: Service Unavailable
-[names] gemini-3.8-flash 失敗: HTTP Error 503: Service Unavailable
-[names] 短い名前 新規145件 / 対象227件
+[names] 短い名前 新規74件 / 対象82件
 [furusato:meat] 30件
 [furusato:seafood] 30件
 [furusato:rice] 30件
 [furusato:fruit] 30件
 [furusato:sweets] 30件
 [furusato:daily] 30件
-[names] 短い名前 新規137件 / 対象172件
+[names] 短い名前 新規14件 / 対象35件
 [furusato] 69ページ
-[room] 説明を取って紹介文を作成: 16/28件
-[room] 1000円台 7件・ほかのジャンル 15件・ふるさと納税 0件
-[room] 投稿リスト 22件
+[room] 説明を取って紹介文を作成: 16/34件
+[room] 1000円台 0件・ほかのジャンル 16件・ふるさと納税 0件
+[room] 投稿リスト 16件
 [story] 素材 3件
 [threads] 投稿 5本
 生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
@@ -66,6 +34,6 @@ low-ya:10008396: ルール違反または不完全な出力のため不採用
 日用品の人気TOP3
 [shorts] 動画 3本
 [pinterest] ピン 0件
-[sns] Instagram 予約表に 5件追加
+[sns] Instagram 予約表に 0件追加
 [sns] Threads・Instagram 計画 5件
 [replies] 質問 59件
