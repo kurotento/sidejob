@@ -8,7 +8,8 @@
    "due": "2026-10-29T22:30:00.000Z",
    "text": "楽天 #PR\n今日は5と0のつく日！\n楽天カードで買う人はエントリーを忘れずに✍️\n（条件は楽天の公式ページで確認してね）\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html",
    "image": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "risers",
@@ -20,7 +21,8 @@
     "netbaby:10052538",
     "2-itamae:10001028",
     "lovelykids86:10000403"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -30,7 +32,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-30-02-single.jpg",
    "codes": [
     "partition-lab:10041745"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "budget",
@@ -42,7 +45,8 @@
     "book:22148632",
     "lock110:10122488",
     "darkangel:10036257"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -54,7 +58,8 @@
     "f222071-fujinomiya:10000025",
     "f382132-shikokuchuo:10000036",
     "f272132-izumisano:10002693"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -64,7 +69,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-30-05-single.jpg",
    "codes": [
     "monoroots:10000470"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-baby",
@@ -76,7 +82,8 @@
     "ponopono:10001822",
     "sanho-store:10000068",
     "irisplaza-r:10163793"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -85,7 +92,8 @@
    "text": "楽天 #PR\n🎬今日の楽天 急上昇TOP3【10/30】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-30-rising.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -95,7 +103,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-30-07-single.jpg",
    "codes": [
     "felicity-wine:10008164"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -105,7 +114,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-30-08-furusato-single.jpg",
    "codes": [
     "f303810-mihama:10000544"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-food",
