@@ -292,12 +292,22 @@ def main():
     series = load_series("budget", [it["code"] for it in budget]) if budget and not args.demo else {}
     if not args.demo:
         prune_history()
+        try:  # 商品名の宣伝文を除いた短い名前（サイト・ROOM・X・動画で使う）
+            import names
+            names.prepare((budget or []) + [it for g in results.values() for it in g], day)
+        except Exception as ex:  # noqa: BLE001
+            print(f"[names] 失敗: {ex}", file=sys.stderr)
     render(cfg, results, args.demo, day, updated, OUT_DIR, budget=budget, series=series, descs=descs)
     cats, fdescs = [], {}
     try:  # ふるさと納税サイト（/furusato/）
         cats = furusato.demo_cats() if args.demo else furusato.fetch_all(cfg)
         fdescs = {}
         if not args.demo:
+            try:
+                import names
+                names.prepare([it for c in cats for it in c["items"]], day)
+            except Exception as ex:  # noqa: BLE001
+                print(f"[names] 失敗: {ex}", file=sys.stderr)
             top = [it for c in cats for it in c["items"][:10]]
             fdescs = writer.describe(top, day, limit=cfg.get("furusato_describe_per_day", 30))
         fpaths = furusato.render_site(cfg, cats, fdescs, args.demo, day, updated, OUT_DIR)
