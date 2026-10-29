@@ -23,7 +23,7 @@ SEARCHES = [
     ("ふるさと納税 どれにしよう", '"ふるさと納税" ("迷う" OR "迷って" OR "決まらない" OR "どれにしよう" OR "悩む" OR "悩んで")'),
     ("ふるさと納税 おすすめ教えて", '"ふるさと納税" ("おすすめ教えて" OR "オススメ教えて" OR "おすすめある" OR "おすすめありますか" OR "何がいい")'),
     ("ふるさと納税 よくわからない", '"ふるさと納税" ("わからない" OR "分からない" OR "よくわからん" OR "初めて" OR "やり方")'),
-    # 楽天・収納・日用品のような広い言葉は当たらなかったので、商品ごとの検索（xqa.py）に置き換えた
+    # 楽天・収納・日用品のような広い言葉は当たらなかったので、季節の物をまとめて探す検索（xseek.py）に置き換えた
 ]
 # 時期・セールに合わせて足す検索
 SEASON_SEARCHES = {
@@ -44,8 +44,8 @@ def nm(it, n=20):
     return out[: n + 6]
 
 
-def build(cfg, budget, fcats, day, out_dir, results=None, featured=None, descs=None):
-    """featured: その日に ROOM・動画で紹介している商品（商品ごとの検索と返信例を作る）."""
+def build(cfg, budget, fcats, day, out_dir, results=None, seek=None):
+    """seek: xseek.build の結果（季節の質問をまとめて探す検索と、言葉ごとの候補商品）."""
     m, d = int(day[5:7]), int(day[8:10])
     b = budget or []
     cat = {c["slug"]: c["items"] for c in fcats or []}
@@ -109,13 +109,20 @@ def build(cfg, budget, fcats, day, out_dir, results=None, featured=None, descs=N
         for label, q in searches)
     cards = "".join(f"""<article class="c"><p class="q">Q. {e(q)}</p><textarea readonly rows="4">{e(a)}</textarea>
 <button onclick="cp(this)">返信文をコピー</button></article>""" for q, a in qa)
-    # 今日 ROOM・動画で紹介している商品ごとに「探す → 答える」をセットにする
-    import xqa
-    pairs = xqa.build(featured or [], descs or {}, day) if featured else []
-    products = "".join(f"""<article class="c"><a class="s" href="https://x.com/search?q={urllib.parse.quote(xqa.search_query(x['word']) + NOISE)}&f=live"
-target="_blank" rel="noopener">🔍 「{e(x['word'])}」で迷っている人を探す</a>
-<p class="q">Q. {e(x['question'])}</p><small>紹介中：{e(short_name(it['name'], 30))}</small><textarea readonly rows="4">{e(x['answer'])}</textarea>
-<button onclick="cp(this)">返信文をコピー</button></article>""" for it, x in pairs)
+    # 季節の質問を探す → 聞かれている物の候補から、相手の条件に合う特徴を選んで返信を組み立てる
+    seek = seek or {}
+    seek_links = "".join(f'<a class="s" href="{e(u)}" target="_blank" rel="noopener">🔍 {e(label)}</a>'
+                         for label, u in seek.get("urls", []))
+
+    def card(p):
+        chips = "".join(f'<button type="button" class="chip" data-f="{e(c)}">{e(c)}</button>' for c in p["chips"])
+        stars = f"★{p['rating']:.1f}・レビュー{p['reviews']:,}件" if p.get("reviews") else ""
+        return f"""<div class="p" data-n="{e(p['name'])}" data-y="{p['price']:,}円"><b>{e(p['name'])}</b>
+<small>{p['price']:,}円 {stars} <a href="{e(p['url'])}" target="_blank" rel="noopener">商品ページ</a></small>
+<div>{chips}</div><textarea rows="3" placeholder="相手の条件に合う特徴を押すと返信文ができます"></textarea>
+<button onclick="cp(this)">返信文をコピー</button></div>"""
+    products = "".join(f"<details><summary>{e(w)}（{len(ps)}件）</summary>{''.join(card(p) for p in ps)}</details>"
+                       for w, ps in seek.get("words", []))
     page = f"""<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow"><title>返信ネタ帳 {m}/{d}</title><style>
 body{{margin:0;font-family:system-ui,"Hiragino Sans",sans-serif;background:#f6f4f0;color:#1d1d1f}}
@@ -125,7 +132,11 @@ main{{padding:12px;max-width:560px;margin:0 auto}}h2{{font-size:1rem;margin:18px
 .c{{background:#fff;border-radius:14px;padding:12px;margin-bottom:12px}}.q{{margin:0 0 6px;font-weight:700;font-size:.92rem}}
 textarea{{width:100%;box-sizing:border-box;font-size:.85rem;border:1px solid #ddd;border-radius:8px;padding:8px}}
 button{{width:100%;margin-top:6px;padding:10px;border:0;border-radius:10px;background:#111;color:#fff;font-weight:700}}
-.tip{{background:#fff8e1;border-radius:12px;padding:10px 14px;font-size:.85rem}}.tip li{{margin:4px 0}}</style></head><body>
+.tip{{background:#fff8e1;border-radius:12px;padding:10px 14px;font-size:.85rem}}.tip li{{margin:4px 0}}
+details{{background:#fff;border-radius:14px;margin-bottom:10px;padding:10px 12px}}summary{{font-weight:700;cursor:pointer}}
+.p{{border-top:1px solid #eee;padding:10px 0}}.p small{{display:block;color:#555;margin:2px 0 6px}}
+.chip{{width:auto;display:inline-block;margin:0 6px 6px 0;padding:6px 10px;border-radius:999px;background:#eef3ff;color:#123;font-weight:400;font-size:.8rem}}
+.chip.on{{background:#1d4ed8;color:#fff}}</style></head><body>
 <header><h1>𝕏 返信ネタ帳（{m}月{d}日）</h1><p>①検索で困っている人を探す → ②近い質問の答えをコピー → 自分の言葉に少し直して返信</p></header>
 <main>
 <div class="tip"><b>使うときの注意</b><ul>
@@ -133,11 +144,16 @@ button{{width:100%;margin-top:6px;padding:10px;border:0;border-radius:10px;backg
 <li>商品をすすめる返信には「#PR」を残す（ステマ規制）</li>
 <li>リンクは貼らないのが基本。気になった人はプロフィールを見に来てくれます</li>
 <li>1日5〜10件、相手の質問にちゃんと答えるのがコツ</li></ul></div>
-{f'<h2>① 今日紹介している商品で探して答える</h2><p style="font-size:.8rem;margin:0 0 8px">🔍を押すと、その商品で迷っている人の最新の投稿が出ます。質問に合っていたら返信例をコピーして少し直してね</p>{products}' if products else ''}
-<h2>② ふるさと納税・セールで探す</h2><p style="font-size:.8rem;margin:0 0 8px">リンク付き・#PR・プレゼント企画などの宣伝投稿は除いて検索します。出てこない日は、少し時間をおいて開き直してね</p>{search_links}
-<h2>③ ②の検索で見つけた人への答え</h2>{cards}
+<h2>① 季節の「おすすめ教えて」を探す</h2>
+<p style="font-size:.8rem;margin:0 0 8px">人に聞いている投稿だけが出ます。「買った」「使ってる」だけの投稿には返さないでね</p>{seek_links}
+{f'<h2>② 聞かれている物の候補から答える</h2><p style="font-size:.8rem;margin:0 0 8px">見つけた質問の物を開いて、相手の条件（一人暮らし・香り・大容量など）に合う特徴を押すと返信文ができます。合う商品がなければ返信しないでOK。迷ったら投稿の文をClaudeに貼ってね</p>{products}' if products else ''}
+<h2>③ ふるさと納税・セールで探す</h2><p style="font-size:.8rem;margin:0 0 8px">リンク付き・#PR・プレゼント企画などの宣伝投稿は除いて検索します。出てこない日は、少し時間をおいて開き直してね</p>{search_links}
+<h2>④ ③の検索で見つけた人への答え</h2>{cards}
 </main>
-<script>async function cp(b){{const t=b.previousElementSibling;try{{await navigator.clipboard.writeText(t.value)}}catch(e){{t.select();document.execCommand('copy')}}b.textContent='コピーしました';setTimeout(()=>b.textContent='返信文をコピー',1500)}}</script>
+<script>async function cp(b){{const t=b.previousElementSibling;try{{await navigator.clipboard.writeText(t.value)}}catch(e){{t.select();document.execCommand('copy')}}b.textContent='コピーしました';setTimeout(()=>b.textContent='返信文をコピー',1500)}}
+document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{{c.classList.toggle("on");const p=c.closest(".p");
+const f=[...p.querySelectorAll(".chip.on")].map(x=>x.dataset.f);
+p.querySelector("textarea").value=f.length?`楽天だと「${{p.dataset.n}}」（${{p.dataset.y}}）が良さそうです。${{f.join("、")}}みたいです #PR`:"";}});</script>
 </body></html>"""
     (out_dir / "replies.html").write_text(page, encoding="utf-8")
-    return len(qa) + len(pairs)
+    return len(qa) + sum(len(ps) for _, ps in seek.get("words", []))
