@@ -257,7 +257,8 @@
     "apoloce:10000016",
     "luckyspread:10000001",
     "rack-kan:10029626"
-   ]
+   ],
+   "scheduled": true
   }
  ]
 }
