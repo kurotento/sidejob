@@ -150,7 +150,8 @@
     "bobbibrown:10001609",
     "dr365:10000043",
     "rakuten24-cosmetics:10055320"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -162,7 +163,8 @@
     "f452025-miyakonojo:10004061",
     "f272132-izumisano:10003733",
     "f272132-izumisano:10003363"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -172,7 +174,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-30-13-single.jpg",
    "codes": [
     "buono-buono:10001170"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-appliances",
@@ -184,7 +187,8 @@
     "enetroom:10192131",
     "dolce-gusto:10000158",
     "mpowjapan:10000823"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -194,7 +198,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-30-15-single.jpg",
    "codes": [
     "dondon:10001586"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -204,7 +209,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-30-16-furusato-single.jpg",
    "codes": [
     "f385069-ainan:10000343"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -213,7 +219,8 @@
    "text": "楽天 #PR\n🎬1000円台・送料無料 売れ筋TOP3【10/30】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-30-budget.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "genre-interior",
@@ -225,7 +232,8 @@
     "angers:10067040",
     "tansu:10049866",
     "auc-kaei-trading:10000243"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -235,7 +243,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-30-18-single.jpg",
    "codes": [
     "dondon:10005919"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "alert",
@@ -244,7 +253,8 @@
    "text": "楽天 #PR\n楽天ROOMを更新したよ✨\n今日ランキングに入っていたものを追加しました\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "genre-daily",
