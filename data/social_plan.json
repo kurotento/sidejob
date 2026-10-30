@@ -266,7 +266,8 @@
     "nagomilab:10000046",
     "dajie:10000000",
     "excitech:10000407"
-   ]
+   ],
+   "scheduled": true
   }
  ]
 }
