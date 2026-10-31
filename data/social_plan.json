@@ -8,7 +8,8 @@
    "due": "2026-10-31T23:15:00.000Z",
    "text": "楽天 #PR\n今日は毎月1日のワンダフルデー！\nエントリーを忘れずに✍️\n（条件は楽天の公式ページで確認してね）\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html",
    "image": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "risers",
@@ -20,7 +21,8 @@
     "2-itamae:10000394",
     "akol:10001104",
     "prime-brain:10000071"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -30,7 +32,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-11-01-02-single.jpg",
    "codes": [
     "kenkocom:12079545"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "budget",
@@ -42,7 +45,8 @@
     "kenkocom:12148912",
     "book:22151958",
     "book:22152089"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -54,7 +58,8 @@
     "f016683-shiranuka:10000564",
     "f016683-shiranuka:10000227",
     "f122025-choshi:10001721"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -64,7 +69,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-11-01-05-single.jpg",
    "codes": [
     "rakutenoriginal-daily:10000001"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -73,7 +79,8 @@
    "text": "楽天 #PR\n🎬今日の楽天 急上昇TOP3【11/1】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-11-01-rising.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "genre-beauty",
@@ -85,7 +92,8 @@
     "arlington:10000190",
     "maccosmetics:10001670",
     "selectshopmint:10000054"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -95,7 +103,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-11-01-07-single.jpg",
    "codes": [
     "calinuts:10000078"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -105,7 +114,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-11-01-08-furusato-single.jpg",
    "codes": [
     "f406058-kawasaki:10000992"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-appliances",
