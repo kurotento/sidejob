@@ -141,7 +141,8 @@
     "tansu:10044250",
     "delishop:10000271",
     "agri-support:10024420"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -153,7 +154,8 @@
     "f016918-betsukai:10004314",
     "f404012-kotake:10000241",
     "f393070-geisei:10000307"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -163,7 +165,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-31-12-single.jpg",
    "codes": [
     "easyjoy-shop:10000338"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-interior",
@@ -175,7 +178,8 @@
     "tansu:10055629",
     "ease-space:10009401",
     "tansu:10041467"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -185,7 +189,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-31-14-single.jpg",
    "codes": [
     "queeneyes:10000479"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -195,7 +200,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-31-15-furusato-single.jpg",
    "codes": [
     "f403458-shingu:10000756"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -204,7 +210,8 @@
    "text": "楽天 #PR\n🎬1000円台・送料無料 売れ筋TOP3【10/31】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-10-31-budget.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "genre-daily",
@@ -216,7 +223,8 @@
     "at-rescue:10002460",
     "bos-shop:10000144",
     "irisplaza-r:10161529"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -226,7 +234,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-10-31-17-single.jpg",
    "codes": [
     "high-high:10000174"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "alert",
@@ -235,7 +244,8 @@
    "text": "楽天 #PR\n今日の売れ筋、楽天ROOMにもまとめたよ🛍\n1000円台・送料無料の買い回り候補はこちら\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "genre-baby",
