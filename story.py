@@ -30,7 +30,7 @@ def pick(budget, results, day):
     out = []
     pools = [budget or []] + [(results or {}).get(g, []) for g in room.NICHE_GENRES + room.MORE_GENRES]
     for pool in pools:  # 1000円台から1つ、あとはジャンルを順に
-        it = next((x for x in pool if ok(x) and x not in out), None)
+        it = next((x for x in pool if ok(x) and x["code"] not in {o["code"] for o in out}), None)
         if it:
             out.append(it)
         if len(out) >= PER_DAY:
