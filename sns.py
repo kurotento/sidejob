@@ -20,7 +20,7 @@ INSTA_REEL_TIMES = [(18, 0), (21, 0)]
 INSTA_FEED_TIME = (12, 0)
 INSTA_STORY_TIMES = [(18, 0), (21, 15)]  # ストーリーはフォロワーにしか出ない（フォロバが来始めた 2026-10 に再開）
 
-YOUTUBE_TIMES = [(17, 30), (20, 30)]  # ショート動画を YouTube に（Buffer で自動投稿）
+YOUTUBE_TIMES = [(17, 30), (20, 30), (19, 0)]  # ショート動画を YouTube に（Buffer で自動投稿）。3本目はふるさと納税
 
 # Instagram の検索は投稿文の言葉でも探されるので、1行目に検索される言葉を入れ、タグは内容に合う数個にしぼる
 INSTA_TAGS = {
