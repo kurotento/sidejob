@@ -14,6 +14,7 @@ import urllib.parse
 from pathlib import Path
 
 from articles import short_name
+from itemfilter import excluded, pick_varied, similar
 import roomtext
 
 DATA = Path(__file__).resolve().parent / "data"
@@ -28,11 +29,6 @@ NICHE_GENRES = ("interior", "daily")  # インテリア・収納 / 日用品
 MORE_GENRES = ("beauty", "food", "baby", "appliances")
 TARGET = 22            # ふるさと納税以外で、1日に出したい件数
 FURUSATO_PER_DAY = 5
-# 本・CD・DVD など（好みが分かれて「1000円台だから載せた」ようにしか見えない／ROOM の投稿画面で写真が出ないことが多い）と
-# たばこ関連は出さない
-SKIP_SHOPS = {"book", "ploom"}
-SKIP_NAME = re.compile(r"CD|DVD|Blu-?ray|ブルーレイ|アルバム|写真集|月号|ムック|コミック|文庫|単行本|書籍|"
-                       r"VOLUME|カレンダー|トレカ|たばこ|タバコ", re.I)
 REPEAT_DAYS = 3  # room_list.json に残す日数（もう一度出さないかどうかは room_posted.json で決める）
 e = html.escape
 
@@ -173,21 +169,19 @@ def build(cfg, budget, descs, day, out_dir, save=True, fcats=None, fdescs=None, 
     # 同じ日に作り直したときも、先に出したリストの商品は出さない（もう投稿済みのことが多いため）
     recent = {c for codes in hist.values() for c in codes} | set(posted)
     # 候補を多めに集め、紹介文が作れたものだけを使う（「〇〇を探している人に」のような中身のない文は出さない）
-    fresh = lambda it: (it["code"] not in recent and it["price"] <= 10000  # noqa: E731
-                        and it["code"].split(":")[0] not in SKIP_SHOPS and not SKIP_NAME.search(it["name"]))
-    cands = [it for it in budget or [] if fresh(it)][:PER_DAY]
+    fresh = lambda it: it["code"] not in recent and it["price"] <= 10000 and not excluded(it)  # noqa: E731
+    # 似た商品（簡易トイレが3つなど）は並べず、次の候補を使う（件数は減らさない）
+    cands = pick_varied([it for it in budget or [] if fresh(it)], PER_DAY)
     budget_codes = {it["code"] for it in cands}
     pools = [[it for it in (results or {}).get(g, []) if fresh(it)] for g in NICHE_GENRES + MORE_GENRES]
-    seen = set(budget_codes)
     k = 0
     while len(cands) < TARGET + 12 and any(pools):  # ジャンルを順番に1つずつ（インテリア・日用品を先に）
         pool = pools[k % len(pools)]
         k += 1
         while pool:
             it = pool.pop(0)
-            if it["code"] not in seen:
+            if not any(similar(it, o) for o in cands):
                 cands.append(it)
-                seen.add(it["code"])
                 break
     descs = {**descs, **more_descs([it for it in cands if not descs.get(it["code"])], cfg, day)}
     picks = [it for it in cands if descs.get(it["code"])][:TARGET]
@@ -199,7 +193,7 @@ def build(cfg, budget, descs, day, out_dir, save=True, fcats=None, fdescs=None, 
         for c in fcats or []:
             if len(fpicks) < FURUSATO_PER_DAY and rank < len(c["items"]):
                 it = c["items"][rank]
-                if it["code"] not in recent and fdescs.get(it["code"]) and it not in fpicks:
+                if it["code"] not in recent and fdescs.get(it["code"]) and not any(similar(it, o) for o in fpicks):
                     fpicks.append(it)
     furusato_codes = {it["code"] for it in fpicks}
     picks = picks + fpicks

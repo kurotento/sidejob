@@ -24,14 +24,13 @@ def pick(budget, results, day):
     cutoff = (dt.date.fromisoformat(day) - dt.timedelta(days=REPEAT_DAYS)).isoformat()
     hist = {k: v for k, v in hist.items() if k >= cutoff}
     used = {c for k, codes in hist.items() if k != day for c in codes}
-    import room  # 本・CD・たばこは ROOM と同じく出さない
-    from shorts import similar  # 似た商品（簡易トイレが2つなど）も並べない
-    ok = lambda it: (it["code"] not in used and it.get("image") and it["reviews"] >= 50  # noqa: E731
-                     and it["code"].split(":")[0] not in room.SKIP_SHOPS and not room.SKIP_NAME.search(it["name"]))
+    import room
+    from itemfilter import excluded, similar  # 本・CD・たばこと、似た商品（簡易トイレが2つなど）は ROOM と同じく出さない
+    ok = lambda it: it["code"] not in used and it.get("image") and it["reviews"] >= 50 and not excluded(it)  # noqa: E731
     out = []
     pools = [budget or []] + [(results or {}).get(g, []) for g in room.NICHE_GENRES + room.MORE_GENRES]
     for pool in pools:  # 1000円台から1つ、あとはジャンルを順に
-        it = next((x for x in pool if ok(x) and not any(x["code"] == o["code"] or similar(x, o) for o in out)), None)
+        it = next((x for x in pool if ok(x) and not any(similar(x, o) for o in out)), None)
         if it:
             out.append(it)
         if len(out) >= PER_DAY:

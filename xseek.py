@@ -55,12 +55,12 @@ def fetch(word, base_url):
 def pick(raws, word):
     from articles import short_name
     from build import normalize_item
-    import room
+    from itemfilter import excluded  # 本・CD・たばこは ROOM と同じく出さない（同じ種類の候補を並べる場所なので、似た商品の判定は使わない）
     out = []
     for raw in raws:
         it = normalize_item({**raw, "rank": 0})
         head = short_name(it["name"], 40)[:6]
-        if (it["code"].split(":")[0] in room.SKIP_SHOPS or room.SKIP_NAME.search(it["name"])
+        if (excluded(it)
                 or any(short_name(x["name"], 40)[:6] == head for x in out)):  # 色違い・サイズ違いは1つに
             continue
         # 検索の言葉と関係の薄い物（「鍋」で鍋つゆ以外の物など）を除く
