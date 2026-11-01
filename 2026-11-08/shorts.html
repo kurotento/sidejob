@@ -1,0 +1,33 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>ショート動画 11/8</title><style>
+body{margin:0;font-family:system-ui,"Hiragino Sans",sans-serif;background:#f6f4f0;color:#1d1d1f}
+header{background:#c4302b;color:#fff;padding:14px 16px}header h1{font-size:1.1rem;margin:0}header p{margin:4px 0 0;font-size:.8rem}
+main{padding:12px;max-width:520px;margin:0 auto}.c{background:#fff;border-radius:14px;padding:12px;margin-bottom:14px}.c.ok{opacity:.45}
+video{width:100%;max-height:70vh;background:#000;border-radius:10px}textarea{width:100%;box-sizing:border-box;font-size:.8rem;border:1px solid #ddd;border-radius:8px}
+.btn,button{display:block;width:100%;box-sizing:border-box;text-align:center;margin:6px 0;padding:11px;border:0;border-radius:10px;background:#c4302b;color:#fff;font-weight:700;font-size:.9rem;text-decoration:none}
+button{background:#333}.lb{margin:10px 0 2px;font-size:.8rem;font-weight:700}label{display:block;margin-top:6px}</style></head><body>
+<header><h1>YouTube ショート（11月8日）</h1><p>①保存 → YouTubeアプリで「＋」→「ショート」→保存した動画を選ぶ → ②③を貼り付けて公開</p></header>
+<main><article class="c"><video src="shorts/2026-11-08-setsuden.mp4" controls playsinline preload="metadata"></video>
+<a class="btn" href="shorts/2026-11-08-setsuden.mp4" download>① 動画を保存</a>
+<p class="lb">タイトル</p><textarea readonly rows="2">冬の電気代を下げる グッズTOP3【11/8】 #Shorts #楽天 #楽天市場 #節約</textarea><button onclick="cp(this)">② タイトルをコピー</button>
+<p class="lb">説明文</p><textarea readonly rows="8">冬の電気代を下げる グッズTOP3（11月8日時点）
+
+1位 ルームウェア パジャマ 着る毛布 部屋着 あったか 冬 レディース メンズ グル…｜4,490円
+2位 湯たんぽ 充電式 蓄熱式 電気湯たんぽ｜2,980円〜
+3位 電気毛布 掛け敷き モコモコブランケット｜12,900円〜
+
+▶くわしくはプロフィールのリンクから
+https://kurotento.github.io/sidejob/
+
+※価格・寄付額は動画作成時点のものです。最新情報は販売ページでご確認ください。
+※楽天アフィリエイトを利用しています（PR）
+VOICEVOX:ずんだもん
+
+#Shorts #PR #楽天 #節約 #楽天市場</textarea><button onclick="cp(this)">③ 説明文をコピー</button>
+<label><input type="checkbox" onchange="done(0,this.checked)"> アップロードした</label></article></main>
+<script>
+const K='shorts-done-2026-11-08';let s={};try{s=JSON.parse(localStorage.getItem(K)||'{}')}catch(e){}
+function mark(){document.querySelectorAll('.c').forEach((c,i)=>{c.classList.toggle('ok',!!s[i]);c.querySelector('input').checked=!!s[i]})}
+function done(i,v){s[i]=v;try{localStorage.setItem(K,JSON.stringify(s))}catch(e){}mark()}
+async function cp(b){const t=b.previousElementSibling;try{await navigator.clipboard.writeText(t.value)}catch(e){t.select();document.execCommand('copy')}b.textContent='コピーしました';}
+mark();</script></body></html>
