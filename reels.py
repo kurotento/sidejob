@@ -6,7 +6,13 @@
 - magazine: 生成りの紙に明朝体。大きな写真がゆっくり寄り、No.01 の番号と細い罫線だけの静かな紹介
 いらすとやの素材は規約上、再配布できないので、リポジトリには入れず作るたびに取ってくる（1本で20点まで）。
 """
+import hashlib
+import html
+import json
 import math
+import re
+import time
+import urllib.parse
 import urllib.request
 from pathlib import Path
 
@@ -59,17 +65,52 @@ def illust(key):
         return None
 
 
+# 商品名の言葉でいらすとやを検索して、その商品に合うイラストを使う（見つけた画像の URL だけを覚えておく。画像は毎回取ってくる）
+FOUND = Path(__file__).resolve().parent / "data" / "irasutoya.json"  # {検索した言葉: 画像の URL か null}
+SEARCH_STOP = re.compile(r"訳あり|選べる|国産|無添加|送料|お試し|セット|人気|定番|おすすめ|大容量|小分け|冷凍|ふるさと|返礼品|^\d|[0-9]+(kg|g|個|枚|本|袋)|"
+                         r"据え置き|おしゃれ|オシャレ|スリム|コンパクト|軽量|早割|予約|正規品|公式|限定|新作|目当て|肉厚|切身|切り身|高級|厳選|特大|お徳用")
 FISH = ("鮭", "サーモン", "鯖", "サバ", "ホタテ", "帆立", "いくら", "イクラ", "明太", "たらこ", "カニ", "かに", "蟹", "海老", "エビ", "えび",
-        "うなぎ", "鰻", "干物", "魚", "マグロ", "鮪", "ぶり", "ブリ", "しらす", "牡蠣", "かき", "ウニ", "うに", "海鮮", "刺身")
+        "うなぎ", "鰻", "干物", "魚", "マグロ", "鮪", "ぶり", "ブリ", "しらす", "牡蠣", "ウニ", "うに", "海鮮", "刺身")
+
+
+def search_illust(word):
+    """いらすとやで word を検索し、題名に word が入っているいちばん上のイラストの URL（見つからないときは None）."""
+    found = json.loads(FOUND.read_text(encoding="utf-8")) if FOUND.exists() else {}
+    if word in found:
+        return found[word]
+    url = None
+    try:
+        req = urllib.request.Request("https://www.irasutoya.com/search?q=" + urllib.parse.quote(word), headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=30) as r:
+            page = r.read().decode("utf-8", "replace")
+        time.sleep(1)  # いらすとやに負担をかけないよう、1回ずつ間をあける
+        # 題名が「〇〇のイラスト」とぴったりの物 → 〇〇で始まる物 の順に選ぶ（「牛肉」で「うにの牛肉巻き」を選ばないように）
+        hits = [(img, html.unescape(t)) for img, t in re.findall(r'bp_thumbnail_resize\("([^"]+)","([^"]+)"', page)]
+        hits = [(img, t) for img, t in hits if "キャラクター" not in t and "ロゴ" not in t]
+        best = (next((img for img, t in hits if re.match(rf"{re.escape(word)}(の(イラスト|絵))", t)), None)
+                or next((img for img, t in hits if t.startswith(word)), None))
+        url = re.sub(r"/s\d+(-c)?/", "/s400/", best) if best else None
+    except Exception:  # noqa: BLE001
+        return None  # 取れなかったときは覚えない（次の日にもう一度探す）
+    found[word] = url
+    FOUND.write_text(json.dumps(found, ensure_ascii=False, indent=0), encoding="utf-8")
+    return url
 
 
 def illust_for(it, theme, k):
-    # 名前の最初のほうの言葉だけで見る（後ろの「肉厚」などで、鮭に肉のイラストが出ないように）
+    # 名前の最初のほうの言葉で、いらすとやを検索（鮭なら「鮭の切り身」の絵）。後ろの「肉厚」などには反応しない
     from itemfilter import name_words
-    head = " ".join(name_words(it["name"])[:4])
-    if not any(w in head for w in FISH):  # 魚介に合うイラストは無いので、魚介には食べ物のイラストを出さない
-        for words, key in ILLUST_WORDS:
-            if any(w in head for w in words):
+    words = [w for w in name_words(it["name"])[:5] if 2 <= len(w) <= 8 and not SEARCH_STOP.search(w)]
+    for w in words:
+        url = search_illust(w)
+        if url:
+            key = "q_" + hashlib.md5(url.encode()).hexdigest()[:12]
+            IRASUTOYA[key] = url
+            return key
+    head = " ".join(words)
+    if not any(w in head for w in FISH):  # 見つからないときは手で選んだ絵から（魚介には合う絵が無いので、食べ物の絵は出さない）
+        for words_, key in ILLUST_WORDS:
+            if any(w in head for w in words_):
                 return key
     if theme == "green":
         return "furusato"
