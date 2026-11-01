@@ -102,7 +102,8 @@ def illust_for(it, theme, k):
     from itemfilter import name_words
     words = [w for w in name_words(it["name"])[:5] if 2 <= len(w) <= 8 and not SEARCH_STOP.search(w)]
     for w in words:
-        url = search_illust(w)
+        # 見つからない言葉は、中の魚介の名前でもう一度（「銀鮭」→「鮭」）
+        url = search_illust(w) or next((u for f in FISH if f in w and f != w for u in [search_illust(f)] if u), None)
         if url:
             key = "q_" + hashlib.md5(url.encode()).hexdigest()[:12]
             IRASUTOYA[key] = url
