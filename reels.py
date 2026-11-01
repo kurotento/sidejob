@@ -88,6 +88,7 @@ def search_illust(word):
         hits = [(img, html.unescape(t)) for img, t in re.findall(r'bp_thumbnail_resize\("([^"]+)","([^"]+)"', page)]
         hits = [(img, t) for img, t in hits if "キャラクター" not in t and "ロゴ" not in t]
         best = (next((img for img, t in hits if re.match(rf"{re.escape(word)}(の(イラスト|絵))", t)), None)
+                or next((img for img, t in hits if t.startswith(word + "の")), None)  # 「鮭の切り身」を「鮭弁」より先に
                 or next((img for img, t in hits if t.startswith(word)), None))
         url = re.sub(r"/s\d+(-c)?/", "/s400/", best) if best else None
     except Exception:  # noqa: BLE001
