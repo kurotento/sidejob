@@ -90,7 +90,7 @@ def search_illust(word):
         best = (next((img for img, t in hits if re.match(rf"{re.escape(word)}(の(イラスト|絵))", t)), None)
                 or next((img for img, t in hits if t.startswith(word + "の")), None)  # 「鮭の切り身」を「鮭弁」より先に
                 or next((img for img, t in hits if t.startswith(word)), None))
-        url = re.sub(r"/s\d+(-c)?/", "/s400/", best) if best else None
+        url = re.sub(r"=s\d+(-c)?$", "=s400", re.sub(r"/s\d+(-c)?/", "/s400/", best)) if best else None  # 小さいサムネイルの URL を大きい画像に
     except Exception:  # noqa: BLE001
         return None  # 取れなかったときは覚えない（次の日にもう一度探す）
     found[word] = url
