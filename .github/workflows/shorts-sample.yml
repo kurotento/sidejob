@@ -3,6 +3,11 @@ name: shorts-sample
 # 4つの型のショート動画の見本を作り、samples ブランチに置く（本番の投稿には使わない）
 on:
   workflow_dispatch:
+    inputs:
+      mode:
+        description: "空欄=4つの型の見本 / themes=曜日ごとのテーマ7日分"
+        required: false
+        default: ""
   push:
     branches: [main]
     paths: ["tools/shorts_sample.py", ".github/workflows/shorts-sample.yml", "reels.py"]
@@ -28,7 +33,20 @@ jobs:
           pip install --quiet Pillow numpy
           sudo apt-get install -y -qq fonts-noto-cjk ffmpeg > /dev/null
       - name: Make samples
-        run: python tools/shorts_sample.py samples
+        env:
+          RAKUTEN_APP_ID: ${{ secrets.RAKUTEN_APP_ID }}
+          RAKUTEN_ACCESS_KEY: ${{ secrets.RAKUTEN_ACCESS_KEY }}
+          RAKUTEN_AFFILIATE_ID: ${{ secrets.RAKUTEN_AFFILIATE_ID }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python tools/shorts_sample.py samples ${{ github.event.inputs.mode }}
+          # 確認用に、各動画のはじめ・まんなか・おわりの静止画も置く
+          for f in samples/*.mp4; do
+            d=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f")
+            for p in 0.15 0.5 0.9; do
+              ffmpeg -loglevel error -y -ss $(python -c "print($d*$p)") -i "$f" -frames:v 1 -vf scale=360:-1 "${f%.mp4}-$p.jpg"
+            done
+          done
       - name: Push to samples branch
         run: |
           cd samples

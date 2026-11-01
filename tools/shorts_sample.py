@@ -1,7 +1,10 @@
-"""4つの型のショート動画を1本ずつ作る（声・BGM 付きの見本。GitHub Actions の shorts-sample で動かす）.
+"""ショート動画の見本を作る（声・BGM 付き。GitHub Actions の shorts-sample で動かす）.
 
-使い方: python tools/shorts_sample.py 出力フォルダ
+使い方: python tools/shorts_sample.py 出力フォルダ [themes]
+- 引数なし : 4つの型を1本ずつ（直近の1000円台の商品で）
+- themes   : 曜日ごとのテーマの枠を、来週の7日分（楽天の検索・ふるさと納税の取得に RAKUTEN_* の鍵が要る）
 """
+import datetime as dt
 import json
 import sys
 from pathlib import Path
@@ -14,15 +17,36 @@ import shorts  # noqa: E402
 
 out = Path(sys.argv[1] if len(sys.argv) > 1 else "samples")
 out.mkdir(parents=True, exist_ok=True)
-day = sorted(p.name for p in (ROOT / "data" / "history").iterdir())[-1]
-budget = json.loads((ROOT / "data" / "history" / day / "budget.json").read_text(encoding="utf-8"))
 cfg = json.loads((ROOT / "config.json").read_text(encoding="utf-8"))
 shorts.PER_DAY = 1
 log = []
-for p in design.PATTERNS:
-    made = shorts.build({**cfg, "genres": [], "design_pattern": p["key"]}, {}, budget, [], day, out / p["key"], log)
-    for v in made:
-        src = out / p["key"] / v["file"]
-        src.rename(out / f"{p['key']}.mp4")
+if len(sys.argv) > 2 and sys.argv[2] == "themes":
+    import furusato
+    fcats = furusato.fetch_all(cfg)
+    start = dt.date.today() + dt.timedelta(days=1)
+    for k in range(7):
+        day = (start + dt.timedelta(days=k)).isoformat()
+        t = shorts.theme_topic(cfg, fcats, day)
+        if not t:
+            log.append(f"{day} テーマ {shorts.WEEKLY[dt.date.fromisoformat(day).weekday()]['key']}: 商品が足りず作れない")
+            continue
+        log.append(f"{day} {t['title'].replace(chr(10), ' ')}（型: {design.video_pattern(day, cfg)['key']}）")
+        for it, note in t["items"]:
+            log.append(f"   {note}｜{it['price']:,}円｜{it['name'][:60]}")
+        orig = shorts.topics
+        shorts.topics = lambda *a, t=t: [t]
+        made = shorts.build(cfg, {}, [], fcats, day, out / day, log)
+        shorts.topics = orig
+        for v in made:
+            (out / day / v["file"]).rename(out / f"{day}-{v['key']}.mp4")
+            log.append("   " + v["desc"].split("\n")[0])
+else:
+    day = sorted(p.name for p in (ROOT / "data" / "history").iterdir())[-1]
+    budget = json.loads((ROOT / "data" / "history" / day / "budget.json").read_text(encoding="utf-8"))
+    for p in design.PATTERNS:
+        made = shorts.build({**cfg, "genres": [], "design_pattern": p["key"]}, {}, budget, [], day, out / p["key"], log)
+        for v in made:
+            src = out / p["key"] / v["file"]
+            src.rename(out / f"{p['key']}.mp4")
 print("\n".join(log))
 (out / "log.txt").write_text("\n".join(log), encoding="utf-8")

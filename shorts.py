@@ -26,7 +26,7 @@ from social import FONTS, fetch_image
 
 VOICEVOX = "http://127.0.0.1:50021"
 W, H = 1080, 1920
-PER_DAY = 4
+PER_DAY = 3  # テーマの枠・1000円台・ふるさと納税（YouTube の投稿枠 sns.YOUTUBE_TIMES と同じ数）
 PAT = design.PATTERNS[0]  # build() でその日の型に差し替える
 e = html.escape
 
@@ -898,26 +898,129 @@ def pick3(cands, base_url, ok=lambda it: True):
     return out
 
 
+# ---------- 毎日変わるテーマの枠（2026-11-01〜。それまでの「急上昇」「値下がり」の枠と入れ替え） ----------
+# 曜日（月=0）ごとのテーマ。楽天を使うかどうかに関係なく「その商品が気になる人」に届くものを選ぶ。
+# words を楽天の商品検索（レビューの多い順）で探し、must に合う商品だけを使う。lead・tags は Instagram の1行目とタグ。
+WEEKLY = [
+    dict(key="oshikatsu", tag="推し活", title="推し活グッズ\n人気TOP3", what="楽天でレビューが多い推し活グッズ",
+         words=["推し活 グッズ", "アクスタ ケース", "痛バッグ", "ペンライト ケース"], must=r"推し|アクスタ|痛バ|ペンライト|缶バッジ|うちわ",
+         lead="推し活グッズ おすすめ｜レビューの多い人気どころ", tags="#推し活 #推し活グッズ #痛バ #楽天購入品 #PR"),
+    dict(key="setsuden", tag="節約", title="冬の電気代を下げる\nグッズTOP3", what="冬の電気代を下げたい人に人気のグッズ",
+         words=["着る毛布", "電気毛布", "断熱シート 窓", "湯たんぽ"], must=r"毛布|断熱|湯たんぽ|ブランケット|ヒーター",
+         lead="冬の電気代 節約グッズ｜レビューの多い人気どころ", tags="#節約 #電気代節約 #冬支度 #楽天購入品 #PR"),
+    dict(key="hitori", tag="一人暮らし", title="一人暮らしの\n便利グッズTOP3", what="一人暮らしの人に人気の便利グッズ",
+         words=["一人暮らし 便利グッズ", "一人用 鍋", "炊飯器 1合"], must=r"一人|1人|ひとり|ミニ|コンパクト|1合|一人用",
+         lead="一人暮らし 便利グッズ｜レビューの多い人気どころ", tags="#一人暮らし #一人暮らしグッズ #新生活 #楽天購入品 #PR"),
+    dict(key="neko", tag="猫", title="猫グッズ\n人気TOP3", what="楽天でレビューが多い猫グッズ",
+         words=["猫 ベッド", "猫 おもちゃ", "猫 爪とぎ"], must=r"猫|ねこ|ネコ|キャット",
+         lead="猫グッズ おすすめ｜猫飼いさんに人気のもの", tags="#猫 #猫グッズ #猫のいる暮らし #楽天購入品 #PR"),
+    dict(key="furusato-qty", quiz=True),  # 金：ふるさと納税「1万円で何kg？」クイズ（ジャンルは週ごとに替える）
+    dict(key="inu", tag="犬", title="犬グッズ\n人気TOP3", what="楽天でレビューが多い犬グッズ",
+         words=["犬 ベッド", "犬 服", "犬 おやつ"], must=r"犬|いぬ|ドッグ|わんちゃん|ペット",
+         lead="犬グッズ おすすめ｜わんちゃんに人気のもの", tags="#犬 #犬グッズ #犬のいる暮らし #楽天購入品 #PR"),
+    dict(key="attaka", tag="あったかグッズ", title="冬のあったか\nグッズTOP3", what="冬に人気のあったかグッズ",
+         words=["ルームシューズ あったか", "ネックウォーマー", "レッグウォーマー"], must=r"あったか|暖|ウォーマー|ボア|裏起毛|もこもこ|ルームシューズ",
+         lead="冬のあったかグッズ｜レビューの多い人気どころ", tags="#あったかグッズ #冬支度 #寒さ対策 #楽天購入品 #PR"),
+]
+THEME_HISTORY = Path(__file__).resolve().parent / "data" / "theme_history.json"  # テーマの枠で出した商品（4週間は出さない）
+QTY_CATS = ("meat", "seafood", "rice", "fruit")  # 量で比べられるふるさと納税のジャンル
+
+
+def search_items(word, base_url):
+    """楽天の商品検索（レビューの多い順）。アフィリエイトのリンクで返す。鍵がないときは空."""
+    import os
+    if not os.environ.get("RAKUTEN_APP_ID"):
+        return []
+    from build import normalize_item
+    params = {"applicationId": os.environ["RAKUTEN_APP_ID"], "accessKey": os.environ.get("RAKUTEN_ACCESS_KEY", ""),
+              "keyword": word, "sort": "-reviewCount", "hits": 30, "availability": 1,
+              "minPrice": 500, "maxPrice": 20000, "formatVersion": 2}
+    if os.environ.get("RAKUTEN_AFFILIATE_ID"):
+        params["affiliateId"] = os.environ["RAKUTEN_AFFILIATE_ID"]
+    req = urllib.request.Request(SEARCH + "?" + urllib.parse.urlencode(params), headers={
+        "Referer": base_url.rstrip("/") + "/", "User-Agent": "rakuten-ranking-site/1.0",
+        "Origin": urllib.parse.urlsplit(base_url)._replace(path="").geturl()})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as res:
+            raws = json.load(res).get("Items", [])
+        time.sleep(1)
+    except Exception:  # noqa: BLE001
+        return []
+    return [normalize_item(x.get("Item", x)) for x in raws]
+
+
+def grams(name):
+    """商品名から全部の量（グラム）を読む。「選べる」など量が決まらない物は None."""
+    if re.search(r"選べる|選択|から選", name):
+        return None
+    best = 0
+    for m in re.finditer(r"(\d+(?:\.\d+)?)\s*(kg|ｋｇ|キロ|g|ｇ)(?:\s*[×xX✕＊*]\s*(\d+))?", name):
+        g = float(m.group(1)) * (1000 if m.group(2) in ("kg", "ｋｇ", "キロ") else 1) * int(m.group(3) or 1)
+        best = max(best, g)
+    return best if 300 <= best <= 60000 else None
+
+
+def theme_topic(cfg, fcats, day):
+    """その日の曜日のテーマの動画（作れないときは None）."""
+    d = dt.date.fromisoformat(day)
+    th = WEEKLY[d.weekday()]
+    base = cfg["base_url"]
+    hist = json.loads(THEME_HISTORY.read_text(encoding="utf-8")) if THEME_HISTORY.exists() else {}
+    cutoff = (d - dt.timedelta(days=28)).isoformat()
+    hist = {k: v for k, v in hist.items() if cutoff <= k < day}
+    used = {c for codes in hist.values() for c in codes}
+    if th.get("quiz"):
+        cats = [c for c in fcats or [] if c["slug"] in QTY_CATS]
+        if not cats:
+            return None
+        c = cats[d.isocalendar()[1] % len(cats)]
+        scored = []
+        for it in c["items"]:
+            g = grams(it["name"])
+            if g and it["price"] and it["code"] not in used and it.get("reviews", 0) >= 20:
+                scored.append((g / it["price"] * 10000 / 1000, g, it))  # 寄付1万円あたりの kg
+        scored.sort(key=lambda x: -x[0])
+        per = {it["code"]: (kg, g) for kg, g, it in scored}
+        picks = pick3([it for _, _, it in scored], base, lambda f: not f.get("from"))
+        if len(picks) < 3:
+            return None
+        kg_say = lambda it: f"{per[it['code']][0]:.1f}".rstrip("0").rstrip(".")  # noqa: E731
+        t = dict(key="furusato-qty", theme="green", title="ふるさと納税クイズ\n1万円で何kg届く？", tag="ふるさと納税",
+                 label="寄付額", items=[(it, f"1万円で約{kg_say(it)}kg") for it in picks],
+                 what=f"ふるさと納税の{c['title']}で、寄付1万円あたりの量が多い返礼品",
+                 intro=f"クイズです。ふるさと納税の{c['title']}で、寄付1万円あたりの量がいちばん多いのはどれでしょう？",
+                 order="countdown",
+                 fact=lambda it: f"寄付1万円あたり、約{kg_say(it)}キロ。{it['shop']}の返礼品で、寄付額は{price_say(it)}",
+                 lead="ふるさと納税 量が多い返礼品｜寄付1万円あたりで比べました",
+                 tags="#ふるさと納税 #ふるさと納税返礼品 #コスパ #楽天ふるさと納税 #PR")
+    else:
+        must = re.compile(th["must"])
+        pool, seen = [], set()
+        for w in th["words"]:
+            for it in search_items(w, base):
+                if it["code"] not in seen and must.search(it["name"]) and it["code"] not in used and it["reviews"] >= 30 and it["image"]:
+                    seen.add(it["code"])
+                    pool.append(it)
+        pool.sort(key=lambda x: -x["reviews"])
+        picks = pick3(pool, base)
+        if len(picks) < 3:
+            return None
+        t = dict(key=th["key"], theme="red", title=th["title"], tag=th["tag"], label="楽天の価格",
+                 items=[(it, f"レビュー{it['reviews']:,}件") for it in picks], what=th["what"],
+                 fact=lambda it: f"レビューが{it['reviews']:,}件もあって、{price_say(it)}",
+                 lead=th["lead"], tags=th["tags"])
+    hist[day] = [it["code"] for it, _ in t["items"]]
+    THEME_HISTORY.write_text(json.dumps(hist, ensure_ascii=False, indent=0), encoding="utf-8")
+    return t
+
+
 def topics(cfg, results, budget, fcats, day):
     """その日の動画のテーマ（最大 PER_DAY 本）。値段は作る直前に最新のものを確かめる."""
-    allg = [it for g in cfg["genres"] for it in results.get(g["slug"], [])]
     base = cfg["base_url"]
     out = []
-    # 値下がり：値段が種類で変わる商品は比べられないので除き、最新の値段でもまだ下がっているものだけ
-    cheaper = pick3(sorted((x for x in allg if x.get("price_diff", 0) < 0 and not x.get("has_range")),
-                           key=lambda x: x["price_diff"]), base, lambda f: not f.get("from") and f["price_diff"] < 0)
-    if len(cheaper) == 3:
-        out.append(dict(key="cheaper", theme="red", title="今日の楽天\n値下がりTOP3", tag="値下がり", label="楽天の価格",
-                        items=[(it, f"前日より{-it['price_diff']:,}円安い") for it in cheaper],
-                        what="今日の楽天で値下がりした商品",
-                        fact=lambda it: f"{-it['price_diff']:,}円安くなって、{price_say(it)}"))
-    risers = pick3(sorted((x for x in allg if isinstance(x.get("move"), int) and x["move"] >= 3),
-                          key=lambda x: -x["move"]), base)
-    if len(risers) == 3:
-        out.append(dict(key="rising", theme="red", title="今日の楽天\n急上昇TOP3", tag="急上昇", label="楽天の価格",
-                        items=[(it, f"{it['move']}位アップ") for it in risers],
-                        what="今日の楽天でランキングが急上昇している商品",
-                        fact=lambda it: f"昨日から{it['move']}位も上がって、{price_say(it)}"))
+    t = theme_topic(cfg, fcats, day)  # 曜日ごとのテーマ（推し活・猫・ふるさと納税クイズなど）
+    if t:
+        out.append(t)
     picks = pick3(budget or [], base, lambda f: 1000 <= f["price"] < 2000)  # 最新の値段でも1000円台のものだけ
     if len(picks) == 3:
         out.append(dict(key="budget", theme="red", title="1000円台・送料無料\n売れ筋TOP3", tag="1000円台", label="",
@@ -966,7 +1069,7 @@ def build(cfg, results, budget, fcats, day, out_dir, log):
     if not voicevox_ready():
         log.append("[shorts] VOICEVOX に接続できないため動画作成をスキップ")
         return []
-    PAT = design.pattern(day, cfg)
+    PAT = design.video_pattern(day, cfg)
     spk = speaker_id(PAT["voice"]["name"], PAT["voice"]["style"])
     if spk is None:  # その声が VOICEVOX にないときは、ずんだもんの声で作る（作りはそのまま）
         log.append(f"[shorts] {PAT['voice']['name']} の声が見つからないため、ずんだもんの声で作成")
@@ -985,8 +1088,10 @@ def build(cfg, results, budget, fcats, day, out_dir, log):
         try:
             with tempfile.TemporaryDirectory() as tmp:
                 work = Path(tmp)
+                script = {**PAT["script"], "order": t.get("order", PAT["script"]["order"])}  # クイズは答えを最後に出すので3位から
                 intro, body, end_text = design.lines_for(
-                    PAT["script"], t["what"], [(spoken_name(it, reading), t["fact"](it)) for it, _ in t["items"]])
+                    script, t["what"], [(spoken_name(it, reading), t["fact"](it)) for it, _ in t["items"]])
+                intro = t.get("intro", intro)
                 line1 = "楽天ランキング速報" if t["theme"] == "red" else "ふるさと納税 人気返礼品ランキング"
                 slides = []
                 a = work / "s0.wav"
@@ -1021,6 +1126,7 @@ def build(cfg, results, budget, fcats, day, out_dir, log):
                 name = f"shorts/{day}-{t['key']}.mp4"
                 make_video_anim(slides, out_dir / name, work, seed=dt.date.fromisoformat(day).toordinal() + n)
             made.append({"file": name, "title": video_title(t, m, d), "desc": description(t, day, site), "theme": t["theme"], "key": t["key"],
+                         "lead": t.get("lead"), "tags": t.get("tags"),  # Instagram の1行目とタグ（テーマの枠だけ）
                          "sec": round(sum(s[2] for s in slides)),
                          # Instagram のコメントに DM で返すときの商品リンク（動画と同じ順）
                          "items": [{"name": short_name(it["name"], 30), "price": price_text(it), "url": it["url"], "code": it["code"]}

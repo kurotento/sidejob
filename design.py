@@ -65,6 +65,18 @@ def pattern(day, cfg=None):
     return PATTERNS[max(n, 0) % len(PATTERNS)]
 
 
+def video_pattern(day, cfg=None):
+    """ショート動画の型。画像（2週間ごと）と違い、毎日順に替える（テーマも毎日替わるので、組み合わせで毎回違う動画に見せる）."""
+    if cfg is None:
+        conf = ROOT / "config.json"
+        cfg = json.loads(conf.read_text(encoding="utf-8")) if conf.exists() else {}
+    fixed = cfg.get("design_pattern")
+    if fixed in BY_KEY:
+        return BY_KEY[fixed]
+    # 曜日のテーマと型の組み合わせが毎週同じにならないよう、7 と割り切れない数（型は4つ）で回す
+    return PATTERNS[dt.date.fromisoformat(day).toordinal() % len(PATTERNS)]
+
+
 def schedule(day, count=4):
     """今の型と、このあと切り替わる日と型（ポータル表示用）."""
     d = dt.date.fromisoformat(day)
