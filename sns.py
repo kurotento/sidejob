@@ -62,7 +62,11 @@ def story_name(file):
 
 
 def make_story_video(out_dir, file, sec=0):
-    """ストーリー用に「DMで『リスト』と送ってね」の帯を重ねた動画を作る（ストーリーはリンクを貼れないので DM に来てもらう）."""
+    """ストーリー用に「プロフィールのリンクから見てね」の帯を重ねた動画を作る.
+
+    API で投稿するストーリーにはリンクを貼れない。以前は「DMで『リスト』と送ってね」にしていたが、
+    フォローしていない人の DM はリクエストに入って API から読めない（2026-11-01 に確認）ので、プロフィールのリンクへ案内する。
+    """
     import subprocess
 
     from PIL import Image, ImageDraw
@@ -76,9 +80,9 @@ def make_story_video(out_dir, file, sec=0):
     # 最後の4秒だけ、画面の真ん中に出す（動画の型によって字幕の位置が違うので、ずっと出すと重なる）
     d.rectangle((0, 0, 1080, 1920), fill=(0, 0, 0, 110))
     d.rounded_rectangle((70, 780, 1010, 1140), 48, fill=(193, 53, 132, 245))
-    d.text((540, 880), "商品のリンクがほしい人は", font=design.font("sans", 50), fill="white", anchor="mm")
-    d.text((540, 980), f"DMで「{DM_KEYWORD}」と送ってね", font=design.font("sans", 72), fill="white", anchor="mm")
-    d.text((540, 1075), "すぐにリンクが届きます", font=design.font("sans", 44), fill="white", anchor="mm")
+    d.text((540, 880), "紹介した商品は", font=design.font("sans", 50), fill="white", anchor="mm")
+    d.text((540, 980), "プロフィールのリンクから", font=design.font("sans", 72), fill="white", anchor="mm")
+    d.text((540, 1075), "楽天ROOMにまとめています", font=design.font("sans", 44), fill="white", anchor="mm")
     png = dst.with_suffix(".png")
     band.save(png)
     try:
@@ -139,7 +143,7 @@ def insta_posts(cfg, day, videos, at, out_dir=None):
                f"商品はプロフィールのリンク（楽天ROOM）からまとめて見られます\n\n{INSTA_TAGS[kind]}")
         out.append(item("instagram", "reel", at(h, m), cap, video=f"{base}/{v['file']}"))
     for (h, m), v in zip(INSTA_STORY_TIMES, videos or []):
-        # DM の自動返信がオンなら、「DMで『リスト』と送ってね」の帯を重ねた動画を使う
+        # DM の自動返信がオンなら、「プロフィールのリンクから」の帯を重ねた動画を使う
         file = (story_name(v["file"]) if cfg.get("ig_dm") and v.get("items") and out_dir and make_story_video(out_dir, v["file"], v.get("sec", 0))
                 else v["file"])
         out.append(item("instagram", "story", at(h, m), "", video=f"{base}/{file}"))
