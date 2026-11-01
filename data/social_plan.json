@@ -137,7 +137,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-11-01-10-single.jpg",
    "codes": [
     "kharis:10005255"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-interior",
@@ -149,7 +150,8 @@
     "yukyostore:10000040",
     "tansu:10041466",
     "aooka:10000433"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "furusato-top",
@@ -161,7 +163,8 @@
     "f014583-higashikawa:10000140",
     "f434337-minamiaso:10000737",
     "f302015-wakayama:10000658"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -171,7 +174,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-11-01-13-single.jpg",
    "codes": [
     "honjien-3:10003362"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-daily",
@@ -183,7 +187,8 @@
     "nagomilab:10000109",
     "kurashido:10000448",
     "sawasei:10230379"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "weekly",
@@ -192,7 +197,8 @@
    "text": "楽天 #PR\n保存版📌 今週の1000円台・送料無料 売れ筋TOP10\n買い回りの候補に使ってね\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #1000円台 #買い回り",
    "image": "https://kurotento.github.io/sidejob/social/2026-11-01-weekly-budget.png",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -202,7 +208,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-11-01-15-single.jpg",
    "codes": [
     "queeneyes:10000228"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -211,7 +218,8 @@
    "text": "楽天 #PR\n🎬1000円台・送料無料 売れ筋TOP3【11/1】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-11-01-budget.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "furusato-single",
@@ -221,7 +229,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-11-01-16-furusato-single.jpg",
    "codes": [
     "f062073-kaminoyama:10001209"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "genre-baby",
@@ -233,7 +242,8 @@
     "bimishop-japan:10019499",
     "pigeon-shop:10002137",
     "netbaby:10027996"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "alert",
