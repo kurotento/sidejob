@@ -326,12 +326,6 @@ def main():
             print(f"[story] 素材 {story.build(cfg, budget, results, day, OUT_DIR)}件")
         except Exception as ex:  # noqa: BLE001
             print(f"[story] 失敗: {ex}", file=sys.stderr)
-    if not args.demo:
-        try:  # Threads 用の投稿（悩み別・3案から採点で選ぶ）
-            import threads
-            print(f"[threads] 投稿 {threads.build(cfg, results, budget, cats, {**descs, **fdescs}, day, OUT_DIR)}本")
-        except Exception as ex:  # noqa: BLE001
-            print(f"[threads] 失敗: {ex}", file=sys.stderr)
     print(f"生成完了: {OUT_DIR}（失敗ジャンル {errors}件）")
     videos = []
     if not args.demo:
@@ -344,6 +338,11 @@ def main():
             print(f"[shorts] 動画 {len(videos)}本")
         except Exception as ex:  # noqa: BLE001
             print(f"[shorts] 失敗: {ex}", file=sys.stderr)
+        try:  # Threads 用の投稿（悩み別・3案から採点で選ぶ。ショートのあとに作り、その日のテーマの商品を使う）
+            import threads
+            print(f"[threads] 投稿 {threads.build(cfg, results, budget, cats, {**descs, **fdescs}, day, OUT_DIR, videos)}本")
+        except Exception as ex:  # noqa: BLE001
+            print(f"[threads] 失敗: {ex}", file=sys.stderr)
         try:
             social.plan(cfg, results, budget, {**descs, **fdescs}, day, OUT_DIR, cats, videos)
         except Exception as ex:  # noqa: BLE001 - 投稿の失敗でサイト更新は止めない

@@ -1225,6 +1225,7 @@ def theme_topic(cfg, fcats, day, results=None):
                  lead=th["lead"], tags=th["tags"])
         if th.get("replay"):
             t["intro"] = f"今週いちばん見られたテーマを、もう一度。{th['what']}を、別の3つで紹介します。"
+    t["is_theme"] = True  # X・Threads もこの日のテーマの商品で投稿する（made の theme_items）
     hist[day] = [it["code"] for it, _ in t["items"]]
     THEME_HISTORY.write_text(json.dumps(hist, ensure_ascii=False, indent=0), encoding="utf-8")
     return t
@@ -1357,6 +1358,9 @@ def build(cfg, results, budget, fcats, day, out_dir, log):
                 make_video_anim(slides, out_dir / name, work, seed=dt.date.fromisoformat(day).toordinal() + n)
             made.append({"file": name, "title": video_title(t, m, d), "desc": description(t, day, site), "theme": t["theme"], "key": t["key"],
                          "lead": t.get("lead"), "tags": t.get("tags"),  # Instagram の1行目とタグ（テーマの枠だけ）
+                         # 曜日のテーマの商品（X・Threads の投稿にも使う）。見出し（安い・チェック1など）も添える
+                         "theme_items": [{**it, "label": t.get("labels", {}).get(r + 1, ""), "fact": t["fact"](it)}
+                                         for r, (it, _) in enumerate(t["items"])] if t.get("is_theme") else None,
                          "sec": round(sum(s[2] for s in slides)),
                          # Instagram のコメントに DM で返すときの商品リンク（動画と同じ順）
                          "items": [{"name": short_name(it["name"], 30), "price": price_text(it), "url": it["url"], "code": it["code"]}

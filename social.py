@@ -24,8 +24,12 @@ DATA = ROOT / "data"
 POSTED = DATA / "posted.json"
 LOG = DATA / "social_log.txt"
 JST = dt.timezone(dt.timedelta(hours=9))
-SLOTS = [(7, 30), (8, 15), (9, 0), (9, 45), (10, 30), (11, 15), (12, 0), (12, 45), (13, 30), (14, 15),
-         (15, 0), (15, 45), (16, 30), (17, 15), (18, 0), (18, 45), (19, 30), (20, 15), (21, 0), (22, 0)]
+# ランキングを並べる通常の投稿の枠（2026-11-01 に20→10。その分、その日のショート動画3本とテーマの商品2件を別に足して1日15件ほど）
+SLOTS = [(7, 30), (9, 0), (10, 30), (12, 0), (13, 30), (15, 0), (16, 30), (18, 0), (20, 15), (22, 0)]
+VIDEO_TIMES = [(12, 30), (19, 45), (21, 30)]  # ショート動画（テーマ・1000円台・ふるさと納税の順）
+THEME_TIMES = [(11, 15), (17, 15)]  # 曜日のテーマの商品を1つずつ
+THEME_HOOK = {"vs": "安いのと高いの、どっちを選ぶ？", "nazo": "なんでこれが今売れてるの？", "check": "買う前に見ておきたいポイント",
+              "furusato-qty": "寄付1万円で何kg届く？"}
 BUFFER_CAP = 10  # Buffer無料プランで同時に予約できる件数。昼にもう一度予約して1日20件にする
 MAX_TAGS = 5
 FONTS = ["/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc", "C:/Windows/Fonts/YuGothB.ttc"]
@@ -629,13 +633,48 @@ def video_posts(cfg, videos, day):
     d = dt.date.fromisoformat(day)
     base = cfg["base_url"].rstrip("/")
     out = []
-    for (h, m), v in zip(((12, 30), (19, 45)), videos or []):
+    for (h, m), v in zip(VIDEO_TIMES, videos or []):
         title = re.sub(r"\s*#\S+", "", v["title"]).strip()
         green = v.get("theme") == "green"
-        url = f"{base}/furusato/" if green else f"{base}/{cfg['budget']['slug']}.html"
-        tags = "#ふるさと納税 #楽天ふるさと納税" if green else "#楽天 #楽天市場 #買い回り"
+        if v.get("theme_items"):  # 曜日のテーマ（推し活・猫など）は ROOM へ。タグもテーマのもの
+            url = cfg.get("room_url") or f"{base}/"
+            tags = " ".join(t for t in (v.get("tags") or "").split() if t != "#PR")
+        else:
+            url = f"{base}/furusato/" if green else f"{base}/{cfg['budget']['slug']}.html"
+            tags = "#ふるさと納税 #楽天ふるさと納税" if green else "#楽天 #楽天市場 #買い回り"
         text = finish([f"🎬{title}", "らんくまが30秒で紹介するよ"], url, tags)
         out.append((dt.datetime(d.year, d.month, d.day, h, m, tzinfo=JST), text, f"{base}/{v['file']}"))
+    return out
+
+
+def theme_posts(cfg, videos, day):
+    """曜日のテーマ（ショートと同じ商品）を1つずつ紹介する投稿。返り値は [(日時JST, 本文)]."""
+    d = dt.date.fromisoformat(day)
+    v = next((x for x in videos or [] if x.get("theme_items")), None)
+    if not v:
+        return []
+    hook = THEME_HOOK.get(v["key"]) or (v.get("lead") or "").split("｜")[0]
+    tags = " ".join(t for t in (v.get("tags") or "").split() if t != "#PR")
+    out = []
+    for (h, m), it in zip(THEME_TIMES, v["theme_items"]):
+        # 動画の読み上げの文から値段を除く（値段は別の行に書くので）。ふつうのテーマは★とレビュー件数に
+        fact = re.sub(r"[、。]?\s*(値段は|寄付額は)?[\d,]+円(から)?$", "", it.get("fact") or "")
+        if v["key"] not in THEME_HOOK:
+            fact = f"★{it['rating']:.1f}（レビュー{it['reviews']:,}件）" if it.get("reviews", 0) >= 10 else ""
+        limit = 40
+        while True:
+            head = f"【{it['label']}】" if it.get("label") else ""
+            price = ("寄付額" if v.get("theme") == "green" else "") + yen(it) + ("〜" if it.get("from") and yen(it) else "")
+            lines = [hook, "", head + short_name(it["name"], limit), price] + ([fact] if fact else [])
+            text = finish(lines, it["url"], tags)
+            if x_len(text) <= 280 or limit <= 10:
+                break
+            if fact:
+                fact = ""
+                continue
+            limit -= 4
+        text, _ = fit_x(text, tags)
+        out.append((dt.datetime(d.year, d.month, d.day, h, m, tzinfo=JST), text))
     return out
 
 
@@ -704,6 +743,7 @@ def plan(cfg, results, budget, descs, day, out_dir, fcats=None, videos=None):
     extra = [(t, txt, "", "") for t, txt in sale_alerts(names, d, f"{base}/{cfg['budget']['slug']}.html")]
     extra += [(t, txt, img, "") for t, txt, img in weekly_posts(cfg, budget, fcats, day, out_dir)]
     extra += [(t, txt, "", vid) for t, txt, vid in video_posts(cfg, videos, day)]
+    extra += [(t, txt, "", "") for t, txt in theme_posts(cfg, videos, day)]
     extra += [(t, txt, "", "") for t, txt in room_posts(cfg, day)]
     for t, txt, img, vid in extra:
         if t > later:

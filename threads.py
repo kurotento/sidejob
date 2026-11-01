@@ -60,11 +60,26 @@ SYSTEM = """あなたはThreadsで暮らしと買い物の情報を発信して�
 EXPERIENCE = re.compile(r"使ってみ|使ったら|食べたら|飲んだら|になったの|変わったの|届いた|リピ|愛用|うちでは|我が家では|私は毎|治る|消える|痩せ")
 
 
-def pick_items(results, budget, fcats, descs, used):
-    """ターゲットごとに、まだ使っていない商品を1つずつ選ぶ."""
+# 曜日のテーマの日の、最後の問いかけ（ショートの構成に合わせる）
+THEME_ASK = {"vs": "最後は「安いのと高いの、どっち派？」のように、どちらを選ぶか聞く",
+             "nazo": "最後は「これが売れてる理由、知ってた？」のように聞く",
+             "check": "最後は「買う前にどこを見る？」のように、選び方を聞く",
+             "furusato-qty": "最後は「1万円で何kg届くと思う？」のように、量を予想させる"}
+
+
+def pick_items(results, budget, fcats, descs, used, videos=None):
+    """その日のテーマ（ショートと同じ商品）を先に、残りはターゲットごとに、まだ使っていない商品を1つずつ選ぶ."""
     pools = {"budget": budget or [], "furusato": [it for c in fcats or [] for it in c["items"]]}
     pools.update(results or {})
     out = []
+    v = next((x for x in videos or [] if x.get("theme_items")), None)
+    if v:
+        label = (v.get("tags") or "#テーマ").split()[0].lstrip("#")
+        who = f"{label}が好きな人・{label}の物を探している人"
+        ask = THEME_ASK.get(v["key"], "最後は「みんなは何を使ってる？」のように聞く")
+        for it in v["theme_items"]:
+            if it["code"] not in used:
+                out.append((label, who, {**it, "ask": ask, "theme": True}))
     for label, who, src in TARGETS:
         for it in pools.get(src, []):
             if src != "furusato" and it["price"] > MAX_PRICE:  # 暮らしの悩み向けなので、手が届く価格の物だけ
@@ -72,7 +87,7 @@ def pick_items(results, budget, fcats, descs, used):
             if it["code"] not in used and it["code"] not in {x["code"] for _, _, x in out}:
                 out.append((label, who, it))
                 break
-    return out[:PER_DAY]
+    return out[:PER_DAY + 1]  # テーマの3件＋ターゲット（予約するのはテーマを先に1日3本）
 
 
 def call(prompt, key, model):
@@ -122,7 +137,8 @@ def write(picks, descs, day):
         d = descs.get(it["code"]) or {"intro": it.get("caption", "")[:400]}
         prompt = (f"ターゲットの悩み: {who}\n商品名: {short_name(it['name'], 60)}\n価格: {it['price']:,}円{'〜（種類によって変わるので、値段は書かない）' if it.get('has_range') else ''}\n"
                   f"レビュー: {it.get('reviews', 0):,}件 平均{it.get('rating', 0)}\n紹介文: {d.get('intro', '')}\n"
-                  f"特徴: {' / '.join(d.get('features', []))}\n向いている人: {d.get('for_whom', '')}")
+                  f"特徴: {' / '.join(d.get('features', []))}\n向いている人: {d.get('for_whom', '')}"
+                  + (f"\n動画で伝えた特徴: {it['fact']}\n問いかけ: {it['ask']}" if it.get("ask") else ""))
         for _ in range(2):
             try:
                 r = clean(call(prompt, key, model))
@@ -142,17 +158,17 @@ def write(picks, descs, day):
             if r or not key:
                 break
         if r:
-            cache[ck] = {**r, "url": it["url"]}
+            cache[ck] = {**r, "url": it["url"], "theme": bool(it.get("theme"))}
     cutoff = (dt.date.fromisoformat(day) - dt.timedelta(days=14)).isoformat()
     cache = {k: v for k, v in cache.items() if k[:10] >= cutoff}
     CACHE.write_text(json.dumps(cache, ensure_ascii=False, indent=0), encoding="utf-8")
     return cache
 
 
-def build(cfg, results, budget, fcats, descs, day, out_dir):
+def build(cfg, results, budget, fcats, descs, day, out_dir, videos=None):
     cache = json.loads(CACHE.read_text(encoding="utf-8")) if CACHE.exists() else {}
     used = {k[11:] for k in cache if k[:10] != day}  # 2週間は同じ商品を使わない
-    picks = pick_items(results, budget, fcats, descs, used)
+    picks = pick_items(results, budget, fcats, descs, used, videos)
     cache = write(picks, descs, day)
     cards = []
     for n, (label, who, it) in enumerate(picks):

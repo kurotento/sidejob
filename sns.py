@@ -14,7 +14,8 @@ DATA = Path(__file__).resolve().parent / "data"
 SNS_PLAN = DATA / "sns_plan.json"
 JST = dt.timezone(dt.timedelta(hours=9))
 
-THREADS_TIMES = [(12, 15), (19, 0), (21, 30)]  # 新しいアカウントなので最初は1日3本
+THREADS_TIMES = [(12, 15), (19, 0), (21, 30)]  # 新しいアカウントなので最初は1日3本（曜日のテーマの商品から）
+THREADS_VIDEO_TIME = (20, 15)  # その日のテーマのショートを動画で1本
 # フォロワーが少ないうちは、フォロワー以外にも届くリールを中心にする（ストーリーはフォロワーにしか出ない）
 INSTA_REEL_TIMES = [(18, 0), (21, 0)]
 INSTA_FEED_TIME = (12, 0)
@@ -114,11 +115,18 @@ def item(service, kind, t, text, image="", video=""):
             "text": text, "image": image, "video": video, "codes": []}
 
 
-def threads_posts(day, at):
+def threads_posts(day, at, cfg=None, videos=None):
     cache = json.loads((DATA / "threads_posts.json").read_text(encoding="utf-8")) if (DATA / "threads_posts.json").exists() else {}
+    # その日のテーマ（ショートと同じ商品）を先に、そのあと点の高い順
     todays = sorted(((k, v) for k, v in cache.items() if k.startswith(day + ":") and v.get("patterns")),
-                    key=lambda kv: -kv[1]["patterns"][0]["total"])
+                    key=lambda kv: (not kv[1].get("theme"), -kv[1]["patterns"][0]["total"]))
     out = []
+    v = next((x for x in videos or [] if x.get("theme_items")), None)
+    if v and cfg:  # テーマのショートを動画でも1本（動画の投稿は返信を付けられないので、ROOM の検索を本文に）
+        title = re.sub(r"\s*#\S+", "", v["title"]).strip()
+        tags = " ".join(t for t in (v.get("tags") or "").split() if t != "#PR")
+        text = f"{title}\n\nらんくまが30秒で紹介するよ\n紹介した商品は、楽天ROOMで「らんくま」と検索してね\n{tags} #PR"
+        out.append(item("threads", "video", at(*THREADS_VIDEO_TIME), text, video=f"{cfg['base_url'].rstrip('/')}/{v['file']}"))
     for (h, m), (k, v) in zip(THREADS_TIMES, todays):
         url = v.get("url")
         if not url:
@@ -219,7 +227,7 @@ def build(cfg, day, videos, out_dir=None):
     if cfg.get("instagram_via") == "sheet":  # Instagram はスプレッドシートの予約表から投稿する（Buffer は使わない）
         to_sheet(cfg, day, insta, out_dir)
         insta = []
-    for x in threads_posts(day, at) + insta + youtube_posts(cfg, day, videos, at):
+    for x in threads_posts(day, at, cfg, videos) + insta + youtube_posts(cfg, day, videos, at):
         if (x["service"], x["kind"], x["time"]) not in have and dt.datetime.strptime(
                 x["due"], "%Y-%m-%dT%H:%M:%S.000Z").replace(tzinfo=dt.timezone.utc) > now:
             posts.append(x)
