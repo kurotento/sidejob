@@ -880,10 +880,29 @@ def price_say(it):
     return f"{it['price']:,}円" + ("から" if it.get("from") else "")
 
 
+def name_words(name):
+    """似た商品かどうかを比べるための、商品名の主な言葉（【】などの宣伝文と記号を除く）."""
+    name = re.sub(r"【[^】]*】|\[[^\]]*\]|［[^］]*］|＼[^／]*／|「[^」]*」|<[^>]*>", " ", name)
+    words = re.split(r"[\s　/／|｜・,，、。!！?？()（）『』★☆◆◇■□●○※+＋]+", name)
+    return [w for w in words if len(w) >= 2 and not AD_WORD.search(w)]
+
+
+AD_WORD = re.compile(r"位|OFF|オフ|[%％]|クーポン|送料|ポイント|楽天|限定|SALE|セール|公式|倍|円|獲得|ランキング|累計|人気|お試し|あす楽|即納")
+
+
+def similar(a, b):
+    """同じような商品（例：簡易トイレが3つ並ぶ）なら True。最初のほうの主な言葉（3文字以上）が、相手の名前の最初のほうに含まれていれば似た商品とみなす."""
+    wa, wb = name_words(a["name"])[:4], name_words(b["name"])[:4]
+    ja, jb = "".join(wa), "".join(wb)
+    return any(len(w) >= 3 and w in jb for w in wa) or any(len(w) >= 3 and w in ja for w in wb)
+
+
 def pick3(cands, base_url, ok=lambda it: True):
-    """候補の上から、最新の値段で条件に合う商品を3つ選ぶ（売り切れ・見つからないものは飛ばす）."""
+    """候補の上から、最新の値段で条件に合う商品を3つ選ぶ（売り切れ・見つからないもの、すでに選んだ物と似た商品は飛ばす）."""
     out = []
     for it in cands:
+        if any(similar(it, o) for o in out):
+            continue
         f = latest(it, base_url)
         if f and ok(f):
             out.append(f)
