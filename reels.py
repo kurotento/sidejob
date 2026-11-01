@@ -155,7 +155,7 @@ def list_media(it, t, punch=0.0):
 def list_rows(d, revealed, current, x=40, y=BAND + 70, labels=None):
     """左の順位一覧（1〜3位）。revealed: {順位: 名前}。labels があれば王冠と順位の代わりに見出し（「安いほう」など）を出す."""
     for r in (1, 2, 3):
-        yy = y + (r - 1) * 96
+        yy = y + ((3 - r) if labels else (r - 1)) * 96  # 見出しのときは出てくる順（チェック1・安い が上）
         if labels:
             outlined(d, (x, yy + 30), labels[r], F("sans", 34), (255, 226, 0), (0, 0, 0), 5, anchor="lm")
             name = revealed.get(r)
