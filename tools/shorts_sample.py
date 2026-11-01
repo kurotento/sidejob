@@ -23,6 +23,9 @@ log = []
 if len(sys.argv) > 2 and sys.argv[2] == "themes":
     import furusato
     fcats = furusato.fetch_all(cfg)
+    for c in fcats:  # クイズで量が読めた返礼品の数
+        ok = [it for it in c["items"] if shorts.amount(it)]
+        log.append(f"[量] {c['slug']}: {len(ok)}/{len(c['items'])}件 " + " / ".join(f"{shorts.amount(it):.0f}g {it['name'][:25]}" for it in ok[:3]))
     start = dt.date.today() + dt.timedelta(days=1)
     for k in range(7):
         day = (start + dt.timedelta(days=k)).isoformat()

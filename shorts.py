@@ -21,7 +21,7 @@ from pathlib import Path
 
 import design
 from articles import short_name
-from itemfilter import excluded, similar
+from itemfilter import excluded, name_words, similar
 from social import FONTS, fetch_image
 
 VOICEVOX = "http://127.0.0.1:50021"
@@ -903,10 +903,10 @@ def pick3(cands, base_url, ok=lambda it: True):
 # words を楽天の商品検索（レビューの多い順）で探し、must に合う商品だけを使う。lead・tags は Instagram の1行目とタグ。
 WEEKLY = [
     dict(key="oshikatsu", tag="推し活", title="推し活グッズ\n人気TOP3", what="楽天でレビューが多い推し活グッズ",
-         words=["推し活 グッズ", "アクスタ ケース", "痛バッグ", "ペンライト ケース"], must=r"推し|アクスタ|痛バ|ペンライト|缶バッジ|うちわ",
+         words=["推し活 グッズ", "アクスタ ケース", "痛バッグ", "ペンライト ケース"], must=r"推し|アクスタ|痛バ|ペンライト|缶バッジ|うちわ", ng=r"医療|瞳孔|看護|ナース|診察",
          lead="推し活グッズ おすすめ｜レビューの多い人気どころ", tags="#推し活 #推し活グッズ #痛バ #楽天購入品 #PR"),
     dict(key="setsuden", tag="節約", title="冬の電気代を下げる\nグッズTOP3", what="冬の電気代を下げたい人に人気のグッズ",
-         words=["着る毛布", "電気毛布", "断熱シート 窓", "湯たんぽ"], must=r"毛布|断熱|湯たんぽ|ブランケット|ヒーター",
+         words=["着る毛布", "電気毛布", "断熱シート 窓", "湯たんぽ"], must=r"毛布|断熱|湯たんぽ|ブランケット", ng=r"バッテリー",
          lead="冬の電気代 節約グッズ｜レビューの多い人気どころ", tags="#節約 #電気代節約 #冬支度 #楽天購入品 #PR"),
     dict(key="hitori", tag="一人暮らし", title="一人暮らしの\n便利グッズTOP3", what="一人暮らしの人に人気の便利グッズ",
          words=["一人暮らし 便利グッズ", "一人用 鍋", "炊飯器 1合"], must=r"一人|1人|ひとり|ミニ|コンパクト|1合|一人用",
@@ -949,15 +949,27 @@ def search_items(word, base_url):
     return [normalize_item(x.get("Item", x)) for x in raws]
 
 
-def grams(name):
-    """商品名から全部の量（グラム）を読む。「選べる」など量が決まらない物は None."""
-    if re.search(r"選べる|選択|から選", name):
-        return None
+def grams(text):
+    """文から全部の量（グラム）を読む（「500g×3」は1500g。いちばん大きい数を全体の量とみなす）。読めないときは None."""
     best = 0
-    for m in re.finditer(r"(\d+(?:\.\d+)?)\s*(kg|ｋｇ|キロ|g|ｇ)(?:\s*[×xX✕＊*]\s*(\d+))?", name):
+    for m in re.finditer(r"(\d+(?:\.\d+)?)\s*(kg|ｋｇ|キロ|g|ｇ)(?:\s*[×xX✕＊*]\s*(\d+))?", text or ""):
         g = float(m.group(1)) * (1000 if m.group(2) in ("kg", "ｋｇ", "キロ") else 1) * int(m.group(3) or 1)
         best = max(best, g)
     return best if 300 <= best <= 60000 else None
+
+
+def amount(it):
+    """返礼品の量（グラム）。容量で寄付額が変わる物（寄付額が「〜」）は比べられないので None.
+
+    量は商品名か、説明文の「内容量」のところから読む。
+    """
+    if it.get("has_range"):
+        return None
+    g = grams(it["name"])
+    if g is None:
+        m = re.search(r"内容量\s*[:：】\]]?\s*(.{0,120})", it.get("caption_long") or it.get("caption") or "")
+        g = grams(m.group(1)) if m else None
+    return g
 
 
 def theme_topic(cfg, fcats, day):
@@ -976,7 +988,7 @@ def theme_topic(cfg, fcats, day):
         c = cats[d.isocalendar()[1] % len(cats)]
         scored = []
         for it in c["items"]:
-            g = grams(it["name"])
+            g = amount(it)
             if g and it["price"] and it["code"] not in used and it.get("reviews", 0) >= 20:
                 scored.append((g / it["price"] * 10000 / 1000, g, it))  # 寄付1万円あたりの kg
         scored.sort(key=lambda x: -x[0])
@@ -994,11 +1006,14 @@ def theme_topic(cfg, fcats, day):
                  lead="ふるさと納税 量が多い返礼品｜寄付1万円あたりで比べました",
                  tags="#ふるさと納税 #ふるさと納税返礼品 #コスパ #楽天ふるさと納税 #PR")
     else:
-        must = re.compile(th["must"])
+        must, ng = re.compile(th["must"]), re.compile(th.get("ng") or "$^")
+        # テーマの言葉は、宣伝文を除いた名前の最初のほうにあるものだけ（名前の後ろに検索用の言葉を並べただけの商品を拾わない）
+        head = lambda it: " ".join(name_words(it["name"])[:3])  # noqa: E731
         pool, seen = [], set()
         for w in th["words"]:
             for it in search_items(w, base):
-                if it["code"] not in seen and must.search(it["name"]) and it["code"] not in used and it["reviews"] >= 30 and it["image"]:
+                if (it["code"] not in seen and must.search(head(it)) and not ng.search(it["name"])
+                        and it["code"] not in used and it["reviews"] >= 30 and it["image"]):
                     seen.add(it["code"])
                     pool.append(it)
         pool.sort(key=lambda x: -x["reviews"])
