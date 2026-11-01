@@ -13,6 +13,8 @@ SKIP_NAME = re.compile(r"CD|DVD|Blu-?ray|ブルーレイ|アルバム|写真集|
                        r"VOLUME|カレンダー|トレカ|たばこ|タバコ", re.I)
 # 商品名の宣伝の言葉（似た商品かどうかを比べるときは除く）
 AD_WORD = re.compile(r"位|OFF|オフ|[%％]|クーポン|送料|ポイント|楽天|限定|SALE|セール|公式|倍|円|獲得|ランキング|累計|人気|お試し|あす楽|即納")
+# 呼び方が違うだけの同じ種類の商品（比べる前に1つの言葉にそろえる）
+SAME_KIND = [(re.compile(r"(非常用|携帯|災害用|防災|簡易)(簡易)?トイレ"), "簡易トイレ")]
 
 
 def excluded(it):
@@ -22,6 +24,8 @@ def excluded(it):
 def name_words(name):
     """似た商品かどうかを比べるための、商品名の主な言葉（【】などの宣伝文と記号を除く）."""
     name = re.sub(r"【[^】]*】|\[[^\]]*\]|［[^］]*］|＼[^／]*／|「[^」]*」|<[^>]*>", " ", name)
+    for pat, word in SAME_KIND:
+        name = pat.sub(word, name)
     words = re.split(r"[\s　/／|｜・,，、。!！?？()（）『』★☆◆◇■□●○※+＋]+", name)
     return [w for w in words if len(w) >= 2 and not AD_WORD.search(w)]
 
