@@ -86,6 +86,8 @@ def run():
     except RuntimeError as ex:
         convs = []
         log.append(f"{now:%m/%d %H:%M} DM: 会話の取得エラー {str(ex)[:150]}")
+    recent = [cv for cv in convs if now - parse(cv["updated_time"]) <= dt.timedelta(hours=DM_HOURS)]
+    print(f"会話 {len(convs)}件（{DM_HOURS}時間以内 {len(recent)}件）")
     for cv in convs:
         if now - parse(cv["updated_time"]) > dt.timedelta(hours=DM_HOURS):
             continue
@@ -94,6 +96,7 @@ def run():
         except RuntimeError as ex:
             log.append(f"{now:%m/%d %H:%M} DM: メッセージ取得エラー {str(ex)[:150]}")
             continue
+        print(f"  メッセージ {len(msgs)}件・「リスト」{sum(bool(KEYWORD.search(m.get('message') or '')) for m in msgs)}件")
         for msg in msgs:
             frm = msg.get("from") or {}
             if (msg["id"] in done or frm.get("id") == str(me["user_id"]) or frm.get("username") == me.get("username")
