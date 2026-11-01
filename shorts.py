@@ -21,7 +21,7 @@ from pathlib import Path
 
 import design
 from articles import short_name
-from itemfilter import excluded, name_words, similar
+from itemfilter import excluded, name_words, pick_varied, similar
 from social import FONTS, fetch_image
 
 VOICEVOX = "http://127.0.0.1:50021"
@@ -909,7 +909,7 @@ WEEKLY = [
          words=["着る毛布", "電気毛布", "断熱シート 窓", "湯たんぽ"], must=r"毛布|断熱|湯たんぽ|ブランケット", ng=r"バッテリー",
          lead="冬の電気代 節約グッズ｜レビューの多い人気どころ", tags="#節約 #電気代節約 #冬支度 #楽天購入品 #PR"),
     dict(key="hitori", tag="一人暮らし", title="一人暮らしの\n便利グッズTOP3", what="一人暮らしの人に人気の便利グッズ",
-         words=["一人暮らし 便利グッズ", "一人用 鍋", "炊飯器 1合"], must=r"一人|1人|ひとり|ミニ|コンパクト|1合|一人用",
+         words=["一人暮らし 便利グッズ", "一人用 鍋", "炊飯器 1合"], must=r"一人|1人|ひとり|ミニ|コンパクト|1合|一人用", ng=r"の素|グルメ|食品|お取り寄せ",
          lead="一人暮らし 便利グッズ｜レビューの多い人気どころ", tags="#一人暮らし #一人暮らしグッズ #新生活 #楽天購入品 #PR"),
     dict(key="neko", tag="猫", title="猫グッズ\n人気TOP3", what="楽天でレビューが多い猫グッズ",
          words=["猫 ベッド", "猫 おもちゃ", "猫 爪とぎ"], must=r"猫|ねこ|ネコ|キャット",
@@ -949,24 +949,25 @@ def search_items(word, base_url):
     return [normalize_item(x.get("Item", x)) for x in raws]
 
 
-def grams(text):
-    """文から全部の量（グラム）を読む（「500g×3」は1500g。いちばん大きい数を全体の量とみなす）。読めないときは None."""
-    best = 0
+def grams(text, low=False):
+    """文から量（グラム）を読む（「500g×3」は1500g）。ふつうはいちばん大きい数を全体の量とみなし、
+    low=True（「1.5kg〜4kg から選べる」など）は、いちばん安い寄付額に合ういちばん少ない量にする。読めないときは None."""
+    found = []
     for m in re.finditer(r"(\d+(?:\.\d+)?)\s*(kg|ｋｇ|キロ|g|ｇ)(?:\s*[×xX✕＊*]\s*(\d+))?", text or ""):
         g = float(m.group(1)) * (1000 if m.group(2) in ("kg", "ｋｇ", "キロ") else 1) * int(m.group(3) or 1)
-        best = max(best, g)
-    return best if 300 <= best <= 60000 else None
+        if 300 <= g <= 60000:
+            found.append(g)
+    return (min(found) if low else max(found)) if found else None
 
 
 def amount(it):
-    """返礼品の量（グラム）。容量で寄付額が変わる物（寄付額が「〜」）は比べられないので None.
+    """返礼品の量（グラム）。量は商品名か、説明文の「内容量」のところから読む.
 
-    量は商品名か、説明文の「内容量」のところから読む。
+    容量を選べる返礼品（寄付額が「〜」・名前に「〜」「選べる」）は、いちばん少ない量（＝いちばん安い寄付額のもの）にする。
     """
-    if it.get("has_range"):
-        return None
-    g = grams(it["name"])
-    if g is None:
+    low = bool(it.get("has_range") or it.get("from") or re.search(r"[～〜]|選べる|選択|から選", it["name"]))
+    g = grams(it["name"], low)
+    if g is None and not low:
         m = re.search(r"内容量\s*[:：】\]]?\s*(.{0,120})", it.get("caption_long") or it.get("caption") or "")
         g = grams(m.group(1)) if m else None
     return g
@@ -988,15 +989,18 @@ def theme_topic(cfg, fcats, day):
         c = cats[d.isocalendar()[1] % len(cats)]
         scored = []
         for it in c["items"]:
-            g = amount(it)
-            if g and it["price"] and it["code"] not in used and it.get("reviews", 0) >= 20:
-                scored.append((g / it["price"] * 10000 / 1000, g, it))  # 寄付1万円あたりの kg
+            if it["code"] in used or it.get("reviews", 0) < 20 or excluded(it) or amount(it) is None:
+                continue
+            f = latest(it, base)  # 最新の寄付額（容量を選べる物は、いちばん安い寄付額）
+            g = amount(f) if f else None
+            if g and f["price"]:
+                scored.append((g / f["price"] * 10000 / 1000, f))  # 寄付1万円あたりの kg
         scored.sort(key=lambda x: -x[0])
-        per = {it["code"]: (kg, g) for kg, g, it in scored}
-        picks = pick3([it for _, _, it in scored], base, lambda f: not f.get("from"))
+        per = {f["code"]: kg for kg, f in scored}
+        picks = pick_varied([f for _, f in scored], 3)
         if len(picks) < 3:
             return None
-        kg_say = lambda it: f"{per[it['code']][0]:.1f}".rstrip("0").rstrip(".")  # noqa: E731
+        kg_say = lambda it: f"{per[it['code']]:.1f}".rstrip("0").rstrip(".")  # noqa: E731
         t = dict(key="furusato-qty", theme="green", title="ふるさと納税クイズ\n1万円で何kg届く？", tag="ふるさと納税",
                  label="寄付額", items=[(it, f"1万円で約{kg_say(it)}kg") for it in picks],
                  what=f"ふるさと納税の{c['title']}で、寄付1万円あたりの量が多い返礼品",
