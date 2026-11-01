@@ -955,9 +955,12 @@ def grams(text, low=False):
     found = []
     for m in re.finditer(r"(\d+(?:\.\d+)?)\s*(kg|ｋｇ|キロ|g|ｇ)(?:\s*[×xX✕＊*]\s*(\d+))?", text or ""):
         g = float(m.group(1)) * (1000 if m.group(2) in ("kg", "ｋｇ", "キロ") else 1) * int(m.group(3) or 1)
-        if 300 <= g <= 60000:
+        if 50 <= g <= 60000:
             found.append(g)
-    return (min(found) if low else max(found)) if found else None
+    if low:
+        # 量が1つしか書かれていない（「最大2kg」など）と、いちばん安い寄付額の量か分からないので使わない
+        return min(found) if len(found) >= 2 else None
+    return max(found) if found and max(found) >= 300 else None
 
 
 def amount(it):
