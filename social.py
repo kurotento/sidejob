@@ -783,6 +783,18 @@ def log_schema(key):
     SCHEMA.write_text(chr(10).join(out) + chr(10), encoding="utf-8")
 
 
+SITE_LINK = re.compile(r"https://kurotento\.github\.io/sidejob[^\s?#]*")
+
+
+def tag_links(post, service):
+    """サイトへのリンクに「どこから来たか」の印（utm）を付けた投稿（Google アナリティクスで X・Threads などを分けて見るため）."""
+    tag = lambda t: SITE_LINK.sub(lambda m: f"{m.group(0)}?utm_source={service}&utm_medium=social", t or "")  # noqa: E731
+    out = {**post, "text": tag(post["text"])}
+    if post.get("reply"):
+        out["reply"] = tag(post["reply"])
+    return out
+
+
 def schedule(key, posts, service, log, posted, day):
     """posts（同じチャンネル向け）のうち未予約のものを、空き枠の範囲で予約する."""
     now = dt.datetime.now(dt.timezone.utc)
@@ -806,10 +818,11 @@ def schedule(key, posts, service, log, posted, day):
         meta = INSTA_META.get(post["kind"], "") if service == "instagram" else ""
         if service == "youtube":  # タイトル必須。カテゴリはハウツー・スタイル、子ども向けではない、公開
             meta = "{youtube: {title: %s, categoryId: \"26\", privacy: public, madeForKids: false, notifySubscribers: true}}" % json.dumps(post.get("title", ""))
+        tagged = tag_links(post, service)
         if service == "threads" and post.get("reply"):  # 本文＋自分への返信（リンク）のスレッドにする
-            items = ", ".join("{text: %s, assets: []}" % json.dumps(t) for t in (post["text"], post["reply"]))
+            items = ", ".join("{text: %s, assets: []}" % json.dumps(t) for t in (tagged["text"], tagged["reply"]))
             meta = "{threads: {type: post, thread: [%s]}}" % items  # Buffer の仕様変更で type は post だけになった
-        send = post
+        send = tagged
         try:
             try:
                 r = create(key, send, channel, meta)
@@ -820,7 +833,7 @@ def schedule(key, posts, service, log, posted, day):
                 if not meta:
                     raise
                 if service == "threads":  # スレッドにできなければ、リンクを本文に足して1件で
-                    send = {**post, "text": post["text"] + "\n\n" + post["reply"]}
+                    send = {**tagged, "text": tagged["text"] + "\n\n" + tagged["reply"]}
                     meta = ""
                 log.append(f"{post['time']} {post['kind']}: 種類指定でエラー（{str(ex)[:120]}）→ 指定なしで再試行")
                 r = create(key, send, channel)

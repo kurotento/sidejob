@@ -184,10 +184,17 @@ def page(cfg, title, body, path, demo, updated, active=None, hero="", extra_css=
     gsv = cfg.get("google_site_verification", "")
     verify = f'<meta name="google-site-verification" content="{e(gsv)}">' if gsv and not demo else ""
     banner = '<div class="demo">デモデータ表示中（公開しないでください）</div>' if demo else ""
+    ga = cfg.get("ga_measurement_id", "") if not demo else ""
+    # Google アナリティクス：どこから来た人が、どの商品の楽天リンクを押したかを数える（楽天のレポートは合計しか見られないため）
+    analytics = (f'<script async src="https://www.googletagmanager.com/gtag/js?id={e(ga)}"></script><script>'
+                 f'window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}gtag("js",new Date());gtag("config","{e(ga)}");'
+                 'document.addEventListener("click",function(ev){var a=ev.target.closest&&ev.target.closest("a[href]");'
+                 r'if(a&&/rakuten\.co\.jp/.test(a.href)){gtag("event","rakuten_click",{link_url:a.href,link_text:(a.textContent||"").trim().slice(0,60),transport_type:"beacon"});}},true);'
+                 '</script>') if ga else ""
     return f"""<!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{e(full_title)}</title><meta name="description" content="{e(cfg['site_description'])}">
-<link rel="canonical" href="{e(canonical)}"><meta name="theme-color" content="#bf0000">{verify}
+<link rel="canonical" href="{e(canonical)}"><meta name="theme-color" content="#bf0000">{verify}{analytics}
 <meta property="og:title" content="{e(full_title)}"><meta property="og:description" content="{e(cfg['site_description'])}">
 <meta property="og:type" content="website"><meta property="og:url" content="{e(canonical)}">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%23bf0000'/%3E%3Cpath fill='white' d='M4 8l4 3.5L12 5l4 6.5L20 8l-1.6 10H5.6z'/%3E%3C/svg%3E">
@@ -201,6 +208,7 @@ def page(cfg, title, body, path, demo, updated, active=None, hero="", extra_css=
 <p>当サイトは楽天アフィリエイトを利用しており、リンク経由のご購入で運営者に紹介料が支払われる場合があります。</p>
 {('<p><a href="' + e(cfg["x_url"]) + '" rel="noopener" target="_blank">𝕏 毎日の値下がり・セール速報は X でも発信中（フォローする）</a></p>') if cfg.get("x_url") else ''}
 {('<p><a href="' + e(cfg["room_url"]) + '" rel="noopener" target="_blank">🛍 売れ筋とふるさと納税の返礼品は楽天ROOMにもまとめています</a></p>') if cfg.get("room_url") else ''}
+<p>アクセスの傾向を知るため Google アナリティクスを使っています（Cookie を使い、個人を特定する情報は集めません。ブラウザの設定で無効にできます）。</p>
 <p><a href="about.html">運営者情報・免責事項</a> ／ Supported by <a href="https://webservice.rakuten.co.jp/" rel="noopener">Rakuten Developers</a></p></div></footer>
 </body></html>"""
 
