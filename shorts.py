@@ -588,7 +588,7 @@ def anim_title(theme, title, sub, dur, out, seed, mouth=(), text=""):
     return [("whoosh", 0.0), ("pop", 0.25)]
 
 
-def anim_item(theme, rank, it, price_label, note, text, dur, out, seed, mouth=()):
+def anim_item(theme, rank, it, price_label, note, text, dur, out, seed, mouth=(), label=None):
     from PIL import ImageDraw
     big = stripes_bg(theme)
     chunks = sub_chunks(text) if text else []
@@ -620,8 +620,13 @@ def anim_item(theme, rank, it, price_label, note, text, dur, out, seed, mouth=()
     badge = layer((200, 200))
     bdg = ImageDraw.Draw(badge)
     bdg.ellipse([4, 4, 196, 196], fill=medal, outline=(255, 255, 255), width=9)
-    bdg.text((100, 88), f"{rank}", font=font(104), fill=(255, 255, 255), anchor="mm")
-    bdg.text((100, 160), "位", font=font(38), fill=(255, 255, 255), anchor="mm")
+    if label:  # VS・謎解きなど、順位ではない見出し（2行まで）
+        lines = label.split("\n")[:2]
+        for k, ln in enumerate(lines):
+            bdg.text((100, 100 + (k * 2 - (len(lines) - 1)) * 26), ln, font=font(44 if len(ln) <= 4 else 34), fill=(255, 255, 255), anchor="mm")
+    else:
+        bdg.text((100, 88), f"{rank}", font=font(104), fill=(255, 255, 255), anchor="mm")
+        bdg.text((100, 160), "位", font=font(38), fill=(255, 255, 255), anchor="mm")
     price_l = layer((900, 170))
     pd = ImageDraw.Draw(price_l)
     pd.text((0, 10), price_text(it), font=font(120), fill=accent)
@@ -899,34 +904,74 @@ def pick3(cands, base_url, ok=lambda it: True):
 
 
 # ---------- 毎日変わるテーマの枠（2026-11-01〜。それまでの「急上昇」「値下がり」の枠と入れ替え） ----------
-# 曜日（月=0）ごとのテーマ。楽天を使うかどうかに関係なく「その商品が気になる人」に届くものを選ぶ。
-# words を楽天の商品検索（レビューの多い順）で探し、must に合う商品だけを使う。lead・tags は Instagram の1行目とタグ。
-WEEKLY = [
-    dict(key="oshikatsu", tag="推し活", title="推し活グッズ\n人気TOP3", what="楽天でレビューが多い推し活グッズ",
-         words=["推し活 グッズ", "アクスタ ケース", "痛バッグ", "ペンライト ケース"], must=r"推し|アクスタ|痛バ|ペンライト|缶バッジ|うちわ", ng=r"医療|瞳孔|看護|ナース|診察",
-         lead="推し活グッズ おすすめ｜レビューの多い人気どころ", tags="#推し活 #推し活グッズ #痛バ #楽天購入品 #PR"),
-    dict(key="setsuden", tag="節約", title="冬の電気代を下げる\nグッズTOP3", what="冬の電気代を下げたい人に人気のグッズ",
+# 楽天を使うかどうかに関係なく「その商品が気になる人」に届くテーマにする。kind ごとに話の運び方（構成）が違う。
+# - search : words を楽天の商品検索（レビューの多い順）で探し、名前の最初のほうが must に合う商品を3位から紹介
+# - vs     : 同じ種類の安い・ふつう・高いを比べる（VSバトル）
+# - mystery: 急上昇している商品の「なんで売れてる？」を説明文から読み取って答え合わせ（謎解き）
+# - check  : 買う前に見るポイント3つと、それに合う商品（選び方チェック）
+# - quiz   : ふるさと納税「1万円で何kg届く？」
+# - best   : その週にいちばん見られたテーマをもう一度（分からないときは THEMES_EXTRA を週ごとに）
+# lead・tags は Instagram の1行目とタグ。
+OSHI = dict(key="oshikatsu", kind="search", tag="推し活", title="推し活グッズ\n人気TOP3", what="楽天でレビューが多い推し活グッズ",
+            words=["推し活 グッズ", "アクスタ ケース", "痛バッグ", "ペンライト ケース"], must=r"推し|アクスタ|痛バ|ペンライト|缶バッジ|うちわ",
+            ng=r"医療|瞳孔|看護|ナース|診察", lead="推し活グッズ おすすめ｜レビューの多い人気どころ", tags="#推し活 #推し活グッズ #痛バ #楽天購入品 #PR")
+NEKO = dict(key="neko", kind="search", tag="猫", title="猫グッズ\n人気TOP3", what="楽天でレビューが多い猫グッズ",
+            words=["猫 ベッド", "猫 おもちゃ", "猫 爪とぎ"], must=r"猫|ねこ|ネコ|キャット",
+            lead="猫グッズ おすすめ｜猫飼いさんに人気のもの", tags="#猫 #猫グッズ #猫のいる暮らし #楽天購入品 #PR")
+INU = dict(key="inu", kind="search", tag="犬", title="犬グッズ\n人気TOP3", what="楽天でレビューが多い犬グッズ",
+           words=["犬 ベッド", "犬 服", "犬 おやつ"], must=r"犬|いぬ|ドッグ|わんちゃん|ペット",
+           lead="犬グッズ おすすめ｜わんちゃんに人気のもの", tags="#犬 #犬グッズ #犬のいる暮らし #楽天購入品 #PR")
+THEMES_EXTRA = [  # 日曜に「よく見られたテーマ」が分からないとき、週ごとに順に使う
+    dict(key="setsuden", kind="search", tag="節約", title="冬の電気代を下げる\nグッズTOP3", what="冬の電気代を下げたい人に人気のグッズ",
          words=["着る毛布", "電気毛布", "断熱シート 窓", "湯たんぽ"], must=r"毛布|断熱|湯たんぽ|ブランケット", ng=r"バッテリー",
          lead="冬の電気代 節約グッズ｜レビューの多い人気どころ", tags="#節約 #電気代節約 #冬支度 #楽天購入品 #PR"),
-    dict(key="hitori", tag="一人暮らし", title="一人暮らしの\n便利グッズTOP3", what="一人暮らしの人に人気の便利グッズ",
-         words=["一人暮らし 便利グッズ", "一人用 鍋", "炊飯器 1合"], must=r"一人|1人|ひとり|ミニ|コンパクト|1合|一人用", ng=r"の素|グルメ|食品|お取り寄せ",
-         lead="一人暮らし 便利グッズ｜レビューの多い人気どころ", tags="#一人暮らし #一人暮らしグッズ #新生活 #楽天購入品 #PR"),
-    dict(key="neko", tag="猫", title="猫グッズ\n人気TOP3", what="楽天でレビューが多い猫グッズ",
-         words=["猫 ベッド", "猫 おもちゃ", "猫 爪とぎ"], must=r"猫|ねこ|ネコ|キャット",
-         lead="猫グッズ おすすめ｜猫飼いさんに人気のもの", tags="#猫 #猫グッズ #猫のいる暮らし #楽天購入品 #PR"),
-    dict(key="furusato-qty", quiz=True),  # 金：ふるさと納税「1万円で何kg？」クイズ（ジャンルは週ごとに替える）
-    dict(key="inu", tag="犬", title="犬グッズ\n人気TOP3", what="楽天でレビューが多い犬グッズ",
-         words=["犬 ベッド", "犬 服", "犬 おやつ"], must=r"犬|いぬ|ドッグ|わんちゃん|ペット",
-         lead="犬グッズ おすすめ｜わんちゃんに人気のもの", tags="#犬 #犬グッズ #犬のいる暮らし #楽天購入品 #PR"),
-    dict(key="attaka", tag="あったかグッズ", title="冬のあったか\nグッズTOP3", what="冬に人気のあったかグッズ",
+    dict(key="hitori", kind="search", tag="一人暮らし", title="一人暮らしの\n便利グッズTOP3", what="一人暮らしの人に人気の便利グッズ",
+         words=["一人暮らし 便利グッズ", "一人用 鍋", "炊飯器 1合"], must=r"一人|1人|ひとり|ミニ|コンパクト|1合|一人用",
+         ng=r"の素|グルメ|食品|お取り寄せ", lead="一人暮らし 便利グッズ｜レビューの多い人気どころ",
+         tags="#一人暮らし #一人暮らしグッズ #新生活 #楽天購入品 #PR"),
+    dict(key="attaka", kind="search", tag="あったかグッズ", title="冬のあったか\nグッズTOP3", what="冬に人気のあったかグッズ",
          words=["ルームシューズ あったか", "ネックウォーマー", "レッグウォーマー"], must=r"あったか|暖|ウォーマー|ボア|裏起毛|もこもこ|ルームシューズ",
          lead="冬のあったかグッズ｜レビューの多い人気どころ", tags="#あったかグッズ #冬支度 #寒さ対策 #楽天購入品 #PR"),
 ]
+WEEKLY = [
+    OSHI,                                   # 月：推し活（カウントダウン）
+    dict(key="vs", kind="vs"),              # 火：VSバトル
+    dict(key="nazo", kind="mystery"),       # 水：謎解き
+    dict(key="pet", kind="pet"),            # 木：猫と犬を週ごとに交互
+    dict(key="furusato-qty", kind="quiz"),  # 金：ふるさと納税クイズ（ジャンルは週ごとに替える）
+    dict(key="check", kind="check"),        # 土：選び方チェック
+    dict(key="best", kind="best"),          # 日：その週いちばん見られたテーマをもう一度
+]
+# VSバトルで比べる物（週ごとに順に）。(名前, 名前の最初のほうに入っているべき言葉)
+VS_CATS = [("加湿器", r"加湿器"), ("ドライヤー", r"ドライヤー"), ("電気毛布", r"電気毛布|電気ブランケット"), ("枕", r"枕|まくら|ピロー"),
+           ("ワイヤレスイヤホン", r"イヤホン"), ("電気ケトル", r"ケトル"), ("フライパン", r"フライパン"), ("掃除機", r"掃除機|クリーナー")]
+VS_TIERS = [(3, "安い", 1000, 3999), (2, "ふつう", 4000, 8999), (1, "高い", 9000, 40000)]  # (順, 見出し, 下限, 上限)
+# 選び方チェック（週ごとに順に）。ポイントは (読み上げる文, 商品名に入っていれば合うとみなす言葉)
+CHECK_CATS = [
+    ("加湿器", r"加湿器", [("お手入れが楽な、上から水を入れられるもの", r"上部給水|上から給水"),
+                           ("寝室に置くなら、音が静かなもの", r"静音"), ("部屋の広さに合う、加湿できる畳数を見ること", r"\d+畳")]),
+    ("電気毛布", r"電気毛布|電気ブランケット", [("丸ごと洗えるもの", r"洗える|丸洗い"), ("つけっぱなしが心配なら、タイマー付き", r"タイマー"),
+                                               ("敷いても掛けても使えるもの", r"掛け敷き|掛敷|掛け・敷き")]),
+    ("着る毛布", r"着る毛布|着るブランケット", [("足元まで隠れる、長めの丈", r"ロング|足元まで|足まで"), ("洗濯機で洗えるもの", r"洗える|洗濯機"),
+                                               ("袖があって、手が動かしやすいもの", r"袖")]),
+    ("ドライヤー", r"ドライヤー", [("髪が早く乾く、大風量のもの", r"大風量|速乾"), ("軽くて、腕が疲れにくいもの", r"軽量|軽い"),
+                                   ("髪をまとめたいなら、イオン付き", r"イオン")]),
+]
 THEME_HISTORY = Path(__file__).resolve().parent / "data" / "theme_history.json"  # テーマの枠で出した商品（4週間は出さない）
+POINTS = Path(__file__).resolve().parent / "data" / "points.json"  # Gemini で作った商品の特徴・売れている理由（作り直さない）
 QTY_CATS = ("meat", "seafood", "rice", "fruit")  # 量で比べられるふるさと納税のジャンル
+CHANNEL_SHORTS = "https://www.youtube.com/@rankumasidejob/shorts"
+
+POINT_PROMPT = """あなたは楽天の商品を短い動画で紹介する係です。商品名と説明文を読んで、{purpose}を、読み上げ用の話し言葉で1文にしてください。
+ルール：
+- 20〜35文字。文末は「〜ところ」「〜こと」で終える（例：上から水を入れられて、お手入れが楽なところ）
+- 説明文に書いてあることだけを使う。書いていない効果・数字・評判は書かない
+- 使った感想・おすすめ・「最強」「神」などの大げさな言葉は書かない
+- 商品名・値段・記号・英字・絵文字は入れない
+1文だけを出力してください。"""
 
 
-def search_items(word, base_url):
+def search_items(word, base_url, lo=500, hi=20000):
     """楽天の商品検索（レビューの多い順）。アフィリエイトのリンクで返す。鍵がないときは空."""
     import os
     if not os.environ.get("RAKUTEN_APP_ID"):
@@ -934,7 +979,7 @@ def search_items(word, base_url):
     from build import normalize_item
     params = {"applicationId": os.environ["RAKUTEN_APP_ID"], "accessKey": os.environ.get("RAKUTEN_ACCESS_KEY", ""),
               "keyword": word, "sort": "-reviewCount", "hits": 30, "availability": 1,
-              "minPrice": 500, "maxPrice": 20000, "formatVersion": 2}
+              "minPrice": lo, "maxPrice": hi, "formatVersion": 2}
     if os.environ.get("RAKUTEN_AFFILIATE_ID"):
         params["affiliateId"] = os.environ["RAKUTEN_AFFILIATE_ID"]
     req = urllib.request.Request(SEARCH + "?" + urllib.parse.urlencode(params), headers={
@@ -947,6 +992,38 @@ def search_items(word, base_url):
     except Exception:  # noqa: BLE001
         return []
     return [normalize_item(x.get("Item", x)) for x in raws]
+
+
+def point(it, purpose, cache):
+    """商品の特徴・売れている理由を、説明文から Gemini で1文に（作れないときは None）."""
+    import os
+    key = f"{it['code']}|{purpose}"
+    if key in cache:
+        return cache[key]
+    api = os.environ.get("GEMINI_API_KEY")
+    if not api:
+        return None
+    from writer import BANNED, ENDPOINT, MODELS
+    text = f"商品名：{it['name']}\n説明文：{(it.get('caption_long') or it.get('caption') or it.get('catch') or '')[:1200]}"
+    body = json.dumps({
+        "systemInstruction": {"parts": [{"text": POINT_PROMPT.format(purpose=purpose)}]},
+        "contents": [{"role": "user", "parts": [{"text": text}]}],
+        "generationConfig": {"temperature": 0.3, "maxOutputTokens": 200},
+    }).encode()
+    for model in MODELS:
+        try:
+            req = urllib.request.Request(ENDPOINT.format(model=model), data=body,
+                                         headers={"Content-Type": "application/json", "x-goog-api-key": api})
+            with urllib.request.urlopen(req, timeout=60) as r:
+                parts = json.load(r)["candidates"][0]["content"]["parts"]
+            out = "".join(p.get("text", "") for p in parts if not p.get("thought")).strip().strip("「」\"'。")
+            out = out.splitlines()[0].strip() if out else ""
+            ok = 12 <= len(out) <= 45 and not re.search(r"[A-Za-z]{2,}|最強|神", out) and not BANNED.search(out)
+            cache[key] = out if ok else None
+            return cache[key]
+        except Exception:  # noqa: BLE001
+            continue
+    return None
 
 
 def grams(text, low=False):
@@ -976,20 +1053,67 @@ def amount(it):
     return g
 
 
-def theme_topic(cfg, fcats, day):
+def head_of(it):
+    """宣伝文を除いた商品名の最初のほう（テーマに合うかはここで見る。名前の後ろに検索用の言葉を並べただけの商品を拾わない）."""
+    return " ".join(name_words(it["name"])[:3])
+
+
+def week_pick(d, seq):
+    return seq[d.isocalendar()[1] % len(seq)]
+
+
+BEST_WORDS = {"oshikatsu": "推し活グッズ", "vs": "安い vs 高い", "nazo": "なんでこれが", "neko": "猫グッズ", "inu": "犬グッズ",
+              "check": "買う前に"}  # タイトルに入る言葉 → テーマ（日曜の再演用。クイズはふるさと納税の枠と重なるので除く）
+
+
+def best_theme(d):
+    """日曜用：この6日間でいちばん再生されたテーマ（YouTube のショート一覧の再生数から）。分からないときは THEMES_EXTRA を週ごとに.
+
+    再演できるのは、毎回ちがう商品で作れる「search」のテーマだけ（猫・犬・推し活）。VS などがいちばんなら、そのまま同じ構成で作る。
+    """
+    try:
+        req = urllib.request.Request(CHANNEL_SHORTS, headers={"Accept-Language": "ja", "User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=30) as r:
+            page = r.read().decode("utf-8", "replace")
+        views = {}
+        week = {d - dt.timedelta(days=k) for k in range(1, 7)}
+        for m in re.finditer(r'"accessibilityText":"([^"]{0,200}?)([\d,]+) ?回視聴', page):
+            text, n = m.group(1), int(m.group(2).replace(",", ""))
+            dm = re.search(r"【(\d+)/(\d+)】", text)
+            if not dm or dt.date(d.year, int(dm.group(1)), int(dm.group(2))) not in week:
+                continue
+            for k, word in BEST_WORDS.items():
+                if word in text:
+                    views[k] = max(views.get(k, 0), n)
+        if views:
+            best = max(views, key=views.get)
+            th = {"oshikatsu": OSHI, "neko": NEKO, "inu": INU}.get(best) or next(x for x in WEEKLY if x["key"] == best)
+            return {**th, "replay": True}
+    except Exception:  # noqa: BLE001
+        pass
+    return week_pick(d, THEMES_EXTRA)
+
+
+def theme_topic(cfg, fcats, day, results=None):
     """その日の曜日のテーマの動画（作れないときは None）."""
     d = dt.date.fromisoformat(day)
     th = WEEKLY[d.weekday()]
+    if th["kind"] == "best":
+        th = best_theme(d)
+    if th["kind"] == "pet":
+        th = {**week_pick(d, [NEKO, INU]), "replay": th.get("replay")}
     base = cfg["base_url"]
     hist = json.loads(THEME_HISTORY.read_text(encoding="utf-8")) if THEME_HISTORY.exists() else {}
     cutoff = (d - dt.timedelta(days=28)).isoformat()
     hist = {k: v for k, v in hist.items() if cutoff <= k < day}
     used = {c for codes in hist.values() for c in codes}
-    if th.get("quiz"):
+    cache = json.loads(POINTS.read_text(encoding="utf-8")) if POINTS.exists() else {}
+    fresh = lambda it: it["code"] not in used and it["reviews"] >= 30 and it["image"] and not excluded(it)  # noqa: E731
+    if th["kind"] == "quiz":
         cats = [c for c in fcats or [] if c["slug"] in QTY_CATS]
         if not cats:
             return None
-        c = cats[d.isocalendar()[1] % len(cats)]
+        c = week_pick(d, cats)
         scored = []
         for it in c["items"]:
             if it["code"] in used or it.get("reviews", 0) < 20 or excluded(it) or amount(it) is None:
@@ -1012,15 +1136,83 @@ def theme_topic(cfg, fcats, day):
                  fact=lambda it: f"寄付1万円あたり、約{kg_say(it)}キロ。{it['shop']}の返礼品で、寄付額は{price_say(it)}",
                  lead="ふるさと納税 量が多い返礼品｜寄付1万円あたりで比べました",
                  tags="#ふるさと納税 #ふるさと納税返礼品 #コスパ #楽天ふるさと納税 #PR")
-    else:
+    elif th["kind"] == "vs":
+        name, must = week_pick(d, VS_CATS)
+        picks = {}
+        for rank, _, lo, hi in VS_TIERS:  # 値段の帯ごとに、レビューのいちばん多いもの
+            pool = [it for it in search_items(name, base, lo, hi) if fresh(it) and re.search(must, head_of(it))]
+            got = pick3(pool, base, lambda f, lo=lo, hi=hi: lo <= f["price"] <= hi)[:1]
+            if not got:
+                return None
+            picks[rank] = got[0]
+        pts = {it["code"]: point(it, "この商品のいちばんの特徴", cache) for it in picks.values()}
+        POINTS.write_text(json.dumps(cache, ensure_ascii=False, indent=0), encoding="utf-8")
+        if not all(pts.values()):
+            return None
+        t = dict(key="vs", theme="red", title=f"{name}\n安い vs 高い", tag=name, label="楽天の価格",
+                 items=[(picks[r], lab) for r, lab, _, _ in sorted(VS_TIERS)],
+                 labels={r: lab for r, lab, _, _ in VS_TIERS}, order="countdown",
+                 what=f"{name}の安いものと高いもの",
+                 intro=f"{name}って、安いのと高いので何が違うの？3つの値段で比べてみます。",
+                 say={3: "まずは安いほう、{name}。{fact}", 2: "真ん中の値段は、{name}。{fact}", 1: "そして高いほう、{name}。{fact}"},
+                 fact=lambda it: f"{pts[it['code']]}。値段は{price_say(it)}",
+                 end="あなたならどれを選ぶ？コメントで教えてね。",
+                 lead=f"{name} 安いのと高いの、何が違う？｜値段の帯ごとに比べました",
+                 tags=f"#{name} #比較 #買い物 #楽天購入品 #PR")
+    elif th["kind"] == "mystery":
+        allg = [it for g in cfg["genres"] for it in (results or {}).get(g["slug"], [])]
+        risers = sorted((x for x in allg if isinstance(x.get("move"), int) and x["move"] >= 5 and fresh(x)), key=lambda x: -x["move"])
+        picks, pts = [], {}
+        for it in risers:
+            if len(picks) == 3:
+                break
+            if any(similar(it, o) for o in picks):
+                continue
+            p = point(it, "この商品がいま選ばれていそうな理由（季節・使いみち・手軽さなど、説明文から読み取れる範囲で）", cache)
+            f = latest(it, base) if p else None
+            if f:
+                picks.append(f)
+                pts[f["code"]] = p
+        POINTS.write_text(json.dumps(cache, ensure_ascii=False, indent=0), encoding="utf-8")
+        if len(picks) < 3:
+            return None
+        t = dict(key="nazo", theme="red", title="なんでこれが\n売れてるの？", tag="楽天ランキング", label="楽天の価格",
+                 items=[(it, f"{it['move']}位アップ") for it in picks],
+                 labels={3: "謎その1", 2: "謎その2", 1: "謎その3"}, order="countdown",
+                 what="楽天でいま急に売れている商品",
+                 intro="楽天でいま急に売れてる、ちょっと気になる3つ。なんで売れてるのか、理由を見てみます。",
+                 say={3: "ひとつめ、{name}。{fact}", 2: "ふたつめ、{name}。{fact}", 1: "みっつめ、{name}。{fact}"},
+                 fact=lambda it: f"売れてる理由は、{pts[it['code']]}かも。昨日から{it['move']}位も上がって、{price_say(it)}",
+                 end="気になったものはあった？保存しておくと、あとで見返せるよ。",
+                 lead="楽天で急に売れてる商品｜なんで売れてる？を説明文から読み解きました",
+                 tags="#楽天ランキング #楽天市場 #売れてる #楽天購入品 #PR")
+    elif th["kind"] == "check":
+        name, must, points = week_pick(d, CHECK_CATS)
+        pool = [it for it in search_items(name, base, 1000, 30000) if fresh(it) and re.search(must, head_of(it))]
+        chosen = {}
+        for rank, (_, ok) in zip((3, 2, 1), points):  # ポイントごとに、それに合ういちばんレビューの多いもの
+            cand = [it for it in pool if re.search(ok, it["name"]) and all(o["code"] != it["code"] for o in chosen.values())]
+            got = pick3(cand, base)[:1]
+            if not got:
+                return None
+            chosen[rank] = got[0]
+        text = {chosen[rank]["code"]: p for rank, (p, _) in zip((3, 2, 1), points)}
+        t = dict(key="check", theme="red", title=f"{name}を買う前に\nチェック3つ", tag=name, label="楽天の価格",
+                 items=[(chosen[r], f"チェック{4 - r}") for r in (1, 2, 3)],
+                 labels={3: "チェック1", 2: "チェック2", 1: "チェック3"}, order="countdown",
+                 what=f"{name}を選ぶときのポイント",
+                 intro=f"{name}を買う前に、見ておきたいポイントを3つ紹介します。",
+                 say={3: "ひとつめのチェックは、{fact}。この条件なら、{name}", 2: "ふたつめは、{fact}。たとえば、{name}",
+                      1: "みっつめは、{fact}。それなら、{name}"},
+                 fact=lambda it: text[it["code"]],
+                 end="保存しておくと、買うときに見返せるよ。",
+                 lead=f"{name}の選び方｜買う前に見たいポイント3つ", tags=f"#{name} #選び方 #買う前に #楽天購入品 #PR")
+    else:  # search：テーマの商品を3位から
         must, ng = re.compile(th["must"]), re.compile(th.get("ng") or "$^")
-        # テーマの言葉は、宣伝文を除いた名前の最初のほうにあるものだけ（名前の後ろに検索用の言葉を並べただけの商品を拾わない）
-        head = lambda it: " ".join(name_words(it["name"])[:3])  # noqa: E731
         pool, seen = [], set()
         for w in th["words"]:
             for it in search_items(w, base):
-                if (it["code"] not in seen and must.search(head(it)) and not ng.search(it["name"])
-                        and it["code"] not in used and it["reviews"] >= 30 and it["image"]):
+                if it["code"] not in seen and must.search(head_of(it)) and not ng.search(it["name"]) and fresh(it):
                     seen.add(it["code"])
                     pool.append(it)
         pool.sort(key=lambda x: -x["reviews"])
@@ -1031,6 +1223,8 @@ def theme_topic(cfg, fcats, day):
                  items=[(it, f"レビュー{it['reviews']:,}件") for it in picks], what=th["what"],
                  fact=lambda it: f"レビューが{it['reviews']:,}件もあって、{price_say(it)}",
                  lead=th["lead"], tags=th["tags"])
+        if th.get("replay"):
+            t["intro"] = f"今週いちばん見られたテーマを、もう一度。{th['what']}を、別の3つで紹介します。"
     hist[day] = [it["code"] for it, _ in t["items"]]
     THEME_HISTORY.write_text(json.dumps(hist, ensure_ascii=False, indent=0), encoding="utf-8")
     return t
@@ -1040,7 +1234,7 @@ def topics(cfg, results, budget, fcats, day):
     """その日の動画のテーマ（最大 PER_DAY 本）。値段は作る直前に最新のものを確かめる."""
     base = cfg["base_url"]
     out = []
-    t = theme_topic(cfg, fcats, day)  # 曜日ごとのテーマ（推し活・猫・ふるさと納税クイズなど）
+    t = theme_topic(cfg, fcats, day, results)  # 曜日ごとのテーマ（推し活・猫・ふるさと納税クイズなど）
     if t:
         out.append(t)
     picks = pick3(budget or [], base, lambda f: 1000 <= f["price"] < 2000)  # 最新の値段でも1000円台のものだけ
@@ -1078,7 +1272,8 @@ def description(t, day, site):
     lines = [f"{t['title'].replace(chr(10), ' ')}（{m}月{d}日時点）", ""]
     for i, (it, note) in enumerate(t["items"]):
         price = f"寄付額{price_text(it)}（{it['shop']}）" if t["theme"] == "green" else price_text(it)
-        lines.append(f"{i + 1}位 {short_name(it['name'], 40)}｜{price}")
+        head = t.get("labels", {}).get(i + 1, f"{i + 1}位").replace("\n", "")
+        lines.append(f"{head} {short_name(it['name'], 40)}｜{price}")
     lines += ["", "▶くわしくはプロフィールのリンクから", site, "",
               "※価格・寄付額は動画作成時点のものです。最新情報は販売ページでご確認ください。",
               "※楽天アフィリエイトを利用しています（PR）", credit(), "",
@@ -1114,6 +1309,11 @@ def build(cfg, results, budget, fcats, day, out_dir, log):
                 intro, body, end_text = design.lines_for(
                     script, t["what"], [(spoken_name(it, reading), t["fact"](it)) for it, _ in t["items"]])
                 intro = t.get("intro", intro)
+                if t.get("say"):  # VS・謎解き・選び方：順位ではない読み上げ（語尾だけ型のしゃべり方に合わせる）
+                    tail = {"pop": "なのだ。", "notebook": "だよ！"}.get(PAT["key"], "です。")
+                    body = [(r, t["say"][r].format(name=n, fact=t["fact"](t["items"][r - 1][0])) + tail)
+                            for r, n in ((r, spoken_name(t["items"][r - 1][0], reading)) for r, _ in body)]
+                end_text = t.get("end", end_text)
                 line1 = "楽天ランキング速報" if t["theme"] == "red" else "ふるさと納税 人気返礼品ランキング"
                 slides = []
                 a = work / "s0.wav"
@@ -1131,7 +1331,7 @@ def build(cfg, results, budget, fcats, day, out_dir, log):
                     sec = synth(text, spk, a) + 0.4
                     if PAT["video"] == "pop":
                         ev = anim_item(t["theme"], rank, it, t["label"], note, text, sec, work / f"f{rank}",
-                                       seed=n * 10 + rank, mouth=mouth_curve(a, sec))
+                                       seed=n * 10 + rank, mouth=mouth_curve(a, sec), label=t.get("labels", {}).get(rank))
                     else:
                         ev = item_fn(t, rank, pos, it, note, sec, work / f"f{rank}", text, dict(revealed))
                         import reels

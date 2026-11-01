@@ -152,10 +152,18 @@ def list_media(it, t, punch=0.0):
     return bg, pic
 
 
-def list_rows(d, revealed, current, x=40, y=BAND + 70):
-    """左の順位一覧（1〜3位）。revealed: {順位: 名前}."""
+def list_rows(d, revealed, current, x=40, y=BAND + 70, labels=None):
+    """左の順位一覧（1〜3位）。revealed: {順位: 名前}。labels があれば王冠と順位の代わりに見出し（「安いほう」など）を出す."""
     for r in (1, 2, 3):
         yy = y + (r - 1) * 96
+        if labels:
+            outlined(d, (x, yy + 30), labels[r], F("sans", 34), (255, 226, 0), (0, 0, 0), 5, anchor="lm")
+            name = revealed.get(r)
+            if name:
+                on = r == current
+                outlined(d, (x + 30 + d.textlength(labels[r], font=F("sans", 34)), yy + 30), name, F("sans", 50 if on else 42),
+                         (255, 255, 255) if on else (190, 190, 190), (0, 0, 0), 7 if on else 5, anchor="lm")
+            continue
         crown(d, x, yy, 56, CROWN[r])
         d.text((x + 28, yy + 38), str(r), font=F("sans", 30), fill=(40, 30, 0), anchor="mm")
         name = revealed.get(r)
@@ -184,7 +192,7 @@ def list_title(t, items, dur, out, text):
             outlined(dq, (x + 150, y + 150), "？", F("sans", 140), (255, 255, 255), (0, 0, 0), 8)
         list_band(img, t["title"])
         d = ImageDraw.Draw(img)
-        list_rows(d, {}, None)
+        list_rows(d, {}, None, labels=t.get("labels"))
         S.draw_sub(d, S.sub_at(chunks, tt, dur))
         save(img, out, f)
     return [("whoosh", 0.0), ("ding", 0.3)]
@@ -206,7 +214,7 @@ def list_item(t, rank, pos, it, note, dur, out, text, revealed):
         list_band(img, t["title"])
         d = ImageDraw.Draw(img)
         shown = {**revealed, rank: mini_name(it)} if tt > 0.35 else dict(revealed)
-        list_rows(d, shown, rank)
+        list_rows(d, shown, rank, labels=t.get("labels"))
         if tt > 0.8:  # 値段の札
             s = S.bounce((tt - 0.8) / 0.3)
             tag = Image.new("RGBA", (520, 150), (0, 0, 0, 0))
@@ -228,7 +236,7 @@ def list_end(t, dur, out, text, line1, revealed):
         img = Image.new("RGB", (W, H), (20, 20, 20))
         list_band(img, t["title"])
         d = ImageDraw.Draw(img)
-        list_rows(d, revealed, None, 120, BAND + 160)
+        list_rows(d, revealed, None, 120, BAND + 160, labels=t.get("labels"))
         s = S.bounce((tt - 0.2) / 0.35)
         box = Image.new("RGBA", (900, 230), (0, 0, 0, 0))
         bd = ImageDraw.Draw(box)
@@ -350,7 +358,7 @@ def aruaru_item(t, rank, pos, it, note, dur, out, text, revealed):
         tt = f / FPS
         img = sunburst(t["theme"], tt)
         d = ImageDraw.Draw(img)
-        big_label(d, (W // 2, 200), f"第{rank}位", 170)
+        big_label(d, (W // 2, 200), t.get("labels", {}).get(rank, f"第{rank}位"), 170)
         if tt < switch:
             red_label(d, (W // 2, 420), name, 150)
             s = S.bounce((tt - 0.2) / 0.35)
@@ -470,7 +478,7 @@ def magazine_item(t, rank, pos, it, note, dur, out, text, revealed):
         crop = pic.crop(((1000 - cw) // 2, (1000 - cw) // 2, (1000 + cw) // 2, (1000 + cw) // 2)).resize((960, 960))
         img.paste(crop, (60, 150 - int(24 * (1 - S.ease_out(tt / 0.6)))))
         d = ImageDraw.Draw(img)
-        d.text((60, 1150), f"No.0{pos + 1}", font=F("serif", 60), fill=acc)
+        d.text((60, 1150), t.get("labels", {}).get(rank, f"No.0{pos + 1}"), font=F("serif", 60), fill=acc)
         d.line([(260, 1186), (W - 60, 1186)], fill=SUB, width=1)
         S_y = 1230
         for ln in S.wrap(d, short_name(it["name"], 60), F("serif", 48), W - 120, 2):

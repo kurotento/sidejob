@@ -21,24 +21,31 @@ cfg = json.loads((ROOT / "config.json").read_text(encoding="utf-8"))
 shorts.PER_DAY = 1
 log = []
 if len(sys.argv) > 2 and sys.argv[2] == "themes":
+    import build
     import furusato
     fcats = furusato.fetch_all(cfg)
+    last = sorted(p.name for p in (ROOT / "data" / "history").iterdir())[-1]  # 謎解き用：直近のランキングと前日からの順位の動き
+    results = {}
+    for g in cfg["genres"]:
+        f = ROOT / "data" / "history" / last / f"{g['slug']}.json"
+        if f.exists():
+            results[g["slug"]] = build.annotate(json.loads(f.read_text(encoding="utf-8")), build.load_previous(last, g["slug"]))
     for c in fcats:  # クイズで量が読めた返礼品の数
         ok = [it for it in c["items"] if shorts.amount(it)]
         log.append(f"[量] {c['slug']}: {len(ok)}/{len(c['items'])}件 " + " / ".join(f"{shorts.amount(it):.0f}g {it['name'][:25]}" for it in ok[:3]))
     start = dt.date.today() + dt.timedelta(days=1)
     for k in range(7):
         day = (start + dt.timedelta(days=k)).isoformat()
-        t = shorts.theme_topic(cfg, fcats, day)
+        t = shorts.theme_topic(cfg, fcats, day, results)
         if not t:
             log.append(f"{day} テーマ {shorts.WEEKLY[dt.date.fromisoformat(day).weekday()]['key']}: 商品が足りず作れない")
             continue
         log.append(f"{day} {t['title'].replace(chr(10), ' ')}（型: {design.video_pattern(day, cfg)['key']}）")
         for it, note in t["items"]:
-            log.append(f"   {note}｜{it['price']:,}円｜{it['name'][:60]}")
+            log.append(f"   {note}｜{it['price']:,}円｜{it['name'][:60]}｜{t['fact'](it)}")
         orig = shorts.topics
         shorts.topics = lambda *a, t=t: [t]
-        made = shorts.build(cfg, {}, [], fcats, day, out / day, log)
+        made = shorts.build(cfg, results, [], fcats, day, out / day, log)
         shorts.topics = orig
         for v in made:
             (out / day / v["file"]).rename(out / f"{day}-{v['key']}.mp4")
