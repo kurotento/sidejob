@@ -70,6 +70,8 @@ LINKS = [
         ("YouTube @rankumasidejob", "https://www.youtube.com/@rankumasidejob"),
     ]),
     ("成果・数字", [
+        ("振り返り（テーマごとの再生数・フォロワー。毎週日曜に見る）", "report.html"),
+        ("Google アナリティクス", "https://analytics.google.com/analytics/web/"),
         ("楽天アフィリエイト 成果レポート", "https://affiliate.rakuten.co.jp/report/"),
         ("Search Console", "https://search.google.com/search-console"),
         ("Instagram のインサイト（アプリから）", "https://www.instagram.com/rankumasidejob/"),

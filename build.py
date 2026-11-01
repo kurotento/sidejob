@@ -316,11 +316,6 @@ def main():
     except Exception as ex:  # noqa: BLE001 - ふるさと納税側の失敗でメインサイトは止めない
         print(f"[furusato] 失敗: {ex}", file=sys.stderr)
     if budget:
-        try:
-            n = room.build(cfg, budget, descs, day, OUT_DIR, save=not args.demo, fcats=cats, fdescs=fdescs, results=results)
-            print(f"[room] 投稿リスト {n}件")
-        except Exception as ex:  # noqa: BLE001
-            print(f"[room] 失敗: {ex}", file=sys.stderr)
         try:  # Instagram ストーリー（リンクスタンプは手で付ける）の素材
             import story
             print(f"[story] 素材 {story.build(cfg, budget, results, day, OUT_DIR)}件")
@@ -338,6 +333,12 @@ def main():
             print(f"[shorts] 動画 {len(videos)}本")
         except Exception as ex:  # noqa: BLE001
             print(f"[shorts] 失敗: {ex}", file=sys.stderr)
+        if budget:  # ROOM の投稿リスト（ショートのあとに作り、その日のテーマの商品を先頭に入れる）
+            try:
+                n = room.build(cfg, budget, descs, day, OUT_DIR, save=True, fcats=cats, fdescs=fdescs, results=results, videos=videos)
+                print(f"[room] 投稿リスト {n}件")
+            except Exception as ex:  # noqa: BLE001
+                print(f"[room] 失敗: {ex}", file=sys.stderr)
         try:  # Threads 用の投稿（悩み別・3案から採点で選ぶ。ショートのあとに作り、その日のテーマの商品を使う）
             import threads
             print(f"[threads] 投稿 {threads.build(cfg, results, budget, cats, {**descs, **fdescs}, day, OUT_DIR, videos)}本")
@@ -364,6 +365,12 @@ def main():
         print(f"[replies] 質問 {replies.build(cfg, budget, cats, day, OUT_DIR, results, seek)}件")
     except Exception as ex:  # noqa: BLE001
         print(f"[replies] 失敗: {ex}", file=sys.stderr)
+    if not args.demo:
+        try:  # 振り返りレポート（テーマごとのショートの再生数・フォロワーの増え方。判断は毎週日曜）
+            import report
+            print(f"[report] テーマ {report.build(cfg, day, OUT_DIR)}件")
+        except Exception as ex:  # noqa: BLE001
+            print(f"[report] 失敗: {ex}", file=sys.stderr)
     try:  # 自分用のポータル（手作業のチェックリスト・自動投稿の状態・管理画面のリンク）
         import portal
         portal.build(cfg, day, videos, OUT_DIR)

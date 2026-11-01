@@ -159,7 +159,7 @@ def more_descs(items, cfg, day, limit=30):
     return got
 
 
-def build(cfg, budget, descs, day, out_dir, save=True, fcats=None, fdescs=None, results=None):
+def build(cfg, budget, descs, day, out_dir, save=True, fcats=None, fdescs=None, results=None, videos=None):
     from social import product_tag
 
     hist = json.loads(HISTORY.read_text(encoding="utf-8")) if HISTORY.exists() else {}
@@ -173,6 +173,13 @@ def build(cfg, budget, descs, day, out_dir, save=True, fcats=None, fdescs=None, 
     # 似た商品（簡易トイレが3つなど）は並べず、次の候補を使う（件数は減らさない）
     cands = pick_varied([it for it in budget or [] if fresh(it)], PER_DAY)
     budget_codes = {it["code"] for it in cands}
+    # その日のショートのテーマの商品を先頭に（動画で「ROOMで らんくま と検索」と案内しているので、見に来た人が見つけられるように）
+    v = next((x for x in videos or [] if x.get("theme_items")), None)
+    theme = [it for it in (v["theme_items"] if v else []) if it["code"] not in recent and not excluded(it)]
+    theme_codes = {it["code"] for it in theme}
+    theme_green = bool(v and v.get("theme") == "green")
+    cands = theme + [it for it in cands if not any(similar(it, t) for t in theme)]
+    budget_codes &= {it["code"] for it in cands}
     pools = [[it for it in (results or {}).get(g, []) if fresh(it)] for g in NICHE_GENRES + MORE_GENRES]
     k = 0
     while len(cands) < TARGET + 12 and any(pools):  # ジャンルを順番に1つずつ（インテリア・日用品を先に）
@@ -209,12 +216,15 @@ def build(cfg, budget, descs, day, out_dir, save=True, fcats=None, fdescs=None, 
     bodies = roomtext.write(picks, descs, day, tags) if save else {}
     manual = json.loads(MANUAL.read_text(encoding="utf-8")) if MANUAL.exists() else {}
     bodies = {**bodies, **manual}  # 手で書いたコメントがあればそれを優先
-    print(f"[room] 1000円台 {len(budget_codes)}件・ほかのジャンル {len(picks) - len(budget_codes) - len(furusato_codes)}件・ふるさと納税 {len(furusato_codes)}件")
+    nt = len(theme_codes & {it["code"] for it in picks})
+    print(f"[room] 今日の動画の商品 {nt}件・1000円台 {len(budget_codes)}件・ほかのジャンル {len(picks) - nt - len(budget_codes) - len(furusato_codes)}件・ふるさと納税 {len(furusato_codes)}件")
     rows = []
     for n, it in enumerate(picks):
         tag = tags[it["code"]]
-        rows.append({"it": it, "tag": tag, "comment": room_comment(it, descs.get(it["code"]), tag, it["code"] in furusato_codes,
-                                                                   it["code"] in budget_codes, bodies.get(it["code"]), n)})
+        green = it["code"] in furusato_codes or (it["code"] in theme_codes and theme_green)
+        rows.append({"it": it, "tag": tag, "theme": it["code"] in theme_codes,
+                     "comment": room_comment(it, descs.get(it["code"]), tag, green,
+                                             it["code"] in budget_codes, bodies.get(it["code"]), n)})
 
     # スプレッドシート用CSV（改行は IMPORTDATA で崩れるので「 / 」に置き換える）
     buf = io.StringIO()
@@ -227,7 +237,7 @@ def build(cfg, budget, descs, day, out_dir, save=True, fcats=None, fdescs=None, 
     (out_dir / "room-list.csv").write_text(buf.getvalue(), encoding="utf-8")
 
     cards = "".join(f"""<article class="c" id="i{n}"><img src="{e(r['it']['image'])}" alt="">
-<div><h2>{n + 1}. {e(short_name(r['it']['name'], 40))}</h2><p class="p">{('寄付額' + format(r['it']['price'], ',') + '円｜' + e(r['it']['shop'])) if r['it']['code'] in furusato_codes else format(r['it']['price'], ',') + ('円・送料無料' if r['it']['code'] in budget_codes else '円')}</p>
+<div><h2>{n + 1}. {'🎬今日の動画の商品｜' if r.get('theme') else ''}{e(short_name(r['it']['name'], 40))}</h2><p class="p">{('寄付額' + format(r['it']['price'], ',') + '円｜' + e(r['it']['shop'])) if r['it']['code'] in furusato_codes else format(r['it']['price'], ',') + ('円・送料無料' if r['it']['code'] in budget_codes else '円')}</p>
 <textarea readonly>{e(r['comment'])}</textarea>
 <button onclick="go({n})">① コメントをコピーしてROOMを開く</button>
 <a class="sub" href="{e(r['it']['url'])}" target="_blank" rel="noopener">開けないときは商品ページから「ROOMに投稿」</a>
