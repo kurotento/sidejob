@@ -59,10 +59,18 @@ def illust(key):
         return None
 
 
+FISH = ("鮭", "サーモン", "鯖", "サバ", "ホタテ", "帆立", "いくら", "イクラ", "明太", "たらこ", "カニ", "かに", "蟹", "海老", "エビ", "えび",
+        "うなぎ", "鰻", "干物", "魚", "マグロ", "鮪", "ぶり", "ブリ", "しらす", "牡蠣", "かき", "ウニ", "うに", "海鮮", "刺身")
+
+
 def illust_for(it, theme, k):
-    for words, key in ILLUST_WORDS:
-        if any(w in it["name"] for w in words):
-            return key
+    # 名前の最初のほうの言葉だけで見る（後ろの「肉厚」などで、鮭に肉のイラストが出ないように）
+    from itemfilter import name_words
+    head = " ".join(name_words(it["name"])[:4])
+    if not any(w in head for w in FISH):  # 魚介に合うイラストは無いので、魚介には食べ物のイラストを出さない
+        for words, key in ILLUST_WORDS:
+            if any(w in head for w in words):
+                return key
     if theme == "green":
         return "furusato"
     return ["cart", "super", "net"][k % 3]
