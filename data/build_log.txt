@@ -1,41 +1,41 @@
-2026-11-02 model=gemini-3.5-flash-lite 新規4件 / 対象4件
+2026-11-03 model=gemini-3.5-flash-lite 新規3件 / 対象3件
 
-2026-11-02 model=gemini-3.5-flash-lite 新規16件 / 対象17件
-arianakosume:10000637: ルール違反または不完全な出力のため不採用
+2026-11-03 model=gemini-3.5-flash-lite 新規8件 / 対象9件
+fuchigami:10000003: ルール違反または不完全な出力のため不採用
 
 [food] 30件
 [beauty] 30件
-[appliances] 27件
+[appliances] 29件
 [interior] 30件
 [daily] 30件
 [baby] 30件
-[budget] 総合597件中 68件が条件に一致
+[budget] 総合595件中 47件が条件に一致
 [gemini] キーの確認: OK（gemini-3.5-flash-lite）
-[names] 短い名前 新規80件 / 対象85件
+[names] 短い名前 新規64件 / 対象73件
 [furusato:meat] 30件
 [furusato:seafood] 30件
 [furusato:rice] 30件
 [furusato:fruit] 30件
 [furusato:sweets] 30件
 [furusato:daily] 30件
-[names] 短い名前 新規2件 / 対象2件
+[names] 短い名前 新規7件 / 対象7件
 [furusato] 69ページ
 [story] 素材 3件
 生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
-[shorts] 作り：イラスト（集中線といらすとや／画像は手書きメモ風）／声：春日部つむぎ
-[shorts] shorts/2026-11-02-oshikatsu.mp4 35秒 推し活グッズ
-人気TOP3
-[shorts] shorts/2026-11-02-budget.mp4 31秒 1000円台・送料無料
+[shorts] 作り：まとめ（黒帯タイトルと順位一覧／画像は速報風）／声：No.7
+[shorts] shorts/2026-11-03-vs.mp4 47秒 電気ケトル
+安い vs 高い
+[shorts] shorts/2026-11-03-budget.mp4 33秒 1000円台・送料無料
 売れ筋TOP3
-[shorts] shorts/2026-11-02-furusato-rice.mp4 37秒 ふるさと納税
-お米の人気TOP3
+[shorts] shorts/2026-11-03-furusato-fruit.mp4 38秒 ふるさと納税
+フルーツの人気TOP3
 [shorts] 動画 3本
-[room] 説明を取って紹介文を作成: 16/30件
-[room] 今日の動画の商品 3件・1000円台 2件・ほかのジャンル 13件・ふるさと納税 0件
-[room] 投稿リスト 18件
+[room] 説明を取って紹介文を作成: 11/21件
+[room] 今日の動画の商品 3件・1000円台 2件・ほかのジャンル 8件・ふるさと納税 0件
+[room] 投稿リスト 13件
 [threads] 投稿 6本
-[pinterest] ピン 35件
+[pinterest] ピン 0件
 [sns] Instagram 予約表に 5件追加
 [sns] Threads・Instagram 計画 7件
 [replies] 質問 59件
-[report] テーマ 3件
+[report] テーマ 4件
