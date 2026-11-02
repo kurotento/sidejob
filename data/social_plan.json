@@ -124,7 +124,9 @@
    "text": "楽天 #PR\n🎬1000円台・送料無料 売れ筋TOP3【11/2】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-11-02-budget.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true,
+   "skipped": "bot判定のため取りやめ"
   },
   {
    "kind": "furusato-single",
@@ -134,7 +136,9 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-11-02-07-furusato-single.jpg",
    "codes": [
     "f462012-kagoshima:10002108"
-   ]
+   ],
+   "scheduled": true,
+   "skipped": "bot判定のため取りやめ"
   },
   {
    "kind": "alert",
@@ -143,7 +147,9 @@
    "text": "楽天 #PR\nふるさと納税の人気返礼品も楽天ROOMで一覧にしてるよ🎁\nレビューが多い定番を中心に\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true,
+   "skipped": "bot判定のため取りやめ"
   },
   {
    "kind": "video",
@@ -152,7 +158,9 @@
    "text": "楽天 #PR\n🎬ふるさと納税 お米の人気TOP3【11/2】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/furusato/\n#ふるさと納税 #楽天ふるさと納税",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-11-02-furusato-rice.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true,
+   "skipped": "bot判定のため取りやめ"
   },
   {
    "kind": "genre-interior",
@@ -164,7 +172,9 @@
     "e-kurashi:10007962",
     "tential:10000220",
     "kaiminya:10000039"
-   ]
+   ],
+   "scheduled": true,
+   "skipped": "bot判定のため取りやめ"
   }
  ]
 }
