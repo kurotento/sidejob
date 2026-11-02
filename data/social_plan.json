@@ -12,7 +12,8 @@
     "rakuten24:11354091",
     "sk-ii:10003857",
     "jcrops:10008581"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "alert",
@@ -21,7 +22,8 @@
    "text": "楽天 #PR\n安いのと高いの、どっちを選ぶ？\n\n【高い】コーヒーケトル EPEIOS 電気ケトル 0.5℃単位温度調節 ドリップケトル…\n14,960円〜\n狙い通りの場所にドリップしやすい注ぎ口の形になっていること\n👇\nhttps://hb.afl.rakuten.co.jp/hgc/g00tqkeo.i7mecda8.g00tqkeo.i7med4dc/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fmpowjapan%2Fcp001agjp1%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fmpowjapan%2Fi%2F10000798%2F&rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90\n#電気ケトル #比較 #買い物 #楽天購入品",
    "image": "",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -31,7 +33,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-11-03-01-single.jpg",
    "codes": [
     "fancl-shop:10009046"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "budget",
@@ -43,7 +46,8 @@
     "kurashikenkou:10225574",
     "darkangel:10036320",
     "imokuniya:10000008"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -52,7 +56,8 @@
    "text": "楽天 #PR\n🎬電気ケトル 安い vs 高い【11/3】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#電気ケトル #比較 #買い物 #楽天購入品",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-11-03-vs.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "alert",
@@ -61,7 +66,8 @@
    "text": "楽天 #PR\n楽天ROOMを更新したよ✨\n今日ランキングに入っていたものを追加しました\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   }
  ]
 }
