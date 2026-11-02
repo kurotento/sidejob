@@ -9,6 +9,7 @@ import datetime as dt
 import io
 import json
 import os
+import random
 import re
 import shutil
 import time
@@ -25,9 +26,11 @@ POSTED = DATA / "posted.json"
 LOG = DATA / "social_log.txt"
 JST = dt.timezone(dt.timedelta(hours=9))
 # ランキングを並べる通常の投稿の枠（2026-11-01 に20→10。その分、その日のショート動画3本とテーマの商品2件を別に足して1日15件ほど）
-SLOTS = [(7, 30), (9, 0), (10, 30), (12, 0), (13, 30), (15, 0), (16, 30), (18, 0), (20, 15), (22, 0)]
-VIDEO_TIMES = [(12, 30), (19, 45), (21, 30)]  # ショート動画（テーマ・1000円台・ふるさと納税の順）
-THEME_TIMES = [(11, 15), (17, 15)]  # 曜日のテーマの商品を1つずつ
+# 2026-11-02 に X で bot 判定（スマホ認証）を受けたため、1日15件ほどから5件ほどに減らした
+SLOTS = [(9, 0), (13, 30), (18, 0)]
+VIDEO_TIMES = [(20, 30)]  # ショート動画は曜日のテーマの1本だけ
+THEME_TIMES = [(12, 15)]  # 曜日のテーマの商品を1つ
+JITTER = (-8, 14)  # 毎日同じ時刻にならないよう、投稿ごとに分単位でずらす
 THEME_HOOK = {"vs": "安いのと高いの、どっちを選ぶ？", "nazo": "なんでこれが今売れてるの？", "check": "買う前に見ておきたいポイント",
               "furusato-qty": "寄付1万円で何kg届く？"}
 BUFFER_CAP = 10  # Buffer無料プランで同時に予約できる件数。昼にもう一度予約して1日20件にする
@@ -751,6 +754,12 @@ def plan(cfg, results, budget, descs, day, out_dir, fcats=None, videos=None):
             items.append({"kind": "video" if vid else ("weekly" if img else "alert"), "time": t.strftime("%m/%d %H:%M"),
                           "due": due.strftime("%Y-%m-%dT%H:%M:%S.000Z"), "text": txt, "image": img, "video": vid,
                           "codes": []})
+    rnd = random.Random(day)
+    for it_ in items:
+        due = dt.datetime.strptime(it_["due"], "%Y-%m-%dT%H:%M:%S.000Z").replace(tzinfo=dt.timezone.utc)
+        moved = due + dt.timedelta(minutes=rnd.randint(*JITTER))
+        if moved > later:
+            it_["due"] = moved.strftime("%Y-%m-%dT%H:%M:%S.000Z")
     items.sort(key=lambda x: x["due"])
     for f in [*IMG_DIR.glob("*.png"), *IMG_DIR.glob("*.jpg")]:  # 3日より前の投稿画像は消す（投稿済みのため不要）
         if f.name[:10] < (d - dt.timedelta(days=3)).isoformat():
