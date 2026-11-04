@@ -1,42 +1,49 @@
-2026-11-04 model=gemini-3.5-flash-lite 新規9件 / 対象10件
-book:22078116: Expecting property name enclosed in double quotes: line 2 column 3 (char 160)
+2026-11-05 model=gemini-3.5-flash-lite 新規7件 / 対象7件
 
-2026-11-04 model=gemini-3.5-flash-lite 新規12件 / 対象13件
-loa-official:10000000: ルール違反または不完全な出力のため不採用
+2026-11-05 model=gemini-3.5-flash-lite 新規12件 / 対象14件
+chihuahua:10000004: ルール違反または不完全な出力のため不採用
+loa-official:10000000: HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
 
 [food] 29件
 [beauty] 30件
-[appliances] 30件
+[appliances] 29件
 [interior] 30件
 [daily] 30件
 [baby] 30件
-[budget] 総合598件中 45件が条件に一致
+[budget] 総合597件中 56件が条件に一致
 [gemini] キーの確認: OK（gemini-3.5-flash-lite）
-[names] 短い名前 新規58件 / 対象69件
+[names] 短い名前 新規66件 / 対象68件
 [furusato:meat] 30件
 [furusato:seafood] 30件
 [furusato:rice] 30件
 [furusato:fruit] 30件
 [furusato:sweets] 30件
 [furusato:daily] 30件
-[names] 短い名前 新規1件 / 対象1件
+[names] 短い名前 新規2件 / 対象6件
 [furusato] 69ページ
 [story] 素材 3件
 生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
-[shorts] 作り：ポップ（らんくまのランキング）／声：ずんだもん
-[shorts] shorts/2026-11-04-nazo.mp4 59秒 なんでこれが
-売れてるの？
-[shorts] shorts/2026-11-04-budget.mp4 34秒 1000円台・送料無料
+[shorts] 作り：マガジン（写真と明朝体の特集ページ）／声：冥鳴ひまり
+[shorts] shorts/2026-11-05-inu.mp4 33秒 犬グッズ
+人気TOP3
+[shorts] shorts/2026-11-05-budget.mp4 32秒 1000円台・送料無料
 売れ筋TOP3
-[shorts] shorts/2026-11-04-furusato-sweets.mp4 39秒 ふるさと納税
-スイーツの人気TOP3
+[shorts] shorts/2026-11-05-furusato-daily.mp4 39秒 ふるさと納税
+日用品の人気TOP3
 [shorts] 動画 3本
-[room] 説明を取って紹介文を作成: 13/28件
-[room] 今日の動画の商品 1件・1000円台 4件・ほかのジャンル 12件・ふるさと納税 0件
-[room] 投稿リスト 17件
+[room] 説明を取って紹介文を作成: 14/22件
+[room] 今日の動画の商品 3件・1000円台 4件・ほかのジャンル 11件・ふるさと納税 0件
+[room] 投稿リスト 18件
 [threads] 投稿 6本
-[pinterest] ピン 0件
-[sns] Instagram 予約表に 5件追加
+[pinterest] RSS に 0件追加
+[sns] Instagram 予約表に 4件追加
 [sns] Threads・Instagram 計画 7件
 [replies] 質問 59件
-[report] テーマ 5件
+[report] テーマ 6件
