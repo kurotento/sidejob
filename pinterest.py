@@ -32,6 +32,7 @@ FEED_IMG = DATA / "pin_feed"
 FEED_PER_DAY = 3
 FEED_DAYS = 14  # RSS に残す日数（初めてつないだ日に、まとめて大量に出ないよう短めに）
 FEED_ORDER = ["budget", "interior", "furusato", "daily"]
+FEED_START = "2026-11-10"  # 11/9 までは手で上げた CSV の予約が出るので、RSS に足すのはその次の日から
 
 # ボード名（Pinterest で同じ名前のボードを作っておく）
 BOARDS = {
@@ -195,7 +196,7 @@ def feed(cfg, results, budget, fcats, descs, day, out_dir):
     d = dt.date.fromisoformat(day)
     entries = json.loads(FEED.read_text(encoding="utf-8")) if FEED.exists() else []
     added = 0
-    if not any(x["day"] == day for x in entries):
+    if day >= FEED_START and not any(x["day"] == day for x in entries):
         hist = json.loads(HISTORY.read_text(encoding="utf-8")) if HISTORY.exists() else {}
         cutoff = (d - dt.timedelta(days=REPEAT_DAYS)).isoformat()
         used = {k for k, v in hist.items() if not k.startswith("_") and v >= cutoff}
