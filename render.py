@@ -183,6 +183,8 @@ def page(cfg, title, body, path, demo, updated, active=None, hero="", extra_css=
     full_title = title if title == cfg["site_name"] else f"{title} | {cfg['site_name']}"
     gsv = cfg.get("google_site_verification", "")
     verify = f'<meta name="google-site-verification" content="{e(gsv)}">' if gsv and not demo else ""
+    if cfg.get("pinterest_verify") and not demo:  # Pinterest のサイト認証（RSS から自動でピンを作るのに必要）
+        verify += f'<meta name="p:domain_verify" content="{e(cfg["pinterest_verify"])}"/>'
     banner = '<div class="demo">デモデータ表示中（公開しないでください）</div>' if demo else ""
     ga = cfg.get("ga_measurement_id", "") if not demo else ""
     # Google アナリティクス：どこから来た人が、どの商品の楽天リンクを押したかを数える（楽天のレポートは合計しか見られないため）

@@ -26,6 +26,12 @@ ICON = ROOT / "x_images" / "icon_400x400.png"
 JST = dt.timezone(dt.timedelta(hours=9))
 REPEAT_DAYS = 60  # 同じ商品を次にピンにするまでの日数
 TIMES = [(7, 30), (12, 0), (17, 0), (20, 30), (22, 0)]  # 1日5ピン（Pinterest がよく見られる時間）
+# 2026-11-05 から、週1回の CSV をやめて RSS（毎日3ピン）に切り替えた
+FEED = DATA / "pin_feed.json"
+FEED_IMG = DATA / "pin_feed"
+FEED_PER_DAY = 3
+FEED_DAYS = 14  # RSS に残す日数（初めてつないだ日に、まとめて大量に出ないよう短めに）
+FEED_ORDER = ["budget", "interior", "furusato", "daily"]
 
 # ボード名（Pinterest で同じ名前のボードを作っておく）
 BOARDS = {
@@ -180,9 +186,86 @@ def build(cfg, results, budget, fcats, descs, day, out_dir, force=False):
     return len(rows)
 
 
+def feed(cfg, results, budget, fcats, descs, day, out_dir):
+    """毎日3ピンを選び、ボードごとの RSS（public/pins/<種類>.xml）に足す。Pinterest が毎日読みに来て自動でピンにする.
+
+    RSS には公開日時の予約がなく、増えた分はその日のうちに全部ピンになるので、まとめて足さず毎日少しずつにする。
+    失敗した日は前の日の RSS がそのまま残る（ピンが増えないだけ）。返り値はその日に足したピンの数.
+    """
+    d = dt.date.fromisoformat(day)
+    entries = json.loads(FEED.read_text(encoding="utf-8")) if FEED.exists() else []
+    added = 0
+    if not any(x["day"] == day for x in entries):
+        hist = json.loads(HISTORY.read_text(encoding="utf-8")) if HISTORY.exists() else {}
+        cutoff = (d - dt.timedelta(days=REPEAT_DAYS)).isoformat()
+        used = {k for k, v in hist.items() if not k.startswith("_") and v >= cutoff}
+        base = cfg["base_url"].rstrip("/")
+        pools = {
+            "budget": [it for it in budget or [] if descs.get(it["code"])],
+            "interior": [it for it in (results or {}).get("interior", []) if it["price"] <= 10000],
+            "daily": [it for it in (results or {}).get("daily", []) if it["price"] <= 10000],
+            "furusato": [it for c in fcats or [] for it in c["items"] if descs.get(it["code"])],
+        }
+        # この7日に出した物と似た商品は出さない（簡易トイレが続く、など）
+        recent = [{"code": x["code"], "name": x["name"]} for x in entries if x["day"] >= (d - dt.timedelta(days=7)).isoformat()]
+        kinds = [FEED_ORDER[(d.toordinal() + k) % len(FEED_ORDER)] for k in range(FEED_PER_DAY)]  # 種類は日ごとに回す
+        picks = []
+        for want in kinds:
+            # その種類に出せる物がなければ、ほかの種類から出す（1日の枚数はそろえる）
+            for kind in [want, *[k for k in FEED_ORDER if k != want]]:
+                it = next((x for x in pools[kind] if x["code"] not in used and not SKIP.search(x["name"]) and not excluded(x)
+                           and not any(similar(x, o) for o in [*recent, *picks])), None)
+                if it:
+                    break
+            if not it:
+                continue
+            picks.append(it)
+            name = f"{day}-{re.sub(r'[^A-Za-z0-9_-]', '-', it['code'])}.jpg"
+            make_pin(it, kind, FEED_IMG / name, day)
+            title, text = pin_text(it, kind, descs.get(it["code"]))
+            entries.append({"day": day, "kind": kind, "code": it["code"], "name": it["name"], "title": title, "text": text,
+                            "link": link_for(it, kind, base), "image": f"{base}/pins/feed/{name}"})
+            hist[it["code"]] = day
+            added += 1
+        HISTORY.write_text(json.dumps(hist, ensure_ascii=False, indent=0), encoding="utf-8")
+        keep = (d - dt.timedelta(days=FEED_DAYS)).isoformat()
+        entries = [x for x in entries if x["day"] >= keep]
+        FEED.write_text(json.dumps(entries, ensure_ascii=False, indent=0), encoding="utf-8")
+        for f in FEED_IMG.glob("*.jpg"):  # RSS から外れた画像は消す（ピンになった後は Pinterest 側に保存される）
+            if f.name[:10] < keep:
+                f.unlink()
+    write_feeds(cfg, entries, out_dir)
+    restore(out_dir)
+    return added
+
+
+def write_feeds(cfg, entries, out_dir):
+    """ボードごとに RSS 2.0 を書く（Pinterest は Atom を読めない）."""
+    from email.utils import format_datetime
+    from xml.sax.saxutils import escape
+    base = cfg["base_url"].rstrip("/")
+    (out_dir / "pins").mkdir(parents=True, exist_ok=True)
+    for kind, board in BOARDS.items():
+        items = []
+        for x in sorted((x for x in entries if x["kind"] == kind), key=lambda x: x["day"], reverse=True):
+            d = dt.date.fromisoformat(x["day"])
+            when = format_datetime(dt.datetime(d.year, d.month, d.day, 7, 0, tzinfo=JST))
+            desc = f'<img src="{x["image"]}" alt="{escape(x["title"], {chr(34): "&quot;"})}"/><p>{escape(x["text"])}</p>'
+            items.append(f"<item><title>{escape(x['title'])}</title><link>{escape(x['link'])}</link>"
+                         f"<guid isPermaLink=\"false\">{escape(x['day'] + ':' + x['code'])}</guid><pubDate>{when}</pubDate>"
+                         f"<description>{escape(desc)}</description>"
+                         f'<enclosure url="{escape(x["image"])}" type="image/jpeg" length="0"/></item>')
+        xml = (f'<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel><title>{escape(board)}｜らんくま</title>'
+               f"<link>{base}/</link><description>{escape(board)}（楽天の売れ筋・ふるさと納税）</description>"
+               f"<language>ja</language>{''.join(items)}</channel></rss>\n")
+        (out_dir / "pins" / f"{kind}.xml").write_text(xml, encoding="utf-8")
+
+
 def restore(out_dir):
     """サイトは毎回作り直されるので、ピンの画像と CSV を data から置き直す."""
     if IMG_DIR.exists():
         shutil.copytree(IMG_DIR, out_dir / "pins", dirs_exist_ok=True)
+    if FEED_IMG.exists():
+        shutil.copytree(FEED_IMG, out_dir / "pins" / "feed", dirs_exist_ok=True)
     if (DATA / "pins.csv").exists():
         shutil.copy(DATA / "pins.csv", out_dir / "pins.csv")
