@@ -15,6 +15,7 @@ import shutil
 from pathlib import Path
 
 from articles import short_name, slug_of
+from itemfilter import excluded, similar
 from social import fetch_image, font, wrap, yen  # noqa: F401  (yen は将来の説明文用)
 
 ROOT = Path(__file__).resolve().parent
@@ -146,7 +147,9 @@ def build(cfg, results, budget, fcats, descs, day, out_dir, force=False):
     for n in range(7 * len(TIMES)):
         kind = order[n % len(order)]
         # 同じタイトルのピンは Pinterest が受け付けない（CD の通常盤と初回盤など、名前がほぼ同じ商品がある）
-        it = next((x for x in pools[kind] if x["code"] not in used and pin_text(x, kind, None)[0] not in titles), None)
+        # 似た商品（簡易トイレが何枚も、など）は1週間に1枚まで。判定は ROOM・ショートと共通
+        it = next((x for x in pools[kind] if x["code"] not in used and pin_text(x, kind, None)[0] not in titles
+                   and not excluded(x) and not any(similar(x, o) for _, o, _ in picks)), None)
         if not it:
             continue
         used.add(it["code"])
