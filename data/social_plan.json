@@ -11,7 +11,8 @@
    "due": "2026-11-04T23:56:00.000Z",
    "text": "楽天 #PR\n今日は5と0のつく日！\n楽天カードで買う人はエントリーを忘れずに✍️\n（条件は楽天の公式ページで確認してね）\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html",
    "image": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "alert",
@@ -20,7 +21,8 @@
    "text": "楽天 #PR\n犬グッズ おすすめ\n\nドッグフード お試し 無添加 国産 おすすめ 手作り ごはん おやつ ドットわん…\n1,000円\n★4.5（レビュー2,022件）\n👇\nhttps://hb.afl.rakuten.co.jp/hgc/g00q2beo.i7mec7ea.g00q2beo.i7medfbc/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fdotwan%2Fotameshi1%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fdotwan%2Fi%2F10000027%2F&rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90\n#犬 #犬グッズ #犬のいる暮らし #楽天購入品",
    "image": "",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "risers",
@@ -32,7 +34,8 @@
     "monoroots:10000488",
     "seastar:10061658",
     "omosan:10000332"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -42,7 +45,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-11-05-02-single.jpg",
    "codes": [
     "darkangel:10036348"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -51,7 +55,8 @@
    "text": "楽天 #PR\n🎬犬グッズ 人気TOP3【11/5】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#犬 #犬グッズ #犬のいる暮らし #楽天購入品",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-11-05-inu.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "alert",
@@ -60,7 +65,8 @@
    "text": "楽天 #PR\n収納・日用品の人気どころを楽天ROOMに集めてます📦\n寝る前のお買い物チェックにどうぞ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   }
  ]
 }
