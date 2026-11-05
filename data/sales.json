@@ -1,0 +1,16 @@
+[
+ {
+  "key": "2026-11-marathon",
+  "name": "お買い物マラソン",
+  "start": "2026-11-04T20:00",
+  "end": "2026-11-11T01:59",
+  "entry_url": "https://event.rakuten.co.jp/campaign/point-up/marathon/",
+  "coupon_url": "https://event.rakuten.co.jp/campaign/point-up/marathon/20261104vdhny/itemcoupon/",
+  "kaimawari": "最大10倍（上限7,000pt）",
+  "kaimawari_say": "最大10倍",
+  "max_total": "最大47.5倍（SPU・ショップのポイントアップを合わせた場合）",
+  "caution": "ふるさと納税の寄付は\n原則ポイントの対象外",
+  "caution_say": "それと、ふるさと納税の寄付は、今は原則ポイントの対象外になっているから気をつけるのだ。",
+  "checked": "2026-11-05 楽天の公式ページで確認"
+ }
+]

@@ -267,6 +267,8 @@ def render(cfg, results, demo, day, updated, out_dir, budget=None, series=None, 
         extra_css = articles.CSS
         extra_paths = articles.render_budget(cfg, budget, series or {}, descs or {}, demo, day, updated, write)
         body += articles.banner(cfg, budget)
+    import sale
+    body += sale.banner(cfg, day)  # お買い物マラソン・スーパーSALE の開催中だけ
     body += ('<a class="banner" href="furusato/" style="margin-top:16px;background:linear-gradient(135deg,#e8f6ef,#fff7e6);border-color:#bfe6cf">'
              '<span style="font-size:2.6rem">🎁</span><div><b>ふるさと納税の人気返礼品ランキング</b>'
              '<small>肉・海鮮・お米・フルーツなど、レビューの多い定番を寄付金額別にチェック</small></div>'

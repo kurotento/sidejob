@@ -549,7 +549,7 @@ def draw_sub(d, text):
         y += step
 
 
-def anim_title(theme, title, sub, dur, out, seed, mouth=(), text=""):
+def anim_title(theme, title, sub, dur, out, seed, mouth=(), text="", hook="3位から発表！"):
     from PIL import ImageDraw
     chunks = sub_chunks(text) if text else []
     big = stripes_bg(theme)
@@ -577,8 +577,8 @@ def anim_title(theme, title, sub, dur, out, seed, mouth=(), text=""):
         if t > 0.2:
             img.paste(text_l, (0, 650 + dy), text_l)
         d = ImageDraw.Draw(img)
-        if t > 0.7 and int(t * 4) % 2 == 0:  # 「3位から発表！」を点滅
-            d.text((W // 2, hook_y), "3位から発表！", font=font(84), fill=(255, 226, 90), anchor="mm",
+        if hook and t > 0.7 and int(t * 4) % 2 == 0:  # 「3位から発表！」を点滅
+            d.text((W // 2, hook_y), hook, font=font(84), fill=(255, 226, 90), anchor="mm",
                    stroke_width=7, stroke_fill=(90, 0, 10))
         draw_confetti(d, parts, t)
         if chunks:
