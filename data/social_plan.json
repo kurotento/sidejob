@@ -1,5 +1,5 @@
 {
- "day": "2026-11-05",
+ "day": "2026-11-06",
  "sale": [
   "お買い物マラソン",
   "買い回り"
@@ -8,65 +8,59 @@
   {
    "kind": "event",
    "time": "09:00",
-   "due": "2026-11-04T23:56:00.000Z",
-   "text": "楽天 #PR\n今日は5と0のつく日！\n楽天カードで買う人はエントリーを忘れずに✍️\n（条件は楽天の公式ページで確認してね）\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html",
+   "due": "2026-11-06T00:12:00.000Z",
+   "text": "楽天 #PR\nお買い物マラソン開催中！\n1ショップ1,000円以上の買い回りでポイント倍率が上がるやつ\n送料無料の1000円台、まとめてます\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#お買い物マラソン",
    "image": "",
-   "codes": [],
-   "scheduled": true
+   "codes": []
   },
   {
    "kind": "alert",
-   "time": "11/05 12:15",
-   "due": "2026-11-05T03:18:00.000Z",
-   "text": "楽天 #PR\n犬グッズ おすすめ\n\nドッグフード お試し 無添加 国産 おすすめ 手作り ごはん おやつ ドットわん…\n1,000円\n★4.5（レビュー2,022件）\n👇\nhttps://hb.afl.rakuten.co.jp/hgc/g00q2beo.i7mec7ea.g00q2beo.i7medfbc/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fdotwan%2Fotameshi1%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fdotwan%2Fi%2F10000027%2F&rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90\n#犬 #犬グッズ #犬のいる暮らし #楽天購入品",
+   "time": "11/06 12:15",
+   "due": "2026-11-06T03:22:00.000Z",
+   "text": "楽天 #PR\n寄付1万円で何kg届く？\n\n人気 鮭 さけ しゃけ サーモン 魚 魚介類 魚介 海鮮 海産物 冷凍 厚切 肉…\n寄付額8,000円〜\n寄付1万円あたり、約2.5キロ。宮城県気仙沼市の返礼品で\n👇\nhttps://hb.afl.rakuten.co.jp/hgc/g00t9uso.i7mec844.g00t9uso.i7med854/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ff042056-kesennuma%2F20561645%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Ff042056-kesennuma%2Fi%2F10001385%2F&rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90\n#ふるさと納税 #ふるさと納税返礼品 #コスパ #楽天ふるさと納税",
    "image": "",
    "video": "",
-   "codes": [],
-   "scheduled": true
+   "codes": []
   },
   {
    "kind": "risers",
    "time": "13:30",
-   "due": "2026-11-05T04:22:00.000Z",
-   "text": "楽天 #PR\n今これ急に売れてる📈\n1️⃣非常食セット 防災食品 7日分… 18,980円（15位UP）\n2️⃣BabySmile 電動鼻水吸引… 7,980円（13位UP）\n3️⃣千賀屋謹製 おもてなし 和風 3…（11位UP）\n👇\nhttps://kurotento.github.io/sidejob/\n#非常食セット #電動鼻水吸引器 #千賀屋謹製 #お買い物マラソン #買い回り",
-   "image": "https://kurotento.github.io/sidejob/social/2026-11-05-01-risers.png",
+   "due": "2026-11-06T04:41:00.000Z",
+   "text": "楽天 #PR\nランキング急上昇中のやつ\n1️⃣もこもこ毛布 ふわとろ ブランケ…（25位UP）\n2️⃣NISHIZARC 隙間掃除ブラ… 1,280円（25位UP）\n3️⃣やわらかキルト パジャマ 子供服…（17位UP）\n👇\nhttps://kurotento.github.io/sidejob/\n#もこもこ毛布 #隙間掃除ブラシ #やわらかキルト #お買い物マラソン #買い回り",
+   "image": "https://kurotento.github.io/sidejob/social/2026-11-06-01-risers.png",
    "codes": [
-    "monoroots:10000488",
-    "seastar:10061658",
-    "omosan:10000332"
-   ],
-   "scheduled": true
+    "eunicedress:10001863",
+    "decori:10000583",
+    "devirockstore:10031259"
+   ]
   },
   {
    "kind": "single",
    "time": "18:00",
-   "due": "2026-11-05T08:55:00.000Z",
-   "text": "楽天 #PR\nレビュー2,000件超えの定番\n\nストレッチ ワイドパンツ レディース パンツ センタープレスパンツ 裏起毛\n送料無料！（★4.0）\nセンタープレス入りで上品なシルエットのレディースワイドパンツだよ。\n👇\nhttps://kurotento.github.io/sidejob/item-darkangel-10036348.html\n#ワイドパンツ #お買い物マラソン #買い回り",
-   "image": "https://kurotento.github.io/sidejob/social/2026-11-05-02-single.jpg",
+   "due": "2026-11-06T09:13:00.000Z",
+   "text": "楽天 #PR\nレビュー7,000件超えの定番\n\n簡易トイレ 非常用トイレセット 防災用品\n送料無料！（★4.5）\nこれは災害時やアウトドアの緊急時に備える防災士監修の簡易トイレセットだよ。\n👇\nhttps://kurotento.github.io/sidejob/item-r1-shop-10000062.html\n#簡易トイレ #お買い物マラソン #買い回り",
+   "image": "https://kurotento.github.io/sidejob/social/2026-11-06-02-single.jpg",
    "codes": [
-    "darkangel:10036348"
-   ],
-   "scheduled": true
+    "r1-shop:10000062"
+   ]
   },
   {
    "kind": "video",
-   "time": "11/05 20:30",
-   "due": "2026-11-05T11:44:00.000Z",
-   "text": "楽天 #PR\n🎬犬グッズ 人気TOP3【11/5】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#犬 #犬グッズ #犬のいる暮らし #楽天購入品",
+   "time": "11/06 20:30",
+   "due": "2026-11-06T11:26:00.000Z",
+   "text": "楽天 #PR\n🎬ふるさと納税クイズ 1万円で何kg届く？【11/6】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#ふるさと納税 #ふるさと納税返礼品 #コスパ #楽天ふるさと納税",
    "image": "",
-   "video": "https://kurotento.github.io/sidejob/shorts/2026-11-05-inu.mp4",
-   "codes": [],
-   "scheduled": true
+   "video": "https://kurotento.github.io/sidejob/shorts/2026-11-06-furusato-qty.mp4",
+   "codes": []
   },
   {
    "kind": "alert",
-   "time": "11/05 21:00",
-   "due": "2026-11-05T12:06:00.000Z",
-   "text": "楽天 #PR\n収納・日用品の人気どころを楽天ROOMに集めてます📦\n寝る前のお買い物チェックにどうぞ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
+   "time": "11/06 21:00",
+   "due": "2026-11-06T11:52:00.000Z",
+   "text": "楽天 #PR\nふるさと納税の人気返礼品も楽天ROOMで一覧にしてるよ🎁\nレビューが多い定番を中心に\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
-   "codes": [],
-   "scheduled": true
+   "codes": []
   }
  ]
 }
