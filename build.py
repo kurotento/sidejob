@@ -300,7 +300,7 @@ def main():
     render(cfg, results, args.demo, day, updated, OUT_DIR, budget=budget, series=series, descs=descs)
     try:  # セールの記事（お買い物マラソン・スーパーSALE。日程は data/sales.json）
         import sale
-        add_to_sitemap(cfg, sale.build(cfg, day, updated, args.demo, OUT_DIR), day)
+        add_to_sitemap(cfg, sale.build(cfg, day, updated, args.demo, OUT_DIR, budget), day)
     except Exception as ex:  # noqa: BLE001
         print(f"[sale] 失敗: {ex}", file=sys.stderr)
     cats, fdescs = [], {}

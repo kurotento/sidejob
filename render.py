@@ -171,7 +171,7 @@ def section(title, icon, note, inner, more=""):
             f'<p>{e(note)}</p></div>{more}</div>{inner}</section>')
 
 
-def page(cfg, title, body, path, demo, updated, active=None, hero="", extra_css=""):
+def page(cfg, title, body, path, demo, updated, active=None, hero="", extra_css="", description=None, head=""):
     tabs = '<a href="index.html" class="{}">{}</a>'.format("on" if active is None else "", e(cfg.get("home_label", "🏠 総合")))
     for href, label, key in cfg.get("extra_tabs", []):
         tabs += f'<a href="{href}" class="{"on" if active == key else ""}">{e(label)}</a>'
@@ -181,6 +181,7 @@ def page(cfg, title, body, path, demo, updated, active=None, hero="", extra_css=
                     for g in cfg["genres"])
     canonical = cfg["base_url"].rstrip("/") + "/" + path
     full_title = title if title == cfg["site_name"] else f"{title} | {cfg['site_name']}"
+    desc = description or cfg["site_description"]  # 検索結果に出る説明文（記事ページは記事ごとに書く）
     gsv = cfg.get("google_site_verification", "")
     verify = f'<meta name="google-site-verification" content="{e(gsv)}">' if gsv and not demo else ""
     if cfg.get("pinterest_verify") and not demo:  # Pinterest のサイト認証（RSS から自動でピンを作るのに必要）
@@ -195,10 +196,10 @@ def page(cfg, title, body, path, demo, updated, active=None, hero="", extra_css=
                  '</script>') if ga else ""
     return f"""<!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{e(full_title)}</title><meta name="description" content="{e(cfg['site_description'])}">
+<title>{e(full_title)}</title><meta name="description" content="{e(desc)}">
 <link rel="canonical" href="{e(canonical)}"><meta name="theme-color" content="#bf0000">{verify}{analytics}
-<meta property="og:title" content="{e(full_title)}"><meta property="og:description" content="{e(cfg['site_description'])}">
-<meta property="og:type" content="website"><meta property="og:url" content="{e(canonical)}">
+<meta property="og:title" content="{e(full_title)}"><meta property="og:description" content="{e(desc)}">
+<meta property="og:type" content="website"><meta property="og:url" content="{e(canonical)}">{head}
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%23bf0000'/%3E%3Cpath fill='white' d='M4 8l4 3.5L12 5l4 6.5L20 8l-1.6 10H5.6z'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
