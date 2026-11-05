@@ -11,7 +11,8 @@
    "due": "2026-11-06T00:12:00.000Z",
    "text": "楽天 #PR\nお買い物マラソン開催中！\n1ショップ1,000円以上の買い回りでポイント倍率が上がるやつ\n送料無料の1000円台、まとめてます\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#お買い物マラソン",
    "image": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "alert",
@@ -20,7 +21,8 @@
    "text": "楽天 #PR\n寄付1万円で何kg届く？\n\n人気 鮭 さけ しゃけ サーモン 魚 魚介類 魚介 海鮮 海産物 冷凍 厚切 肉…\n寄付額8,000円〜\n寄付1万円あたり、約2.5キロ。宮城県気仙沼市の返礼品で\n👇\nhttps://hb.afl.rakuten.co.jp/hgc/g00t9uso.i7mec844.g00t9uso.i7med854/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ff042056-kesennuma%2F20561645%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Ff042056-kesennuma%2Fi%2F10001385%2F&rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90\n#ふるさと納税 #ふるさと納税返礼品 #コスパ #楽天ふるさと納税",
    "image": "",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "risers",
@@ -32,7 +34,8 @@
     "eunicedress:10001863",
     "decori:10000583",
     "devirockstore:10031259"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -42,7 +45,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-11-06-02-single.jpg",
    "codes": [
     "r1-shop:10000062"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -51,7 +55,8 @@
    "text": "楽天 #PR\n🎬ふるさと納税クイズ 1万円で何kg届く？【11/6】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#ふるさと納税 #ふるさと納税返礼品 #コスパ #楽天ふるさと納税",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-11-06-furusato-qty.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "alert",
@@ -60,7 +65,8 @@
    "text": "楽天 #PR\nふるさと納税の人気返礼品も楽天ROOMで一覧にしてるよ🎁\nレビューが多い定番を中心に\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   }
  ]
 }
