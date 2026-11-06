@@ -1,5 +1,5 @@
 {
- "day": "2026-11-06",
+ "day": "2026-11-07",
  "sale": [
   "お買い物マラソン",
   "買い回り"
@@ -8,65 +8,59 @@
   {
    "kind": "event",
    "time": "09:00",
-   "due": "2026-11-06T00:12:00.000Z",
+   "due": "2026-11-07T00:13:00.000Z",
    "text": "楽天 #PR\nお買い物マラソン開催中！\n1ショップ1,000円以上の買い回りでポイント倍率が上がるやつ\n送料無料の1000円台、まとめてます\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#お買い物マラソン",
    "image": "",
-   "codes": [],
-   "scheduled": true
+   "codes": []
   },
   {
    "kind": "alert",
-   "time": "11/06 12:15",
-   "due": "2026-11-06T03:22:00.000Z",
-   "text": "楽天 #PR\n寄付1万円で何kg届く？\n\n人気 鮭 さけ しゃけ サーモン 魚 魚介類 魚介 海鮮 海産物 冷凍 厚切 肉…\n寄付額8,000円〜\n寄付1万円あたり、約2.5キロ。宮城県気仙沼市の返礼品で\n👇\nhttps://hb.afl.rakuten.co.jp/hgc/g00t9uso.i7mec844.g00t9uso.i7med854/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ff042056-kesennuma%2F20561645%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Ff042056-kesennuma%2Fi%2F10001385%2F&rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90\n#ふるさと納税 #ふるさと納税返礼品 #コスパ #楽天ふるさと納税",
+   "time": "11/07 12:15",
+   "due": "2026-11-07T03:16:00.000Z",
+   "text": "楽天 #PR\n買う前に見ておきたいポイント\n\n【チェック3】電気毛布 電気敷毛布 電気掛敷毛布 敷き 掛け敷き 丸洗い 洗える ダニ対策 温…\n2,980円〜\n敷いても掛けても使えるもの\n👇\nhttps://hb.afl.rakuten.co.jp/hgc/g00pui9o.i7mec032.g00pui9o.i7meda24/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fe-kurashi%2F1338101%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fe-kurashi%2Fi%2F10000628%2F&rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90\n#電気毛布 #選び方 #買う前に #楽天購入品",
    "image": "",
    "video": "",
-   "codes": [],
-   "scheduled": true
+   "codes": []
   },
   {
    "kind": "risers",
    "time": "13:30",
-   "due": "2026-11-06T04:41:00.000Z",
-   "text": "楽天 #PR\nランキング急上昇中のやつ\n1️⃣もこもこ毛布 ふわとろ ブランケ…（25位UP）\n2️⃣NISHIZARC 隙間掃除ブラ… 1,280円（25位UP）\n3️⃣やわらかキルト パジャマ 子供服…（17位UP）\n👇\nhttps://kurotento.github.io/sidejob/\n#もこもこ毛布 #隙間掃除ブラシ #やわらかキルト #お買い物マラソン #買い回り",
-   "image": "https://kurotento.github.io/sidejob/social/2026-11-06-01-risers.png",
+   "due": "2026-11-07T04:37:00.000Z",
+   "text": "楽天 #PR\n昨日からぐんぐん順位が上がってる\n1️⃣ブリタ 交換用カートリッジ マク… 4,082円（23位UP）\n2️⃣トーンアップUV サンプル3点付…（21位UP）\n3️⃣グーン ぐんぐん吸収パンツ ディ…（21位UP）\n👇\nhttps://kurotento.github.io/sidejob/\n#ブリタ #ホワイト #グーン #お買い物マラソン #買い回り",
+   "image": "https://kurotento.github.io/sidejob/social/2026-11-07-01-risers.png",
    "codes": [
-    "eunicedress:10001863",
-    "decori:10000583",
-    "devirockstore:10031259"
-   ],
-   "scheduled": true
+    "brita:10000052",
+    "larocheposay:10000039",
+    "netbaby:10027922"
+   ]
   },
   {
    "kind": "single",
    "time": "18:00",
-   "due": "2026-11-06T09:13:00.000Z",
-   "text": "楽天 #PR\nレビュー7,000件超えの定番\n\n簡易トイレ 非常用トイレセット 防災用品\n送料無料！（★4.5）\nこれは災害時やアウトドアの緊急時に備える防災士監修の簡易トイレセットだよ。\n👇\nhttps://kurotento.github.io/sidejob/item-r1-shop-10000062.html\n#簡易トイレ #お買い物マラソン #買い回り",
-   "image": "https://kurotento.github.io/sidejob/social/2026-11-06-02-single.jpg",
+   "due": "2026-11-07T08:53:00.000Z",
+   "text": "楽天 #PR\nレビュー10,000件超えの定番\n\n簡易トイレ 非常用トイレ 防災グッズ\n送料無料！（★4.6）\n👇\nhttps://kurotento.github.io/sidejob/item-h2brothers-10001880.html\n#簡易トイレ #お買い物マラソン #買い回り",
+   "image": "https://kurotento.github.io/sidejob/social/2026-11-07-02-single.jpg",
    "codes": [
-    "r1-shop:10000062"
-   ],
-   "scheduled": true
+    "h2brothers:10001880"
+   ]
   },
   {
    "kind": "video",
-   "time": "11/06 20:30",
-   "due": "2026-11-06T11:26:00.000Z",
-   "text": "楽天 #PR\n🎬ふるさと納税クイズ 1万円で何kg届く？【11/6】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#ふるさと納税 #ふるさと納税返礼品 #コスパ #楽天ふるさと納税",
+   "time": "11/07 20:30",
+   "due": "2026-11-07T11:22:00.000Z",
+   "text": "楽天 #PR\n🎬電気毛布を買う前に チェック3つ【11/7】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#電気毛布 #選び方 #買う前に #楽天購入品",
    "image": "",
-   "video": "https://kurotento.github.io/sidejob/shorts/2026-11-06-furusato-qty.mp4",
-   "codes": [],
-   "scheduled": true
+   "video": "https://kurotento.github.io/sidejob/shorts/2026-11-07-check.mp4",
+   "codes": []
   },
   {
    "kind": "alert",
-   "time": "11/06 21:00",
-   "due": "2026-11-06T11:52:00.000Z",
-   "text": "楽天 #PR\nふるさと納税の人気返礼品も楽天ROOMで一覧にしてるよ🎁\nレビューが多い定番を中心に\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
+   "time": "11/07 21:00",
+   "due": "2026-11-07T11:56:00.000Z",
+   "text": "楽天 #PR\n楽天ROOMを更新したよ✨\n今日ランキングに入っていたものを追加しました\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
-   "codes": [],
-   "scheduled": true
+   "codes": []
   }
  ]
 }
