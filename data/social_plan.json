@@ -11,7 +11,8 @@
    "due": "2026-11-07T00:13:00.000Z",
    "text": "楽天 #PR\nお買い物マラソン開催中！\n1ショップ1,000円以上の買い回りでポイント倍率が上がるやつ\n送料無料の1000円台、まとめてます\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#お買い物マラソン",
    "image": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "alert",
@@ -20,7 +21,8 @@
    "text": "楽天 #PR\n買う前に見ておきたいポイント\n\n【チェック3】電気毛布 電気敷毛布 電気掛敷毛布 敷き 掛け敷き 丸洗い 洗える ダニ対策 温…\n2,980円〜\n敷いても掛けても使えるもの\n👇\nhttps://hb.afl.rakuten.co.jp/hgc/g00pui9o.i7mec032.g00pui9o.i7meda24/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fe-kurashi%2F1338101%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fe-kurashi%2Fi%2F10000628%2F&rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90\n#電気毛布 #選び方 #買う前に #楽天購入品",
    "image": "",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "risers",
@@ -32,7 +34,8 @@
     "brita:10000052",
     "larocheposay:10000039",
     "netbaby:10027922"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -42,7 +45,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-11-07-02-single.jpg",
    "codes": [
     "h2brothers:10001880"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -51,7 +55,8 @@
    "text": "楽天 #PR\n🎬電気毛布を買う前に チェック3つ【11/7】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#電気毛布 #選び方 #買う前に #楽天購入品",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-11-07-check.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "alert",
@@ -60,7 +65,8 @@
    "text": "楽天 #PR\n楽天ROOMを更新したよ✨\n今日ランキングに入っていたものを追加しました\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   }
  ]
 }
