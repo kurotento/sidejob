@@ -20,7 +20,8 @@
    "text": "楽天 #PR\nなんでこれが今売れてるの？\n\n【謎その3】うんちが臭わないトイレ\n8,690円\n売れてる理由は、非常用トイレが四点セットで備蓄できることかも。昨日から17位も上がって\n👇\nhttps://hb.afl.rakuten.co.jp/hgc/g00sok0o.i7mec18c.g00sok0o.i7med2e6/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbos-shop%2Fbos-1353%2F&rafcid=wsc_i_ra_7f5d0d61-104d-4980-92ee-a004c6c60d90\n#楽天ランキング #楽天市場 #売れてる #楽天購入品",
    "image": "",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "risers",
@@ -32,7 +33,8 @@
     "bos-shop:10000148",
     "e-kurashi:10048739",
     "kyowashokken:10000097"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "single",
@@ -42,7 +44,8 @@
    "image": "https://kurotento.github.io/sidejob/social/2026-11-08-02-single.jpg",
    "codes": [
     "rakutenoriginal-daily:10000000"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "weekly",
@@ -51,7 +54,8 @@
    "text": "楽天 #PR\n保存版📌 今週の1000円台・送料無料 売れ筋TOP10\n買い回りの候補に使ってね\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #1000円台 #買い回り",
    "image": "https://kurotento.github.io/sidejob/social/2026-11-08-weekly-budget.png",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -60,7 +64,8 @@
    "text": "楽天 #PR\n🎬なんでこれが 売れてるの？【11/8】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ランキング #楽天市場 #売れてる #楽天購入品",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-11-08-nazo.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "alert",
@@ -69,7 +74,8 @@
    "text": "楽天 #PR\n今日の売れ筋、楽天ROOMにもまとめたよ🛍\n1000円台・送料無料の買い回り候補はこちら\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "weekly",
@@ -78,7 +84,8 @@
    "text": "楽天 #PR\n保存版📌 ふるさと納税 寄付1万円以下の人気返礼品TOP10\nレビューの多い定番から選べるよ\n👇\nhttps://kurotento.github.io/sidejob/furusato/price.html\n#ふるさと納税 #楽天ふるさと納税 #返礼品",
    "image": "https://kurotento.github.io/sidejob/social/2026-11-08-weekly-furusato.png",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   }
  ]
 }
