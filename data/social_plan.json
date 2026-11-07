@@ -1,5 +1,5 @@
 {
- "day": "2026-11-07",
+ "day": "2026-11-08",
  "sale": [
   "お買い物マラソン",
   "買い回り"
@@ -8,65 +8,77 @@
   {
    "kind": "event",
    "time": "09:00",
-   "due": "2026-11-07T00:13:00.000Z",
+   "due": "2026-11-08T00:07:00.000Z",
    "text": "楽天 #PR\nお買い物マラソン開催中！\n1ショップ1,000円以上の買い回りでポイント倍率が上がるやつ\n送料無料の1000円台、まとめてます\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#お買い物マラソン",
    "image": "",
-   "codes": [],
-   "scheduled": true
+   "codes": []
   },
   {
    "kind": "alert",
-   "time": "11/07 12:15",
-   "due": "2026-11-07T03:16:00.000Z",
-   "text": "楽天 #PR\n買う前に見ておきたいポイント\n\n【チェック3】電気毛布 電気敷毛布 電気掛敷毛布 敷き 掛け敷き 丸洗い 洗える ダニ対策 温…\n2,980円〜\n敷いても掛けても使えるもの\n👇\nhttps://hb.afl.rakuten.co.jp/hgc/g00pui9o.i7mec032.g00pui9o.i7meda24/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fe-kurashi%2F1338101%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fe-kurashi%2Fi%2F10000628%2F&rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90\n#電気毛布 #選び方 #買う前に #楽天購入品",
+   "time": "11/08 12:15",
+   "due": "2026-11-08T03:16:00.000Z",
+   "text": "楽天 #PR\nなんでこれが今売れてるの？\n\n【謎その3】うんちが臭わないトイレ\n8,690円\n売れてる理由は、非常用トイレが四点セットで備蓄できることかも。昨日から17位も上がって\n👇\nhttps://hb.afl.rakuten.co.jp/hgc/g00sok0o.i7mec18c.g00sok0o.i7med2e6/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbos-shop%2Fbos-1353%2F&rafcid=wsc_i_ra_7f5d0d61-104d-4980-92ee-a004c6c60d90\n#楽天ランキング #楽天市場 #売れてる #楽天購入品",
    "image": "",
    "video": "",
-   "codes": [],
-   "scheduled": true
+   "codes": []
   },
   {
    "kind": "risers",
    "time": "13:30",
-   "due": "2026-11-07T04:37:00.000Z",
-   "text": "楽天 #PR\n昨日からぐんぐん順位が上がってる\n1️⃣ブリタ 交換用カートリッジ マク… 4,082円（23位UP）\n2️⃣トーンアップUV サンプル3点付…（21位UP）\n3️⃣グーン ぐんぐん吸収パンツ ディ…（21位UP）\n👇\nhttps://kurotento.github.io/sidejob/\n#ブリタ #ホワイト #グーン #お買い物マラソン #買い回り",
-   "image": "https://kurotento.github.io/sidejob/social/2026-11-07-01-risers.png",
+   "due": "2026-11-08T04:35:00.000Z",
+   "text": "楽天 #PR\n今これ急に売れてる📈\n1️⃣うんちが臭わないトイレ 8,690円（17位UP）\n2️⃣天板 山善 YAMAZEN チェスト用 収納…（14位UP）\n3️⃣はぐくみ太郎 こっそり鉄分 30本 1,580円（14位UP）\n👇\nhttps://kurotento.github.io/sidejob/\n#うんちが臭わないトイレ #天板 #はぐくみ太郎 #お買い物マラソン #買い回り",
+   "image": "https://kurotento.github.io/sidejob/social/2026-11-08-01-risers.png",
    "codes": [
-    "brita:10000052",
-    "larocheposay:10000039",
-    "netbaby:10027922"
-   ],
-   "scheduled": true
+    "bos-shop:10000148",
+    "e-kurashi:10048739",
+    "kyowashokken:10000097"
+   ]
   },
   {
    "kind": "single",
    "time": "18:00",
-   "due": "2026-11-07T08:53:00.000Z",
-   "text": "楽天 #PR\nレビュー10,000件超えの定番\n\n簡易トイレ 非常用トイレ 防災グッズ\n送料無料！（★4.6）\n👇\nhttps://kurotento.github.io/sidejob/item-h2brothers-10001880.html\n#簡易トイレ #お買い物マラソン #買い回り",
-   "image": "https://kurotento.github.io/sidejob/social/2026-11-07-02-single.jpg",
+   "due": "2026-11-08T09:07:00.000Z",
+   "text": "楽天 #PR\nレビュー2,000件超えの定番\n\n水 500ml×24本 天然水 ラベルレス\n1,244円、送料無料！（★4.7）\n富士山の天然水を使った、500ml×24本入りのミネラルウォーターだよ。\n👇\nhttps://kurotento.github.io/sidejob/item-rakutenoriginal-daily-10000000.html\n#天然水 #お買い物マラソン #買い回り",
+   "image": "https://kurotento.github.io/sidejob/social/2026-11-08-02-single.jpg",
    "codes": [
-    "h2brothers:10001880"
-   ],
-   "scheduled": true
+    "rakutenoriginal-daily:10000000"
+   ]
+  },
+  {
+   "kind": "weekly",
+   "time": "11/08 19:10",
+   "due": "2026-11-08T10:15:00.000Z",
+   "text": "楽天 #PR\n保存版📌 今週の1000円台・送料無料 売れ筋TOP10\n買い回りの候補に使ってね\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #1000円台 #買い回り",
+   "image": "https://kurotento.github.io/sidejob/social/2026-11-08-weekly-budget.png",
+   "video": "",
+   "codes": []
   },
   {
    "kind": "video",
-   "time": "11/07 20:30",
-   "due": "2026-11-07T11:22:00.000Z",
-   "text": "楽天 #PR\n🎬電気毛布を買う前に チェック3つ【11/7】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#電気毛布 #選び方 #買う前に #楽天購入品",
+   "time": "11/08 20:30",
+   "due": "2026-11-08T11:31:00.000Z",
+   "text": "楽天 #PR\n🎬なんでこれが 売れてるの？【11/8】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ランキング #楽天市場 #売れてる #楽天購入品",
    "image": "",
-   "video": "https://kurotento.github.io/sidejob/shorts/2026-11-07-check.mp4",
-   "codes": [],
-   "scheduled": true
+   "video": "https://kurotento.github.io/sidejob/shorts/2026-11-08-nazo.mp4",
+   "codes": []
   },
   {
    "kind": "alert",
-   "time": "11/07 21:00",
-   "due": "2026-11-07T11:56:00.000Z",
-   "text": "楽天 #PR\n楽天ROOMを更新したよ✨\n今日ランキングに入っていたものを追加しました\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
+   "time": "11/08 21:00",
+   "due": "2026-11-08T12:02:00.000Z",
+   "text": "楽天 #PR\n今日の売れ筋、楽天ROOMにもまとめたよ🛍\n1000円台・送料無料の買い回り候補はこちら\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
-   "codes": [],
-   "scheduled": true
+   "codes": []
+  },
+  {
+   "kind": "weekly",
+   "time": "11/08 21:10",
+   "due": "2026-11-08T12:16:00.000Z",
+   "text": "楽天 #PR\n保存版📌 ふるさと納税 寄付1万円以下の人気返礼品TOP10\nレビューの多い定番から選べるよ\n👇\nhttps://kurotento.github.io/sidejob/furusato/price.html\n#ふるさと納税 #楽天ふるさと納税 #返礼品",
+   "image": "https://kurotento.github.io/sidejob/social/2026-11-08-weekly-furusato.png",
+   "video": "",
+   "codes": []
   }
  ]
 }
