@@ -34,6 +34,7 @@ THEME_TIMES = [(12, 15)]  # 曜日のテーマの商品を1つ
 JITTER = (-45, 50)  # 通常の枠・動画・テーマ：前後に大きくずらす（分）
 ALERT_JITTER = (-25, -2)  # セール開始・終了のお知らせ：時刻に意味があるので、前にだけ少しずらす
 MIN_GAP = 40  # 投稿どうしの間は最低この分数あける
+X_PAUSE_UNTIL = "2026-11-16"  # 11/9 にスパムのラベル（表示の制限）を受けたので、この日まで X の予約をしない（黒さま指示）
 THEME_HOOK = {"vs": "安いのと高いの、どっちを選ぶ？", "nazo": "なんでこれが今売れてるの？", "check": "買う前に見ておきたいポイント",
               "furusato-qty": "寄付1万円で何kg届く？"}
 BUFFER_CAP = 10  # Buffer無料プランで同時に予約できる件数。昼にもう一度予約して1日20件にする
@@ -929,7 +930,10 @@ def run_plan():
         return
     posted = json.loads(POSTED.read_text(encoding="utf-8")) if POSTED.exists() else {}
     log = LOG.read_text(encoding="utf-8").rstrip("\n").split("\n") if LOG.exists() else []
-    schedule(key, p["posts"], "x", log, posted, day)
+    if day <= X_PAUSE_UNTIL:
+        log.append(f"{day} X は {X_PAUSE_UNTIL} まで休止中のため予約しない")
+    else:
+        schedule(key, p["posts"], "x", log, posted, day)
     if SNS_PLAN.exists():  # Threads・Instagram
         sp = json.loads(SNS_PLAN.read_text(encoding="utf-8"))
         try:
