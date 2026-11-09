@@ -1,91 +1,56 @@
 {
- "day": "2026-11-08",
+ "day": "2026-11-09",
  "sale": [
   "お買い物マラソン",
   "買い回り"
  ],
  "posts": [
   {
+   "kind": "alert",
+   "time": "11/09 12:15",
+   "due": "2026-11-09T03:09:00.000Z",
+   "text": "楽天 #PR\n推し活グッズ おすすめ\n\n名入れ 推し活グッズ ハート 星 丸 バイカラー キーホルダー アクリル 推し活…\n1,100円\n★4.8（レビュー890件）\n👇\nhttps://hb.afl.rakuten.co.jp/hgc/g00so45o.i7mec33c.g00so45o.i7med87e/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ftiarise%2Fgrad_carakey%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Ftiarise%2Fi%2F10000420%2F&rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90\n#推し活 #推し活グッズ #痛バ #楽天購入品",
+   "image": "",
+   "video": "",
+   "codes": []
+  },
+  {
    "kind": "event",
-   "time": "09:00",
-   "due": "2026-11-08T00:07:00.000Z",
+   "time": "13:30",
+   "due": "2026-11-09T04:22:00.000Z",
    "text": "楽天 #PR\nお買い物マラソン開催中！\n1ショップ1,000円以上の買い回りでポイント倍率が上がるやつ\n送料無料の1000円台、まとめてます\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#お買い物マラソン",
    "image": "",
    "codes": []
   },
   {
-   "kind": "alert",
-   "time": "11/08 12:15",
-   "due": "2026-11-08T03:16:00.000Z",
-   "text": "楽天 #PR\nなんでこれが今売れてるの？\n\n【謎その3】うんちが臭わないトイレ\n8,690円\n売れてる理由は、非常用トイレが四点セットで備蓄できることかも。昨日から17位も上がって\n👇\nhttps://hb.afl.rakuten.co.jp/hgc/g00sok0o.i7mec18c.g00sok0o.i7med2e6/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbos-shop%2Fbos-1353%2F&rafcid=wsc_i_ra_7f5d0d61-104d-4980-92ee-a004c6c60d90\n#楽天ランキング #楽天市場 #売れてる #楽天購入品",
-   "image": "",
-   "video": "",
-   "codes": [],
-   "scheduled": true
-  },
-  {
    "kind": "risers",
-   "time": "13:30",
-   "due": "2026-11-08T04:35:00.000Z",
-   "text": "楽天 #PR\n今これ急に売れてる📈\n1️⃣うんちが臭わないトイレ 8,690円（17位UP）\n2️⃣天板 山善 YAMAZEN チェスト用 収納…（14位UP）\n3️⃣はぐくみ太郎 こっそり鉄分 30本 1,580円（14位UP）\n👇\nhttps://kurotento.github.io/sidejob/\n#うんちが臭わないトイレ #天板 #はぐくみ太郎 #お買い物マラソン #買い回り",
-   "image": "https://kurotento.github.io/sidejob/social/2026-11-08-01-risers.png",
-   "codes": [
-    "bos-shop:10000148",
-    "e-kurashi:10048739",
-    "kyowashokken:10000097"
-   ],
-   "scheduled": true
-  },
-  {
-   "kind": "single",
    "time": "18:00",
-   "due": "2026-11-08T09:07:00.000Z",
-   "text": "楽天 #PR\nレビュー2,000件超えの定番\n\n水 500ml×24本 天然水 ラベルレス\n1,244円、送料無料！（★4.7）\n富士山の天然水を使った、500ml×24本入りのミネラルウォーターだよ。\n👇\nhttps://kurotento.github.io/sidejob/item-rakutenoriginal-daily-10000000.html\n#天然水 #お買い物マラソン #買い回り",
-   "image": "https://kurotento.github.io/sidejob/social/2026-11-08-02-single.jpg",
+   "due": "2026-11-09T09:06:00.000Z",
+   "text": "楽天 #PR\nランキング急上昇中のやつ\n1️⃣タオル研究所 フェイスタオル… 3,409円（15位UP）\n2️⃣レコルト 自動調理ポット ラ… 19,800円（12位UP）\n3️⃣羽毛布団 ホワイトダックダウ…（12位UP）\n👇\nhttps://kurotento.github.io/sidejob/\n#タオル研究所 #レコルト #羽毛布団 #お買い物マラソン #買い回り",
+   "image": "https://kurotento.github.io/sidejob/social/2026-11-09-01-risers.png",
    "codes": [
-    "rakutenoriginal-daily:10000000"
-   ],
-   "scheduled": true
-  },
-  {
-   "kind": "weekly",
-   "time": "11/08 19:10",
-   "due": "2026-11-08T10:15:00.000Z",
-   "text": "楽天 #PR\n保存版📌 今週の1000円台・送料無料 売れ筋TOP10\n買い回りの候補に使ってね\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #1000円台 #買い回り",
-   "image": "https://kurotento.github.io/sidejob/social/2026-11-08-weekly-budget.png",
-   "video": "",
-   "codes": [],
-   "scheduled": true
+    "towel-kenkyujyo:10000002",
+    "plywood:10022493",
+    "tansu:10041467"
+   ]
   },
   {
    "kind": "video",
-   "time": "11/08 20:30",
-   "due": "2026-11-08T11:31:00.000Z",
-   "text": "楽天 #PR\n🎬なんでこれが 売れてるの？【11/8】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ランキング #楽天市場 #売れてる #楽天購入品",
+   "time": "11/09 20:30",
+   "due": "2026-11-09T11:42:00.000Z",
+   "text": "楽天 #PR\n🎬推し活グッズ 人気TOP3【11/9】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#推し活 #推し活グッズ #痛バ #楽天購入品",
    "image": "",
-   "video": "https://kurotento.github.io/sidejob/shorts/2026-11-08-nazo.mp4",
-   "codes": [],
-   "scheduled": true
+   "video": "https://kurotento.github.io/sidejob/shorts/2026-11-09-oshikatsu.mp4",
+   "codes": []
   },
   {
    "kind": "alert",
-   "time": "11/08 21:00",
-   "due": "2026-11-08T12:02:00.000Z",
-   "text": "楽天 #PR\n今日の売れ筋、楽天ROOMにもまとめたよ🛍\n1000円台・送料無料の買い回り候補はこちら\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
+   "time": "11/09 21:00",
+   "due": "2026-11-09T12:01:00.000Z",
+   "text": "楽天 #PR\n収納・日用品の人気どころを楽天ROOMに集めてます📦\n寝る前のお買い物チェックにどうぞ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
-   "codes": [],
-   "scheduled": true
-  },
-  {
-   "kind": "weekly",
-   "time": "11/08 21:10",
-   "due": "2026-11-08T12:16:00.000Z",
-   "text": "楽天 #PR\n保存版📌 ふるさと納税 寄付1万円以下の人気返礼品TOP10\nレビューの多い定番から選べるよ\n👇\nhttps://kurotento.github.io/sidejob/furusato/price.html\n#ふるさと納税 #楽天ふるさと納税 #返礼品",
-   "image": "https://kurotento.github.io/sidejob/social/2026-11-08-weekly-furusato.png",
-   "video": "",
-   "codes": [],
-   "scheduled": true
+   "codes": []
   }
  ]
 }
