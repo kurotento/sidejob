@@ -1,42 +1,41 @@
-2026-11-09 model=gemini-3.5-flash-lite 新規4件 / 対象4件
+2026-11-10 model=gemini-3.5-flash-lite 新規7件 / 対象7件
 
-2026-11-09 model=gemini-3.5-flash-lite 新規14件 / 対象15件
-tvert:10000482: ルール違反または不完全な出力のため不採用
-2026-11-09 model=gemini-3.5-flash-lite 新規2件 / 対象2件
+2026-11-10 model=gemini-3.5-flash-lite 新規11件 / 対象11件
+2026-11-10 model=gemini-3.5-flash-lite 新規1件 / 対象1件
 [food] 30件
 [beauty] 30件
 [appliances] 30件
 [interior] 30件
-[daily] 30件
+[daily] 29件
 [baby] 30件
-[budget] 総合599件中 77件が条件に一致
+[budget] 総合598件中 74件が条件に一致
 [gemini] キーの確認: OK（gemini-3.5-flash-lite）
-[names] 短い名前 新規48件 / 対象55件
+[names] 短い名前 新規30件 / 対象40件
 [furusato:meat] 30件
 [furusato:seafood] 30件
 [furusato:rice] 30件
 [furusato:fruit] 30件
 [furusato:sweets] 30件
 [furusato:daily] 30件
-[names] 短い名前 新規6件 / 対象6件
+[names] 短い名前 新規3件 / 対象3件
 [furusato] 69ページ
 [story] 素材 3件
 生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
-[shorts] 作り：マガジン（写真と明朝体の特集ページ）／声：冥鳴ひまり
-[shorts] shorts/2026-11-09-oshikatsu.mp4 33秒 推し活グッズ
-人気TOP3
-[shorts] shorts/2026-11-09-budget.mp4 34秒 1000円台・送料無料
+[shorts] 作り：イラスト（集中線といらすとや／画像は手書きメモ風）／声：春日部つむぎ
+[shorts] shorts/2026-11-10-vs.mp4 45秒 フライパン
+安い vs 高い
+[shorts] shorts/2026-11-10-budget.mp4 29秒 1000円台・送料無料
 売れ筋TOP3
-[shorts] shorts/2026-11-09-furusato-fruit.mp4 40秒 ふるさと納税
-フルーツの人気TOP3
+[shorts] shorts/2026-11-10-furusato-sweets.mp4 35秒 ふるさと納税
+スイーツの人気TOP3
 [shorts] 動画 3本
-[room] 説明を取って紹介文を作成: 14/20件
-[room] 今日の動画の商品 3件・1000円台 4件・ほかのジャンル 11件・ふるさと納税 0件
-[room] 投稿リスト 18件
+[room] 説明を取って紹介文を作成: 11/19件
+[room] 今日の動画の商品 3件・1000円台 4件・ほかのジャンル 8件・ふるさと納税 0件
+[room] 投稿リスト 15件
 [threads] 投稿 6本
-[pinterest] RSS に 0件追加
+[pinterest] RSS に 3件追加
 [sns] Instagram 予約表に 4件追加
-[sns] Threads・Instagram 計画 7件
-[names] 短い名前 新規63件 / 対象68件
+[sns] Threads・Instagram 計画 6件
+[names] 短い名前 新規15件 / 対象30件
 [replies] 質問 44件
 [report] テーマ 8件

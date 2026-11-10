@@ -1,61 +1,74 @@
 {
- "day": "2026-11-09",
+ "day": "2026-11-10",
  "sale": [
   "お買い物マラソン",
   "買い回り"
  ],
  "posts": [
   {
-   "kind": "alert",
-   "time": "11/09 12:15",
-   "due": "2026-11-09T03:09:00.000Z",
-   "text": "楽天 #PR\n推し活グッズ おすすめ\n\n名入れ 推し活グッズ ハート 星 丸 バイカラー キーホルダー アクリル 推し活…\n1,100円\n★4.8（レビュー890件）\n👇\nhttps://hb.afl.rakuten.co.jp/hgc/g00so45o.i7mec33c.g00so45o.i7med87e/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ftiarise%2Fgrad_carakey%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Ftiarise%2Fi%2F10000420%2F&rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90\n#推し活 #推し活グッズ #痛バ #楽天購入品",
-   "image": "",
-   "video": "",
-   "codes": [],
-   "scheduled": true
-  },
-  {
    "kind": "event",
    "time": "13:30",
-   "due": "2026-11-09T04:22:00.000Z",
-   "text": "楽天 #PR\nお買い物マラソン開催中！\n1ショップ1,000円以上の買い回りでポイント倍率が上がるやつ\n送料無料の1000円台、まとめてます\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#お買い物マラソン",
+   "due": "2026-11-10T04:30:00.000Z",
+   "text": "楽天 #PR\n今日は5と0のつく日！\n楽天カードで買う人はエントリーを忘れずに✍️\n（条件は楽天の公式ページで確認してね）\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html",
    "image": "",
-   "codes": [],
-   "scheduled": true
+   "codes": []
   },
   {
    "kind": "risers",
    "time": "18:00",
-   "due": "2026-11-09T09:06:00.000Z",
-   "text": "楽天 #PR\nランキング急上昇中のやつ\n1️⃣タオル研究所 フェイスタオル… 3,409円（15位UP）\n2️⃣レコルト 自動調理ポット ラ… 19,800円（12位UP）\n3️⃣羽毛布団 ホワイトダックダウ…（12位UP）\n👇\nhttps://kurotento.github.io/sidejob/\n#タオル研究所 #レコルト #羽毛布団 #お買い物マラソン #買い回り",
-   "image": "https://kurotento.github.io/sidejob/social/2026-11-09-01-risers.png",
+   "due": "2026-11-10T09:19:54.000Z",
+   "text": "楽天 #PR\n昨日からぐんぐん順位が上がってる\n1️⃣セラミックヒーター ファンヒータ…（13位UP）\n2️⃣毛布 NERUS ふわとろ毛布…（13位UP）\n3️⃣簡易トイレ 非常用トイレセット…（12位UP）\n👇\nhttps://kurotento.github.io/sidejob/\n#セラミックヒーター #毛布 #簡易トイレ #お買い物マラソン #買い回り",
+   "image": "https://kurotento.github.io/sidejob/social/2026-11-10-01-risers.png",
    "codes": [
-    "towel-kenkyujyo:10000002",
-    "plywood:10022493",
-    "tansu:10041467"
-   ],
-   "scheduled": true
-  },
-  {
-   "kind": "video",
-   "time": "11/09 20:30",
-   "due": "2026-11-09T11:42:00.000Z",
-   "text": "楽天 #PR\n🎬推し活グッズ 人気TOP3【11/9】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#推し活 #推し活グッズ #痛バ #楽天購入品",
-   "image": "",
-   "video": "https://kurotento.github.io/sidejob/shorts/2026-11-09-oshikatsu.mp4",
-   "codes": [],
-   "scheduled": true
+    "enterb:10000081",
+    "t-interior:10000113",
+    "hiromifashionhouse:10005004"
+   ]
   },
   {
    "kind": "alert",
-   "time": "11/09 21:00",
-   "due": "2026-11-09T12:01:00.000Z",
-   "text": "楽天 #PR\n収納・日用品の人気どころを楽天ROOMに集めてます📦\n寝る前のお買い物チェックにどうぞ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
+   "time": "11/10 21:00",
+   "due": "2026-11-10T11:42:51.000Z",
+   "text": "楽天 #PR\nふるさと納税の人気返礼品も楽天ROOMで一覧にしてるよ🎁\nレビューが多い定番を中心に\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
-   "codes": [],
-   "scheduled": true
+   "codes": []
+  },
+  {
+   "kind": "video",
+   "time": "11/10 20:30",
+   "due": "2026-11-10T12:38:19.000Z",
+   "text": "楽天 #PR\n🎬フライパン 安い vs 高い【11/10】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#フライパン #比較 #買い物 #楽天購入品",
+   "image": "",
+   "video": "https://kurotento.github.io/sidejob/shorts/2026-11-10-vs.mp4",
+   "codes": []
+  },
+  {
+   "kind": "alert",
+   "time": "11/10 20:59",
+   "due": "2026-11-10T13:31:27.000Z",
+   "text": "楽天 #PR\nお買い物マラソン、残り5時間！⏰\n買い回りのあと1店舗、まだ間に合う\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#お買い物マラソン #買い回り",
+   "image": "",
+   "video": "",
+   "codes": []
+  },
+  {
+   "kind": "alert",
+   "time": "11/10 23:59",
+   "due": "2026-11-10T14:41:14.000Z",
+   "text": "楽天 #PR\nお買い物マラソン、残り2時間！⏰\n買い回りのあと1店舗、まだ間に合う\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#お買い物マラソン #買い回り",
+   "image": "",
+   "video": "",
+   "codes": []
+  },
+  {
+   "kind": "alert",
+   "time": "11/11 01:29",
+   "due": "2026-11-10T16:12:45.000Z",
+   "text": "楽天 #PR\nお買い物マラソン、ラスト30分！⏰\n買い回りのあと1店舗、まだ間に合う\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#お買い物マラソン #買い回り",
+   "image": "",
+   "video": "",
+   "codes": []
   }
  ]
 }
