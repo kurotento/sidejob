@@ -1,52 +1,53 @@
 {
- "day": "2026-11-11",
- "sale": [],
+ "day": "2026-11-12",
+ "sale": [
+  "お買い物マラソン",
+  "買い回り"
+ ],
  "posts": [
   {
    "kind": "alert",
-   "time": "11/11 12:15",
-   "due": "2026-11-11T03:13:38.000Z",
-   "text": "楽天 #PR\nなんでこれが今売れてるの？\n\n【謎その3】ボイルずわいがに足 3kg\n\n売れてる理由は、家族みんなでカニ食べ放題を楽しめるところかも。昨日から14位も上がって\n👇\nhttps://hb.afl.rakuten.co.jp/hgc/g00r77to.i7mecd04.g00r77to.i7med311/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fkouragumi%2F100075%2F&rafcid=wsc_i_ra_7f5d0d61-104d-4980-92ee-a004c6c60d90\n#楽天ランキング #楽天市場 #売れてる #楽天購入品",
+   "time": "11/12 12:15",
+   "due": "2026-11-12T03:15:00.000Z",
+   "text": "楽天 #PR\n猫グッズ おすすめ\n\nキャットツリー 据え置き スリム 高さ 170cm 幅 55cm ハウス付き 猫…\n9,130円〜\n★4.3（レビュー3,625件）\n👇\nhttps://hb.afl.rakuten.co.jp/hgc/g00prbao.i7mecc66.g00prbao.i7med90f/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fmaxshare%2Fa04934%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fmaxshare%2Fi%2F10055406%2F&rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90\n#猫 #猫グッズ #猫のいる暮らし #楽天購入品",
    "image": "",
    "video": "",
    "codes": []
   },
   {
-   "kind": "risers",
+   "kind": "event",
    "time": "13:30",
-   "due": "2026-11-11T04:46:07.000Z",
-   "text": "楽天 #PR\n今これ急に売れてる📈\n1️⃣ボイルずわいがに足 3kg（14位UP）\n2️⃣ホットカーペット 2畳 3畳 1畳 1.5畳 本体…（13位UP）\n3️⃣スリーパー 冬 キッズ 赤ちゃん 新生児 ベビー 綿…（13位UP）\n👇\nhttps://kurotento.github.io/sidejob/\n#ボイルずわいがに足 #ホットカーペット #スリーパー",
-   "image": "https://kurotento.github.io/sidejob/social/2026-11-11-00-risers.png",
-   "codes": [
-    "kouragumi:10000441",
-    "irisplaza-r:10148555",
-    "soyott-camp:10000468"
-   ]
+   "due": "2026-11-12T04:34:11.000Z",
+   "text": "楽天 #PR\nお買い物マラソン開催中！\n1ショップ1,000円以上の買い回りでポイント倍率が上がるやつ\n送料無料の1000円台、まとめてます\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#お買い物マラソン",
+   "image": "",
+   "codes": []
   },
   {
-   "kind": "single",
+   "kind": "risers",
    "time": "18:00",
-   "due": "2026-11-11T09:31:07.000Z",
-   "text": "楽天 #PR\nレビュー7,000件超えの定番\n\n簡易トイレ 非常用トイレセット 防災トイレ\n送料無料！（★4.5）\n災害による断水時に備えて持っておきたいのが、防災士が監修した簡易トイレセットだよ。\n👇\nhttps://kurotento.github.io/sidejob/item-hiromifashionhouse-10005004.html\n#簡易トイレ",
-   "image": "https://kurotento.github.io/sidejob/social/2026-11-11-01-single.jpg",
+   "due": "2026-11-12T08:45:45.000Z",
+   "text": "楽天 #PR\nランキング急上昇中のやつ\n1️⃣ムーニーマン パンツ 寝返りM… 7,497円（17位UP）\n2️⃣特大むきえび 1kg 2,999円（15位UP）\n3️⃣オルナオーガニック シャンプー…（14位UP）\n👇\nhttps://kurotento.github.io/sidejob/\n#ムーニーマン #特大むきえび #オルナオーガニック #お買い物マラソン #買い回り",
+   "image": "https://kurotento.github.io/sidejob/social/2026-11-12-01-risers.png",
    "codes": [
-    "hiromifashionhouse:10005004"
+    "netbaby:10037830",
+    "kouragumi:10000855",
+    "tsurunishi:10000666"
    ]
   },
   {
    "kind": "video",
-   "time": "11/11 20:30",
-   "due": "2026-11-11T11:30:18.000Z",
-   "text": "楽天 #PR\n🎬なんでこれが 売れてるの？【11/11】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ランキング #楽天市場 #売れてる #楽天購入品",
+   "time": "11/12 20:30",
+   "due": "2026-11-12T11:08:32.000Z",
+   "text": "楽天 #PR\n🎬猫グッズ 人気TOP3【11/12】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#猫 #猫グッズ #猫のいる暮らし #楽天購入品",
    "image": "",
-   "video": "https://kurotento.github.io/sidejob/shorts/2026-11-11-nazo.mp4",
+   "video": "https://kurotento.github.io/sidejob/shorts/2026-11-12-neko.mp4",
    "codes": []
   },
   {
    "kind": "alert",
-   "time": "11/11 21:00",
-   "due": "2026-11-11T12:13:30.000Z",
-   "text": "楽天 #PR\n楽天ROOMを更新したよ✨\n今日ランキングに入っていたものを追加しました\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
+   "time": "11/12 21:00",
+   "due": "2026-11-12T12:01:07.000Z",
+   "text": "楽天 #PR\n今日の売れ筋、楽天ROOMにもまとめたよ🛍\n1000円台・送料無料の買い回り候補はこちら\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
    "codes": []
