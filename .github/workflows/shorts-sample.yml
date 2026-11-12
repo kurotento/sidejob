@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "空欄=4つの型の見本 / themes=曜日ごとのテーマ7日分"
+        description: "空欄=4つの型の見本 / themes=曜日ごとのテーマ7日分 / xmas=クリスマスの枠"
         required: false
         default: ""
   push:
