@@ -50,6 +50,23 @@ if len(sys.argv) > 2 and sys.argv[2] == "themes":
         for v in made:
             (out / day / v["file"]).rename(out / f"{day}-{v['key']}.mp4")
             log.append("   " + v["desc"].split("\n")[0])
+elif len(sys.argv) > 2 and sys.argv[2] == "xmas":  # クリスマスの枠を、テーマごとに1本ずつ（冒頭の商品カット・タイトル込み）
+    for k, th in enumerate(shorts.XMAS):
+        day = (dt.date(2026, 11, 14) + dt.timedelta(days=k)).isoformat()
+        t = shorts.theme_topic(cfg, [], day, {}, th=th)
+        if not t:
+            log.append(f"{th['key']}: 商品が足りず作れない")
+            continue
+        log.append(f"{th['key']}（型: {design.video_pattern(day, cfg)['key']}）")
+        for it, note in t["items"]:
+            log.append(f"   {note}｜{it['price']:,}円｜{it['name'][:60]}")
+        orig = shorts.topics
+        shorts.topics = lambda *a, t=t: [t]
+        made = shorts.build(cfg, {}, [], [], day, out / day, log)
+        shorts.topics = orig
+        for v in made:
+            (out / day / v["file"]).rename(out / f"{v['key']}.mp4")
+            log.append("   タイトル: " + v["title"])
 else:
     day = sorted(p.name for p in (ROOT / "data" / "history").iterdir())[-1]
     budget = json.loads((ROOT / "data" / "history" / day / "budget.json").read_text(encoding="utf-8"))

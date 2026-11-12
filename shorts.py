@@ -588,6 +588,36 @@ def anim_title(theme, title, sub, dur, out, seed, mouth=(), text="", hook="3位�
     return [("whoosh", 0.0), ("pop", 0.25)]
 
 
+def anim_hook(t, dur, out):
+    """最初の1秒強：文字の表紙より先に、1位の商品の写真と値段を大きく出す（最初で飛ばされないように）."""
+    from PIL import ImageDraw
+    cd = t.get("order") == "countdown"  # 3位から明かす回（クイズ・VSなど）は答えを先に見せない
+    it = t["items"][-1 if cd else 0][0]
+    big = stripes_bg(t["theme"])
+    pic = fetch_image(it.get("image"))
+    accent = THEMES[t["theme"]][1]
+    hook = t.get("hook") or ("この中でどれが1番？" if cd else None) or ("寄付額いくらで届く？" if t["theme"] == "green" else "いちばん売れてるのはコレ")
+    out.mkdir(parents=True, exist_ok=True)
+    for f in range(int(dur * FPS)):
+        tt = f / FPS
+        img = bg_at(big, tt).convert("RGB")
+        d = ImageDraw.Draw(img)
+        d.rounded_rectangle([60, 330, W - 60, 1330], radius=50, fill=(255, 255, 255))
+        if pic:
+            box = 760 * (1.0 + 0.06 * tt / dur)  # ゆっくり寄る
+            sc = box / max(pic.width, pic.height)
+            p2 = pic.resize((int(pic.width * sc), int(pic.height * sc)))
+            cx, cy = W // 2, 720
+            img.paste(p2, (cx - p2.width // 2, cy - p2.height // 2))
+            d = ImageDraw.Draw(img)
+        d.text((W // 2, 200), hook, font=font(76), fill=(255, 255, 255), anchor="mm", stroke_width=8, stroke_fill=(60, 0, 10))
+        d.rounded_rectangle([W // 2 - 330, 1180, W // 2 + 330, 1310], radius=30, fill=accent)
+        d.text((W // 2, 1245), price_text(it), font=font(100), fill=(255, 255, 255), anchor="mm")
+        pr_badge(d)
+        img.save(out / f"f{f:04d}.jpg", quality=88)
+    return [("pop", 0.0)]
+
+
 def anim_item(theme, rank, it, price_label, note, text, dur, out, seed, mouth=(), label=None):
     from PIL import ImageDraw
     big = stripes_bg(theme)
@@ -933,6 +963,39 @@ THEMES_EXTRA = [  # 日曜に「よく見られたテーマ」が分からない
          words=["ルームシューズ あったか", "ネックウォーマー", "レッグウォーマー"], must=r"あったか|暖|ウォーマー|ボア|裏起毛|もこもこ|ルームシューズ",
          lead="冬のあったかグッズ｜レビューの多い人気どころ", tags="#あったかグッズ #冬支度 #寒さ対策 #楽天購入品 #PR"),
 ]
+# 季節の枠：クリスマス前は、毎日同じ型だった「1000円台 売れ筋TOP3」の枠をクリスマスの商品に替える（日替わりで順に）
+XMAS_SEASON = ("11-14", "12-24")
+XMAS = [
+    dict(key="xmas-coffret", kind="search", anywhere=True, tag="クリスマスコフレ", title="クリスマスコフレ\n人気TOP3", what="楽天でレビューが多いクリスマスコフレ",
+         words=["クリスマスコフレ", "ホリデーコフレ", "クリスマス コスメ セット"], must=r"コフレ|ホリデー.{0,6}(セット|キット|コレクション)",
+         ng=r"福袋|サンプル|空箱|ラッピング袋のみ|メンズ", lead="クリスマスコフレ 2026｜レビューの多い人気どころ",
+         tags="#クリスマスコフレ #ホリデーコフレ #コスメ #楽天購入品 #PR"),
+    dict(key="xmas-gift-her", kind="search", anywhere=True, tag="クリスマスプレゼント", title="女性へのクリスマス\nプレゼントTOP3", what="クリスマスプレゼントで人気の女性向けギフト",
+         words=["クリスマスプレゼント 女性", "クリスマス ギフト レディース", "クリスマスプレゼント 彼女"], must=r"クリスマス|ギフト|プレゼント",
+         ng=r"子供|キッズ|ベビー|メンズ|男性|食品|スイーツ|お菓子|花束", lead="クリスマスプレゼント 女性向け｜レビューの多い人気どころ",
+         tags="#クリスマスプレゼント #プレゼント #ギフト #楽天購入品 #PR"),
+    dict(key="xmas-gift-him", kind="search", anywhere=True, tag="クリスマスプレゼント", title="男性へのクリスマス\nプレゼントTOP3", what="クリスマスプレゼントで人気の男性向けギフト",
+         words=["クリスマスプレゼント 男性", "クリスマスプレゼント 彼氏", "クリスマス ギフト メンズ"], must=r"クリスマス|ギフト|プレゼント|メンズ",
+         ng=r"子供|キッズ|ベビー|レディース|女性|食品|スイーツ|お菓子|花束", lead="クリスマスプレゼント 男性向け｜レビューの多い人気どころ",
+         tags="#クリスマスプレゼント #彼氏へのプレゼント #ギフト #楽天購入品 #PR"),
+    dict(key="xmas-deco", kind="search", anywhere=True, tag="クリスマス", title="クリスマスの\n飾りつけTOP3", what="楽天でレビューが多いクリスマスの飾り",
+         words=["クリスマスツリー", "クリスマス 飾り", "クリスマス イルミネーション 室内"], must=r"クリスマス|ツリー|イルミネーション|リース", ng=r"花束|ブーケ|収納|バッグ|ケーキ|食品",
+         lead="クリスマスの飾りつけ｜レビューの多い人気どころ", tags="#クリスマス #クリスマスツリー #クリスマス飾り #楽天購入品 #PR"),
+    dict(key="xmas-kids", kind="search", ranking=566382, rank_name="おもちゃ", tag="クリスマスプレゼント",
+         title="子どもへのクリスマス\nおもちゃ人気TOP3", what="楽天のおもちゃランキングで、いま売れているおもちゃ",
+         words=[], must=r".", ng=r"トレカ|トレーディングカード|カードゲーム|BOX|ボックス|パック|拡張|福袋|景品|大量|縁日|アダルト|大人用",
+         lead="子どものクリスマスプレゼント｜楽天のおもちゃランキングから", tags="#クリスマスプレゼント #おもちゃ #子どものいる暮らし #楽天購入品 #PR"),
+]
+
+
+def xmas_theme(day):
+    """クリスマス前の日なら、その日のクリスマスの枠のテーマ（日替わり）。それ以外は None."""
+    md = day[5:]
+    if not (XMAS_SEASON[0] <= md <= XMAS_SEASON[1]):
+        return None
+    return XMAS[dt.date.fromisoformat(day).toordinal() % len(XMAS)]
+
+
 WEEKLY = [
     OSHI,                                   # 月：推し活（カウントダウン）
     dict(key="vs", kind="vs"),              # 火：VSバトル
@@ -1094,10 +1157,10 @@ def best_theme(d):
     return week_pick(d, THEMES_EXTRA)
 
 
-def theme_topic(cfg, fcats, day, results=None):
-    """その日の曜日のテーマの動画（作れないときは None）."""
+def theme_topic(cfg, fcats, day, results=None, th=None):
+    """その日の曜日のテーマの動画（作れないときは None）。th を渡すとそのテーマで作る（季節の枠）."""
     d = dt.date.fromisoformat(day)
-    th = WEEKLY[d.weekday()]
+    th = th or WEEKLY[d.weekday()]
     if th["kind"] == "best":
         th = best_theme(d)
     if th["kind"] == "pet":
@@ -1210,9 +1273,30 @@ def theme_topic(cfg, fcats, day, results=None):
     else:  # search：テーマの商品を3位から
         must, ng = re.compile(th["must"]), re.compile(th.get("ng") or "$^")
         pool, seen = [], set()
+        if th.get("ranking"):  # 楽天のジャンル別ランキング（売れている順）から選ぶ。レビュー数より「いま人気」を出せる
+            from build import fetch_ranking
+            for page in (1, 2):
+                try:
+                    for it in fetch_ranking(th["ranking"], base, page):
+                        if it["code"] not in seen and not ng.search(it["name"]) and it["code"] not in used and it["image"] and not excluded(it):
+                            seen.add(it["code"])
+                            pool.append(it)
+                except Exception:  # noqa: BLE001
+                    pass
+            picks = pick3(pool, base)
+            if len(picks) < 3:
+                return None
+            t = dict(key=th["key"], theme="red", title=th["title"], tag=th["tag"], label="楽天の価格",
+                     items=[(it, f"ランキング{it['rank']}位") for it in picks], what=th["what"],
+                     fact=lambda it: f"楽天の{th['rank_name']}ランキングで{it['rank']}位、{price_say(it)}",
+                     lead=th["lead"], tags=th["tags"])
+            t["is_theme"] = True
+            hist[day] = list(dict.fromkeys((json.loads(THEME_HISTORY.read_text(encoding="utf-8")).get(day, []) if THEME_HISTORY.exists() else []) + [it["code"] for it, _ in t["items"]]))
+            THEME_HISTORY.write_text(json.dumps(hist, ensure_ascii=False, indent=0), encoding="utf-8")
+            return t
         for w in th["words"]:
             for it in search_items(w, base):
-                if it["code"] not in seen and must.search(head_of(it)) and not ng.search(it["name"]) and fresh(it):
+                if it["code"] not in seen and must.search(it["name"] if th.get("anywhere") else head_of(it)) and not ng.search(it["name"]) and fresh(it):
                     seen.add(it["code"])
                     pool.append(it)
         pool.sort(key=lambda x: -x["reviews"])
@@ -1226,7 +1310,8 @@ def theme_topic(cfg, fcats, day, results=None):
         if th.get("replay"):
             t["intro"] = f"今週いちばん見られたテーマを、もう一度。{th['what']}を、別の3つで紹介します。"
     t["is_theme"] = True  # X・Threads もこの日のテーマの商品で投稿する（made の theme_items）
-    hist[day] = [it["code"] for it, _ in t["items"]]
+    full = json.loads(THEME_HISTORY.read_text(encoding="utf-8")) if THEME_HISTORY.exists() else {}
+    hist[day] = list(dict.fromkeys((full.get(day, []) if t["key"].startswith("xmas") else []) + [it["code"] for it, _ in t["items"]]))
     THEME_HISTORY.write_text(json.dumps(hist, ensure_ascii=False, indent=0), encoding="utf-8")
     return t
 
@@ -1238,7 +1323,11 @@ def topics(cfg, results, budget, fcats, day):
     t = theme_topic(cfg, fcats, day, results)  # 曜日ごとのテーマ（推し活・猫・ふるさと納税クイズなど）
     if t:
         out.append(t)
-    picks = pick3(budget or [], base, lambda f: 1000 <= f["price"] < 2000)  # 最新の値段でも1000円台のものだけ
+    xt = xmas_theme(day)
+    xv = theme_topic(cfg, fcats, day, results, th=xt) if xt else None  # クリスマス前は1000円台の枠の代わりに
+    if xv:
+        out.append(xv)
+    picks = pick3(budget or [], base, lambda f: 1000 <= f["price"] < 2000) if not xv else []  # 最新の値段でも1000円台のものだけ
     if len(picks) == 3:
         out.append(dict(key="budget", theme="red", title="1000円台・送料無料\n売れ筋TOP3", tag="1000円台", label="",
                         items=[(it, "送料無料") for it in picks],
@@ -1259,6 +1348,8 @@ def topics(cfg, results, budget, fcats, day):
 def video_title(t, m, d):
     """タイトルにもハッシュタグを入れる（検索・おすすめで見つけてもらうため。100文字以内）."""
     base = f"{t['title'].replace(chr(10), ' ')}【{m}/{d}】"
+    if t.get("order") != "countdown" and not t.get("say"):  # ランキングの回は、毎日同じ題にならないよう1位の商品名を頭に
+        base = f"1位は{price_text(t['items'][0][0])}｜{base}"  # 毎日同じ題にならないよう、1位の値段を頭に（商品名は宣伝文が混ざるので使わない）
     tags = ["#Shorts", "#楽天"] + (["#ふるさと納税", "#楽天ふるさと納税"] if t["theme"] == "green"
                                    else ["#楽天市場", f"#{t['tag']}"])
     out = base
@@ -1325,6 +1416,10 @@ def build(cfg, results, budget, fcats, day, out_dir, log):
                 end_text = (t["end"] + " " if t.get("end") else "") + ROOM_CTA.get(PAT["key"], ROOM_CTA[""])
                 line1 = "楽天ランキング速報" if t["theme"] == "red" else "ふるさと納税 人気返礼品ランキング"
                 slides = []
+                hw = work / "h.wav"  # 最初の1.3秒は声なし（BGMと効果音だけ）で商品を見せる
+                subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "lavfi", "-i", "anullsrc=r=44100:cl=mono",
+                                "-t", "1.3", str(hw)], check=True)
+                slides.append((work / "fh", hw, 1.3, anim_hook(t, 1.3, work / "fh")))
                 a = work / "s0.wav"
                 sec = synth(intro, spk, a) + 0.4
                 if PAT["video"] == "pop":
