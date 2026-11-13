@@ -1,5 +1,5 @@
 {
-"day": "2026-11-12",
+"day": "2026-11-13",
 "words": [
 [
 "加湿器",
@@ -19,7 +19,7 @@
 {
 "name": "ハイブリッド加湿器 5L 大容量",
 "price": 6780,
-"reviews": 11544,
+"reviews": 11568,
 "rating": 4.29,
 "url": "https://item.rakuten.co.jp/liberesta/aqua-m1/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -31,7 +31,7 @@
 {
 "name": "加湿器 卓上 超音波 350ml 大容量",
 "price": 1880,
-"reviews": 9663,
+"reviews": 9683,
 "rating": 4.45,
 "url": "https://item.rakuten.co.jp/milicute-himawari/x06-1/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -135,7 +135,7 @@
 ]
 },
 {
-"name": "ULRUB ボディクリーム 120g",
+"name": "ULRUB ウルラブ ボディクリーム 120g",
 "price": 3980,
 "reviews": 324,
 "rating": 4.53,
@@ -166,7 +166,7 @@
 {
 "name": "れんげ化粧水 140cc",
 "price": 1200,
-"reviews": 9862,
+"reviews": 9865,
 "rating": 4.74,
 "url": "https://item.rakuten.co.jp/renngekesyousui/10000002/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -178,7 +178,7 @@
 {
 "name": "Anua 化粧水 ダーマライン 自然由来ライン",
 "price": 2950,
-"reviews": 3131,
+"reviews": 3132,
 "rating": 4.72,
 "url": "https://item.rakuten.co.jp/anuajapan/anua00023/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -190,7 +190,7 @@
 {
 "name": "プリュ うるおい シルクローション 化粧水",
 "price": 2030,
-"reviews": 2961,
+"reviews": 2962,
 "rating": 4.49,
 "url": "https://item.rakuten.co.jp/luire/plusls000/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -202,7 +202,7 @@
 {
 "name": "オルナオーガニック 化粧水 200ml",
 "price": 2300,
-"reviews": 1945,
+"reviews": 1946,
 "rating": 4.58,
 "url": "https://item.rakuten.co.jp/tsurunishi/905b01mtmmcmf/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -219,7 +219,7 @@
 {
 "name": "毛布 シングル ブランケット",
 "price": 1580,
-"reviews": 11494,
+"reviews": 11497,
 "rating": 4.59,
 "url": "https://item.rakuten.co.jp/dondon/mf-003/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -231,7 +231,7 @@
 {
 "name": "西川 毛布 シングル 140×200cm 二枚合わせ",
 "price": 3980,
-"reviews": 8609,
+"reviews": 8610,
 "rating": 4.57,
 "url": "https://item.rakuten.co.jp/futon/838309/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -255,7 +255,7 @@
 {
 "name": "NERUS ふわとろ毛布",
 "price": 2980,
-"reviews": 4392,
+"reviews": 4441,
 "rating": 4.73,
 "url": "https://item.rakuten.co.jp/t-interior/htc50/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -272,7 +272,7 @@
 {
 "name": "電気毛布 掛け敷き モコモコブランケット",
 "price": 12900,
-"reviews": 3812,
+"reviews": 3826,
 "rating": 4.56,
 "url": "https://item.rakuten.co.jp/hitidear/cozywave-g1/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -284,7 +284,7 @@
 {
 "name": "電気毛布 敷き 掛け",
 "price": 7760,
-"reviews": 3015,
+"reviews": 3052,
 "rating": 4.51,
 "url": "https://item.rakuten.co.jp/ennshopstore/bx88pj/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -294,9 +294,9 @@
 ]
 },
 {
-"name": "電気毛布 掛け敷き 洗える 電気ブランケット",
+"name": "電気毛布 洗濯ネット 190*130cm",
 "price": 9960,
-"reviews": 2535,
+"reviews": 2553,
 "rating": 4.63,
 "url": "https://item.rakuten.co.jp/itsube-souken/ppr-blanket/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -308,7 +308,7 @@
 {
 "name": "電気毛布 電気ひざ掛け 着る毛布 120x98cm",
 "price": 5980,
-"reviews": 2488,
+"reviews": 2490,
 "rating": 4.2,
 "url": "https://item.rakuten.co.jp/azusa/b1a13drtla/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -349,8 +349,8 @@
 {
 "name": "蓄熱式湯たんぽ 充電式 コードレス カバー付き",
 "price": 1980,
-"reviews": 832,
-"rating": 4.53,
+"reviews": 835,
+"rating": 4.52,
 "url": "https://item.rakuten.co.jp/creaswing/gds-311-0002/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
 "30から65度まで温度調整ができる充電式湯たんぽ",
@@ -378,7 +378,7 @@
 {
 "name": "セラミックヒーター 人感センサー",
 "price": 5999,
-"reviews": 14746,
+"reviews": 14748,
 "rating": 4.4,
 "url": "https://item.rakuten.co.jp/dondon/mdht-001/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -390,7 +390,7 @@
 {
 "name": "パネルヒーター 足元ヒーター リモコン付き",
 "price": 8980,
-"reviews": 6676,
+"reviews": 6697,
 "rating": 4.5,
 "url": "https://item.rakuten.co.jp/auc-risecreation/y0721/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -402,7 +402,7 @@
 {
 "name": "山善 セラミックファンヒーター 電気ストーブ",
 "price": 6480,
-"reviews": 5859,
+"reviews": 5863,
 "rating": 4.32,
 "url": "https://item.rakuten.co.jp/e-kurashi/1484987/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [

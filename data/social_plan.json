@@ -1,5 +1,5 @@
 {
- "day": "2026-11-12",
+ "day": "2026-11-13",
  "sale": [
   "お買い物マラソン",
   "買い回り"
@@ -7,9 +7,9 @@
  "posts": [
   {
    "kind": "alert",
-   "time": "11/12 12:15",
-   "due": "2026-11-12T03:15:00.000Z",
-   "text": "楽天 #PR\n猫グッズ おすすめ\n\nキャットツリー 据え置き スリム 高さ 170cm 幅 55cm ハウス付き 猫…\n9,130円〜\n★4.3（レビュー3,625件）\n👇\nhttps://hb.afl.rakuten.co.jp/hgc/g00prbao.i7mecc66.g00prbao.i7med90f/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fmaxshare%2Fa04934%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fmaxshare%2Fi%2F10055406%2F&rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90\n#猫 #猫グッズ #猫のいる暮らし #楽天購入品",
+   "time": "11/13 12:15",
+   "due": "2026-11-13T02:52:08.000Z",
+   "text": "楽天 #PR\n寄付1万円で何kg届く？\n\nさがびより 精米 無洗米 定期便 佐賀県産米\n寄付額4,600円〜\n寄付1万円あたり、約10.9キロ。佐賀県上峰町の返礼品で\n👇\nhttps://hb.afl.rakuten.co.jp/hgc/g00swido.i7mec705.g00swido.i7med554/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ff413453-kamimine%2Fb-670-as%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Ff413453-kamimine%2Fi%2F10000940%2F&rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90\n#ふるさと納税 #ふるさと納税返礼品 #コスパ #楽天ふるさと納税",
    "image": "",
    "video": "",
    "codes": []
@@ -17,7 +17,7 @@
   {
    "kind": "event",
    "time": "13:30",
-   "due": "2026-11-12T04:34:11.000Z",
+   "due": "2026-11-13T05:00:52.000Z",
    "text": "楽天 #PR\nお買い物マラソン開催中！\n1ショップ1,000円以上の買い回りでポイント倍率が上がるやつ\n送料無料の1000円台、まとめてます\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#お買い物マラソン",
    "image": "",
    "codes": []
@@ -25,29 +25,29 @@
   {
    "kind": "risers",
    "time": "18:00",
-   "due": "2026-11-12T08:45:45.000Z",
-   "text": "楽天 #PR\nランキング急上昇中のやつ\n1️⃣ムーニーマン パンツ 寝返りM… 7,497円（17位UP）\n2️⃣特大むきえび 1kg 2,999円（15位UP）\n3️⃣オルナオーガニック シャンプー…（14位UP）\n👇\nhttps://kurotento.github.io/sidejob/\n#ムーニーマン #特大むきえび #オルナオーガニック #お買い物マラソン #買い回り",
-   "image": "https://kurotento.github.io/sidejob/social/2026-11-12-01-risers.png",
+   "due": "2026-11-13T08:22:49.000Z",
+   "text": "楽天 #PR\n昨日からぐんぐん順位が上がってる\n1️⃣電動鼻吸い器 シュポット… 13,585円（25位UP）\n2️⃣ロアザオイル 30ml…（22位UP）\n3️⃣トゥヴェール ナノエマル… 3,610円（15位UP）\n👇\nhttps://kurotento.github.io/sidejob/\n#電動鼻吸い器 #ロアザオイル #トゥヴェール #お買い物マラソン #買い回り",
+   "image": "https://kurotento.github.io/sidejob/social/2026-11-13-01-risers.png",
    "codes": [
-    "netbaby:10037830",
-    "kouragumi:10000855",
-    "tsurunishi:10000666"
+    "pigeon-shop:10002137",
+    "beautypark2017:10002719",
+    "tvert:10000064"
    ]
   },
   {
    "kind": "video",
-   "time": "11/12 20:30",
-   "due": "2026-11-12T11:08:32.000Z",
-   "text": "楽天 #PR\n🎬猫グッズ 人気TOP3【11/12】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#猫 #猫グッズ #猫のいる暮らし #楽天購入品",
+   "time": "11/13 20:30",
+   "due": "2026-11-13T11:42:03.000Z",
+   "text": "楽天 #PR\n🎬ふるさと納税クイズ 1万円で何kg届く？【11/13】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#ふるさと納税 #ふるさと納税返礼品 #コスパ #楽天ふるさと納税",
    "image": "",
-   "video": "https://kurotento.github.io/sidejob/shorts/2026-11-12-neko.mp4",
+   "video": "https://kurotento.github.io/sidejob/shorts/2026-11-13-furusato-qty.mp4",
    "codes": []
   },
   {
    "kind": "alert",
-   "time": "11/12 21:00",
-   "due": "2026-11-12T12:01:07.000Z",
-   "text": "楽天 #PR\n今日の売れ筋、楽天ROOMにもまとめたよ🛍\n1000円台・送料無料の買い回り候補はこちら\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
+   "time": "11/13 21:00",
+   "due": "2026-11-13T12:35:10.000Z",
+   "text": "楽天 #PR\n収納・日用品の人気どころを楽天ROOMに集めてます📦\n寝る前のお買い物チェックにどうぞ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
    "codes": []
