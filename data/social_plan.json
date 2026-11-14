@@ -1,53 +1,52 @@
 {
- "day": "2026-11-13",
- "sale": [
-  "お買い物マラソン",
-  "買い回り"
- ],
+ "day": "2026-11-14",
+ "sale": [],
  "posts": [
   {
    "kind": "alert",
-   "time": "11/13 12:15",
-   "due": "2026-11-13T02:52:08.000Z",
-   "text": "楽天 #PR\n寄付1万円で何kg届く？\n\nさがびより 精米 無洗米 定期便 佐賀県産米\n寄付額4,600円〜\n寄付1万円あたり、約10.9キロ。佐賀県上峰町の返礼品で\n👇\nhttps://hb.afl.rakuten.co.jp/hgc/g00swido.i7mec705.g00swido.i7med554/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ff413453-kamimine%2Fb-670-as%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Ff413453-kamimine%2Fi%2F10000940%2F&rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90\n#ふるさと納税 #ふるさと納税返礼品 #コスパ #楽天ふるさと納税",
+   "time": "11/14 12:15",
+   "due": "2026-11-14T03:00:23.000Z",
+   "text": "楽天 #PR\n買う前に見ておきたいポイント\n\n【チェック3】着る毛布 暖かい メンズ レディース かわいい ロング ルームウェア パジャマ…\n1,980円〜\n袖があって、手が動かしやすいもの\n👇\nhttps://hb.afl.rakuten.co.jp/hgc/g00pr3yo.i7mec198.g00pr3yo.i7mededf/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Frack-kan%2F7069688%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Frack-kan%2Fi%2F10092387%2F&rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90\n#着る毛布 #選び方 #買う前に #楽天購入品",
    "image": "",
    "video": "",
    "codes": []
   },
   {
-   "kind": "event",
+   "kind": "risers",
    "time": "13:30",
-   "due": "2026-11-13T05:00:52.000Z",
-   "text": "楽天 #PR\nお買い物マラソン開催中！\n1ショップ1,000円以上の買い回りでポイント倍率が上がるやつ\n送料無料の1000円台、まとめてます\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#お買い物マラソン",
-   "image": "",
-   "codes": []
+   "due": "2026-11-14T03:47:48.000Z",
+   "text": "楽天 #PR\n今これ急に売れてる📈\n1️⃣みかん 熊本県産 不選別 家庭用 規格外… 999円（22位UP）\n2️⃣BabySmile 電動鼻水吸引器 メル… 7,980円（22位UP）\n3️⃣プレミアム スプリングマットレス ポケッ…（14位UP）\n👇\nhttps://kurotento.github.io/sidejob/\n#みかん #電動鼻水吸引器 #スプリングマットレス",
+   "image": "https://kurotento.github.io/sidejob/social/2026-11-14-00-risers.png",
+   "codes": [
+    "kumamoto-food:10004089",
+    "seastar:10061658",
+    "itsube-souken:10000309"
+   ]
   },
   {
-   "kind": "risers",
+   "kind": "single",
    "time": "18:00",
-   "due": "2026-11-13T08:22:49.000Z",
-   "text": "楽天 #PR\n昨日からぐんぐん順位が上がってる\n1️⃣電動鼻吸い器 シュポット… 13,585円（25位UP）\n2️⃣ロアザオイル 30ml…（22位UP）\n3️⃣トゥヴェール ナノエマル… 3,610円（15位UP）\n👇\nhttps://kurotento.github.io/sidejob/\n#電動鼻吸い器 #ロアザオイル #トゥヴェール #お買い物マラソン #買い回り",
-   "image": "https://kurotento.github.io/sidejob/social/2026-11-13-01-risers.png",
+   "due": "2026-11-14T09:07:33.000Z",
+   "text": "楽天 #PR\nレビュー4,000件超えの定番\n\n裏起毛 ニット デニム フレアパンツ レギンスパンツ\n送料無料！（★4.2）\n穿くだけですっきりとしたシルエットが叶う、レディースのフレアパンツだよ。\n👇\nhttps://kurotento.github.io/sidejob/item-darkangel-10036320.html\n#フレアパンツ",
+   "image": "https://kurotento.github.io/sidejob/social/2026-11-14-01-single.jpg",
    "codes": [
-    "pigeon-shop:10002137",
-    "beautypark2017:10002719",
-    "tvert:10000064"
+    "darkangel:10036320"
    ]
   },
   {
    "kind": "video",
-   "time": "11/13 20:30",
-   "due": "2026-11-13T11:42:03.000Z",
-   "text": "楽天 #PR\n🎬ふるさと納税クイズ 1万円で何kg届く？【11/13】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#ふるさと納税 #ふるさと納税返礼品 #コスパ #楽天ふるさと納税",
+   "time": "11/14 20:30",
+   "due": "2026-11-14T11:22:27.000Z",
+   "text": "楽天 #PR\n🎬着る毛布を買う前に チェック3つ【11/14】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#着る毛布 #選び方 #買う前に #楽天購入品",
    "image": "",
-   "video": "https://kurotento.github.io/sidejob/shorts/2026-11-13-furusato-qty.mp4",
+   "video": "https://kurotento.github.io/sidejob/shorts/2026-11-14-check.mp4",
    "codes": []
   },
   {
    "kind": "alert",
-   "time": "11/13 21:00",
-   "due": "2026-11-13T12:35:10.000Z",
-   "text": "楽天 #PR\n収納・日用品の人気どころを楽天ROOMに集めてます📦\n寝る前のお買い物チェックにどうぞ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
+   "time": "11/14 21:00",
+   "due": "2026-11-14T12:08:58.000Z",
+   "text": "楽天 #PR\nふるさと納税の人気返礼品も楽天ROOMで一覧にしてるよ🎁\nレビューが多い定番を中心に\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
    "codes": []
