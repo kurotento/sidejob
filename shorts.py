@@ -1296,10 +1296,10 @@ def theme_topic(cfg, fcats, day, results=None, th=None):
             return t
         for w in th["words"]:
             for it in search_items(w, base):
-                if it["code"] not in seen and must.search(it["name"] if th.get("anywhere") else head_of(it)) and not ng.search(it["name"]) and fresh(it):
+                if it["code"] not in seen and must.search(it["name"] if th.get("anywhere") else head_of(it)) and not ng.search(it["name"]) and fresh(it)                         and (not th.get("fuku") or (fuku_ok(it) and re.search(th["about"], it["name"]) and not re.search(th.get("not_about") or "$^", it["name"]))):  # 福袋は、その枠のもの（服の枠にシャンプー等を入れない）
                     seen.add(it["code"])
                     pool.append(it)
-        pool.sort(key=lambda x: -x["reviews"])
+        pool.sort(key=fuku_key if th.get("fuku") else (lambda x: -x["reviews"]))
         picks = pick3(pool, base)
         if len(picks) < 3:
             return None
@@ -1427,12 +1427,66 @@ def furusato_one(cfg, fcats, day, kind):
     return t
 
 
+# 福袋の枠（2026-11-16〜）：11月はあげてけでない日の水・木・土・日、12/1〜1/3は毎日、曜日のテーマの枠に入れる（あげてけの日は、12月はあげてけを福袋版に）
+FUKU = [
+    dict(key="fuku-cosme", kind="search", anywhere=True, about=r"コスメ|化粧|スキンケア|美容|メイク|ファンデ|リップ|美容液|化粧水|シャンプー|トリートメント|ヘアケア|ボディ|香水", tag="福袋", title="コスメの福袋\n人気TOP3", what="楽天でレビューが多いコスメの福袋",
+         words=["福袋 2027 コスメ", "コスメ 福袋", "スキンケア 福袋"], must=r"福袋|ハッピーバッグ"),
+    dict(key="fuku-food", kind="search", anywhere=True, about=r"食品|グルメ|お菓子|菓子|スイーツ|チョコ|チーズ|乳製品|フリーズドライ|肉|カニ|蟹|海鮮|コーヒー|珈琲|紅茶|お茶|米|果物|フルーツ|おせち|ドリンク|酒|ラーメン|麺|食", tag="福袋", title="食べ物の福袋\n人気TOP3", what="楽天でレビューが多い食べ物の福袋",
+         words=["福袋 2027 食品", "グルメ 福袋", "お菓子 福袋"], must=r"福袋|ハッピーバッグ"),
+    dict(key="fuku-fashion", kind="search", anywhere=True, about=r"レディース|メンズ|服|アパレル|ジャケット|アウター|コート|ニット|パーカー|スウェット|ワンピース|トップス|パンツ|スカート|靴|スニーカー|バッグ|メガネ|眼鏡|帽子|マフラー", not_about=r"シャンプー|トリートメント|コスメ|化粧|スキンケア|美容", tag="福袋", title="服の福袋\n人気TOP3", what="楽天でレビューが多い服の福袋",
+         words=["福袋 2027 レディース", "福袋 2027 メンズ", "福袋 アパレル"], must=r"福袋|ハッピーバッグ"),
+    dict(key="fuku-zakka", kind="search", anywhere=True, about=r"雑貨|キッチン|インテリア|食器|鍋|フライパン|包丁|カトラリー|タオル|風水|置物|日用品|収納|文具|器", tag="福袋", title="雑貨の福袋\n人気TOP3", what="楽天でレビューが多い雑貨・キッチンの福袋",
+         words=["福袋 2027 雑貨", "福袋 キッチン", "福袋 インテリア"], must=r"福袋|ハッピーバッグ"),
+    dict(key="fuku-kids", kind="search", anywhere=True, about=r"キッズ|子供|子ども|こども|ベビー|おもちゃ|女の子|男の子|ジュニア|赤ちゃん", tag="福袋", title="子どもの福袋\n人気TOP3", what="楽天でレビューが多い子ども服・おもちゃの福袋",
+         words=["福袋 2027 キッズ", "福袋 子供服", "福袋 おもちゃ"], must=r"福袋|ハッピーバッグ"),
+]
+for _f in FUKU:
+    _f.update(fuku=True, ng=r"空袋|袋のみ|ショッパー|ラッピング|サンプル|アダルト|福袋(価格|特価|セール)|ふるさと納税|犬|猫|ペット|ドッグ|わんちゃん", lead=f"{_f['what'].replace('楽天でレビューが多い', '')} 2027｜レビューの多い人気どころ",
+              tags="#福袋 #福袋2027 #福袋予約 #楽天購入品 #PR")
+
+
+def fuku_ok(it):
+    """本物の福袋か。名前の後ろに「福袋」を並べただけのふつうの商品・「福袋価格」・去年までの福袋は外す."""
+    n = it["name"]
+    if (re.search(r"20(2[0-6])", n) and "2027" not in n) or re.search(r"ふるさと納税|福袋(価格|特価|セール)|犬|猫|ペット|ドッグ|スタイ|よだれ|ブラックフライデー|下着|ショーツ|ブラジャー", n):
+        return False
+    head = " ".join(name_words(n)[:2])  # 「スタイ セット 福袋」のように、3語目以降の福袋は数えない
+    return bool(re.search(r"福袋|ハッピーバッグ", head)
+                or re.search(r"福袋.{0,6}2027|2027.{0,12}福袋|【[^】]*(福袋[^】]*2027|2027[^】]*福袋)[^】]*】", n))  # 【福袋】だけの物（タオル・スタイのセット等）は2027の福袋のときだけ
+
+
+def fuku_key(it):
+    """2027年の福袋を先に、その中でレビューの多い順."""
+    return ("2027" not in it["name"], -it["reviews"])
+
+
+def fuku_season(day):
+    """'daily'（12/1〜1/3）・'some'（11月）・None."""
+    md = day[5:]
+    if md >= "12-01" or md <= "01-03":
+        return "daily" if (md >= "12-01" or md <= "01-03") and not ("01-04" <= md <= "11-15") else None
+    if "11-16" <= md <= "11-30":
+        return "some"
+    return None
+
+
+def fuku_theme(day):
+    """その日の福袋のテーマ（出さない日は None）."""
+    s = fuku_season(day)
+    d = dt.date.fromisoformat(day)
+    if s is None or (s == "some" and d.weekday() not in (2, 3, 5, 6)):  # 11月はあげてけでない日のうち水・木・土・日（週2本ほど）
+        return None
+    return FUKU[d.toordinal() % len(FUKU)]
+
+
 def topics(cfg, results, budget, fcats, day):
     """その日の動画のテーマ（最大 PER_DAY 本）。値段は作る直前に最新のものを確かめる."""
     base = cfg["base_url"]
     out = []
     import agete
     t = agete.topic(cfg, day) if agete.is_day(day) else None  # 1日おきに「神商品あげてけ」（前の日に準備した商品）
+    ft = fuku_theme(day) if not t else None
+    t = t or (theme_topic(cfg, fcats, day, results, th=ft) if ft else None)  # 福袋（11月は水・木・土・日、12月〜1/3は毎日）
     t = t or theme_topic(cfg, fcats, day, results)  # 曜日ごとのテーマ（推し活・猫・ふるさと納税クイズなど）
     if t:
         out.append(t)

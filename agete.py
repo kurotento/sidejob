@@ -35,8 +35,18 @@ def prepare(results, day, base_url):
     for p in sorted(DIR.glob("20*.json"))[-14:]:  # 2週間は同じ商品を出さない
         if not p.stem.endswith("reviews"):
             used |= {x["code"] for x in json.loads(p.read_text(encoding="utf-8")).get("items", [])}
+    fuku = False
+    try:
+        from shorts import fuku_ok, fuku_season, search_items
+        fuku = fuku_season(day) == "daily"  # 12/1〜1/3 は「買ってよかった福袋」版
+    except Exception:  # noqa: BLE001
+        pass
+    if fuku:
+        src = {"fuku": [it for w in ("福袋 2027", "福袋 2027 コスメ", "福袋 2027 食品", "福袋 2027 雑貨")
+                        for it in search_items(w, base_url, 1000, 20000) if fuku_ok(it)]}
+        results = src
     pool = [it for items in (results or {}).values() for it in items
-            if it.get("reviews", 0) >= 100 and (it.get("rating") or 0) >= 4.3 and 800 <= it.get("price", 0) <= 8000
+            if it.get("reviews", 0) >= (20 if fuku else 100) and (it.get("rating") or 0) >= 4.3 and 800 <= it.get("price", 0) <= (20000 if fuku else 8000)
             and it.get("image") and not excluded(it) and it["code"] not in used]
     pool.sort(key=lambda x: (-x["reviews"]))
     picks = []
@@ -48,7 +58,7 @@ def prepare(results, day, base_url):
             break
     if len(picks) < N:
         return None
-    data = {"day": day, "items": [{**it, "page": item_page(it)} for it in picks]}
+    data = {"day": day, "fuku": fuku, "items": [{**it, "page": item_page(it)} for it in picks]}
     path.write_text(json.dumps(data, ensure_ascii=False, indent=0), encoding="utf-8")
     return data
 
@@ -166,7 +176,7 @@ def title_frames(t, dur, out):
         s = 1.0 + 0.3 * max(0.0, 1 - tt / 0.2)
         d.text((W // 2, 760), "楽天で買ってよかった", font=font(int(88 * s)), fill=(255, 255, 255), anchor="mm",
                stroke_width=9, stroke_fill=(0, 0, 0))
-        d.text((W // 2, 920), "神商品あげてけ", font=font(int(130 * s)), fill=(255, 225, 60), anchor="mm",
+        d.text((W // 2, 920), "福袋あげてけ" if t.get("fuku") else "神商品あげてけ", font=font(int(130 * s)), fill=(255, 225, 60), anchor="mm",
                stroke_width=12, stroke_fill=(0, 0, 0))
         d.text((W // 2, 1080), "第6位から発表", font=font(64), fill=(255, 255, 255), anchor="mm", stroke_width=6, stroke_fill=(0, 0, 0))
         pr_badge(d)
@@ -195,7 +205,7 @@ def slides(t, spk, work, reading):
     from shorts import spoken_name, synth
     out = []
     a = work / "a0.wav"
-    sec = synth("楽天で買ってよかった、神商品あげてけ。第6位から発表します。", spk, a) + 0.3
+    sec = synth(f"楽天で買ってよかった、{'福袋' if t.get('fuku') else '神商品'}あげてけ。第6位から発表します。", spk, a) + 0.3
     out.append((work / "a0", a, sec, title_frames(t, sec, work / "a0")))
     for i, (it, label) in enumerate(t["items"]):
         rank = len(t["items"]) - i

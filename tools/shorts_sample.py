@@ -95,8 +95,8 @@ elif len(sys.argv) > 2 and sys.argv[2] == "furusato":  # ふるさと納税の4�
         for v in made:
             (out / day / v["file"]).rename(out / f"{v['key']}.mp4")
             log.append("   タイトル: " + v["title"])
-elif len(sys.argv) > 2 and sys.argv[2] == "xmas":  # クリスマスの枠を、テーマごとに1本ずつ（冒頭の商品カット・タイトル込み）
-    for k, th in enumerate(shorts.XMAS):
+elif len(sys.argv) > 2 and sys.argv[2] in ("xmas", "fuku"):  # クリスマス・福袋の枠を、テーマごとに1本ずつ
+    for k, th in enumerate(shorts.XMAS if sys.argv[2] == "xmas" else shorts.FUKU):
         day = (dt.date(2026, 11, 14) + dt.timedelta(days=k)).isoformat()
         t = shorts.theme_topic(cfg, [], day, {}, th=th)
         if not t:
