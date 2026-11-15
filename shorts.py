@@ -1311,8 +1311,119 @@ def theme_topic(cfg, fcats, day, results=None, th=None):
             t["intro"] = f"今週いちばん見られたテーマを、もう一度。{th['what']}を、別の3つで紹介します。"
     t["is_theme"] = True  # X・Threads もこの日のテーマの商品で投稿する（made の theme_items）
     full = json.loads(THEME_HISTORY.read_text(encoding="utf-8")) if THEME_HISTORY.exists() else {}
-    hist[day] = list(dict.fromkeys((full.get(day, []) if t["key"].startswith("xmas") else []) + [it["code"] for it, _ in t["items"]]))
+    hist[day] = list(dict.fromkeys(full.get(day, []) + [it["code"] for it, _ in t["items"]]))
     THEME_HISTORY.write_text(json.dumps(hist, ensure_ascii=False, indent=0), encoding="utf-8")
+    return t
+
+
+# ---------- ふるさと納税の枠（2026-11-16〜）：毎日同じ「人気TOP3」だと量産型に見られて広がらないので、問いかけのある型を日替わりに ----------
+FURU_KINDS = ["quiz", "deadline", "season"]  # tiers（寄付額で比べる）は同じ種類で量が増える3つがそろわないので外した
+FURU_SEASON = [("かに", "ふるさと納税 かに", r"かに|カニ|蟹"), ("いくら", "ふるさと納税 いくら", r"いくら|イクラ"),
+               ("年越しそば", "ふるさと納税 年越しそば", r"そば|蕎麦"), ("おせち", "ふるさと納税 おせち", r"おせち")]
+FURU_TIERS = [(3, "1万円前後", 5000, 12999), (2, "2万円前後", 15000, 24999), (1, "3万円以上", 27000, 60000)]
+
+
+def furu_search(word, base):
+    import os
+    if not os.environ.get("RAKUTEN_APP_ID"):
+        return []
+    import furusato
+    out = []
+    for p in (1, 2):
+        try:
+            out += furusato.search(word, base, page=p)
+        except Exception:  # noqa: BLE001
+            break
+        time.sleep(1.1)
+    return out
+
+
+def furusato_topic(cfg, fcats, day):
+    """ふるさと納税の枠（日替わりの型。その日の型が作れなければ次の型）。どれも作れないときは None."""
+    d = dt.date.fromisoformat(day)
+    k = d.toordinal() % len(FURU_KINDS)
+    for kind in FURU_KINDS[k:] + FURU_KINDS[:k]:
+        if kind == "quiz" and WEEKLY[d.weekday()]["kind"] == "quiz":  # 金曜は曜日のテーマがクイズなので重ねない
+            continue
+        t = furusato_one(cfg, fcats, day, kind)
+        if t:
+            return t
+    return None
+
+
+def furusato_one(cfg, fcats, day, kind):
+    d = dt.date.fromisoformat(day)
+    base = cfg["base_url"]
+    hist = json.loads(THEME_HISTORY.read_text(encoding="utf-8")) if THEME_HISTORY.exists() else {}
+    cutoff = (d - dt.timedelta(days=28)).isoformat()
+    used = {c for k, codes in hist.items() if cutoff <= k < day for c in codes}
+    ok = lambda it: it["code"] not in used and it.get("reviews", 0) >= 20 and it.get("image") and not excluded(it)  # noqa: E731
+    tags = "#ふるさと納税 #ふるさと納税返礼品 #楽天ふるさと納税 #PR"
+    t = None
+    if kind == "quiz":
+        t = theme_topic(cfg, fcats, day, th=dict(key="furusato-qty", kind="quiz"))
+        if t:
+            return t  # theme_topic が履歴も書く
+    elif kind == "deadline":
+        pool = [it for it in furu_search("ふるさと納税 年内発送", base) if ok(it) and re.search(r"年内", it["name"])]
+        picks = pick3(sorted(pool, key=lambda x: -x["reviews"]), base)
+        if len(picks) == 3:
+            t = dict(key="furusato-deadline", theme="green", title="ふるさと納税\n年内に届く返礼品", tag="ふるさと納税", label="寄付額",
+                     items=[(it, it["shop"]) for it in picks], what="年内に届くと書かれた、ふるさと納税の人気返礼品",
+                     intro="ふるさと納税、今年の分は12月31日まで。年内に届くと書かれた人気の返礼品を3つ紹介します。",
+                     fact=lambda it: f"{it['shop']}の返礼品で、寄付額は{price_say(it)}",
+                     end="申し込みは年末ほど混むので、早めがおすすめです。",
+                     lead="ふるさと納税 年内に届く返礼品｜12月31日まで", tags=tags)
+    elif kind == "tiers":
+        cats = [c for c in fcats or [] if c["slug"] in QTY_CATS]
+        cats = cats[d.toordinal() % len(cats):] + cats[:d.toordinal() % len(cats)] if cats else []
+        picks, c = None, None
+        for c in cats:  # 週ごとの順で、3つの金額帯がそろうジャンルを使う
+            pool = c["items"] + furu_search(f"ふるさと納税 {c['title']} 大容量", base)
+            picks = {}
+            for rank, _, lo, hi in FURU_TIERS:
+                head = {"meat": r"肉|牛|豚|鶏|ハンバーグ", "seafood": r"海鮮|魚|ホタテ|帆立|えび|エビ|かに|カニ|鮭|いくら|うなぎ",
+                        "rice": r"米|こめ|コメ", "fruit": r"みかん|りんご|ぶどう|シャイン|梨|桃|柿|いちご|メロン|フルーツ"}.get(c["slug"], ".")
+                cand = [it for it in pool if ok(it) and amount(it) and lo <= it["price"] <= hi
+                        and it["code"] not in {p["code"] for p in picks.values()}
+                        and not re.search(r"定期便|回お届け|ヶ月|か月|カ月|セット.*セット|と.{0,3}セット", it["name"])  # 定期便・別の物との詰め合わせは量を比べられない
+                        and re.search(head, " ".join(name_words(it["name"])[:3]))]
+                got = pick3(sorted(cand, key=lambda x: -x["reviews"]), base, lambda f, lo=lo, hi=hi: lo <= f["price"] <= hi and amount(f))[:1]
+                if not got:
+                    picks = None
+                    break
+                picks[rank] = got[0]
+            if picks and not (amount(picks[3]) < amount(picks[2]) < amount(picks[1])):  # 寄付額が上がるほど量が増える並びの時だけ使う
+                picks = None
+            if picks:
+                break
+        if c:
+            if picks:
+                kg = lambda it: f"{amount(it) / 1000:.1f}".rstrip("0").rstrip(".")  # noqa: E731
+                t = dict(key="furusato-tiers", theme="green", title=f"ふるさと納税 {c['title']}\n寄付額でどう変わる？", tag="ふるさと納税",
+                         label="寄付額", items=[(picks[r], f"約{kg(picks[r])}kg") for r, _, _, _ in sorted(FURU_TIERS)],
+                         labels={r: lab for r, lab, _, _ in FURU_TIERS}, order="countdown",
+                         what=f"ふるさと納税の{c['title']}を、寄付額1万円前後・2万円前後・3万円以上で比べたもの",
+                         intro=f"ふるさと納税の{c['title']}、寄付額が上がると何が変わる？1万円前後、2万円前後、3万円以上で比べます。",
+                         say={3: "まずは1万円前後、{name}。{fact}", 2: "2万円前後なら、{name}。{fact}", 1: "3万円以上だと、{name}。{fact}"},
+                         fact=lambda it: f"約{kg(it)}キロ届いて、寄付額は{price_say(it)}",
+                         end="あなたならどの金額にする？コメントで教えてね。",
+                         lead=f"ふるさと納税 {c['title']}｜寄付額で量はどう変わる？", tags=tags)
+    elif kind == "season":
+        name, word, must = week_pick(d, FURU_SEASON)
+        pool = [it for it in furu_search(word, base) if ok(it) and re.search(must, head_of(it))]
+        picks = pick3(sorted(pool, key=lambda x: -x["reviews"]), base)
+        if len(picks) == 3:
+            t = dict(key="furusato-season", theme="green", title=f"年末年始に\nふるさと納税の{name}", tag="ふるさと納税", label="寄付額",
+                     items=[(it, it["shop"]) for it in picks], what=f"年末年始に食べたい、ふるさと納税の{name}",
+                     intro=f"年末年始の{name}、ふるさと納税でもらうならどれ？レビューの多い3つを紹介します。",
+                     fact=lambda it: f"{it['shop']}の返礼品で、寄付額は{price_say(it)}",
+                     lead=f"ふるさと納税 {name}｜年末年始に人気の返礼品", tags=tags)
+    if not t:
+        return None
+    full = json.loads(THEME_HISTORY.read_text(encoding="utf-8")) if THEME_HISTORY.exists() else {}
+    full[day] = list(dict.fromkeys(full.get(day, []) + [it["code"] for it, _ in t["items"]]))
+    THEME_HISTORY.write_text(json.dumps(full, ensure_ascii=False, indent=0), encoding="utf-8")
     return t
 
 
@@ -1320,7 +1431,9 @@ def topics(cfg, results, budget, fcats, day):
     """その日の動画のテーマ（最大 PER_DAY 本）。値段は作る直前に最新のものを確かめる."""
     base = cfg["base_url"]
     out = []
-    t = theme_topic(cfg, fcats, day, results)  # 曜日ごとのテーマ（推し活・猫・ふるさと納税クイズなど）
+    import agete
+    t = agete.topic(cfg, day) if agete.is_day(day) else None  # 1日おきに「神商品あげてけ」（前の日に準備した商品）
+    t = t or theme_topic(cfg, fcats, day, results)  # 曜日ごとのテーマ（推し活・猫・ふるさと納税クイズなど）
     if t:
         out.append(t)
     xt = xmas_theme(day)
@@ -1333,7 +1446,10 @@ def topics(cfg, results, budget, fcats, day):
                         items=[(it, "送料無料") for it in picks],
                         what="楽天で今売れている、1000円台で送料無料の商品",
                         fact=lambda it: f"送料無料で{price_say(it)}"))
-    if fcats:
+    ft = furusato_topic(cfg, fcats, day) if fcats else None  # ふるさと納税は問いかけのある型を日替わりで（TOP3は作れないときだけ）
+    if ft:
+        out.append(ft)
+    elif fcats:
         k = dt.date.fromisoformat(day).toordinal() % len(fcats)
         c = fcats[k]
         fpicks = pick3(c["items"], base)
@@ -1402,55 +1518,63 @@ def build(cfg, results, budget, fcats, day, out_dir, log):
     for n, t in enumerate(topics(cfg, results, budget, fcats, day)):
         t["day"] = day
         try:
-            with tempfile.TemporaryDirectory() as tmp:
-                work = Path(tmp)
-                script = {**PAT["script"], "order": t.get("order", PAT["script"]["order"])}  # クイズは答えを最後に出すので3位から
-                intro, body, end_text = design.lines_for(
-                    script, t["what"], [(spoken_name(it, reading), t["fact"](it)) for it, _ in t["items"]])
-                intro = t.get("intro", intro)
-                if t.get("say"):  # VS・謎解き・選び方：順位ではない読み上げ（語尾だけ型のしゃべり方に合わせる）
-                    tail = {"pop": "なのだ。", "notebook": "だよ！"}.get(PAT["key"], "です。")
-                    body = [(r, t["say"][r].format(name=n, fact=t["fact"](t["items"][r - 1][0])) + tail)
-                            for r, n in ((r, spoken_name(t["items"][r - 1][0], reading)) for r, _ in body)]
-                # 最後は必ず「楽天ROOMで、らんくまと検索」（ショートは説明欄のリンクを押せないので、ROOM のアプリ内検索で来てもらう）
-                end_text = (t["end"] + " " if t.get("end") else "") + ROOM_CTA.get(PAT["key"], ROOM_CTA[""])
-                line1 = "楽天ランキング速報" if t["theme"] == "red" else "ふるさと納税 人気返礼品ランキング"
-                slides = []
-                hw = work / "h.wav"  # 最初の1.3秒は声なし（BGMと効果音だけ）で商品を見せる
-                subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "lavfi", "-i", "anullsrc=r=44100:cl=mono",
-                                "-t", "1.3", str(hw)], check=True)
-                slides.append((work / "fh", hw, 1.3, anim_hook(t, 1.3, work / "fh")))
-                a = work / "s0.wav"
-                sec = synth(intro, spk, a) + 0.4
-                if PAT["video"] == "pop":
-                    ev = anim_title(t["theme"], t["title"], f"{m}月{d}日時点", sec, work / "f0", seed=n,
-                                    mouth=mouth_curve(a, sec), text=intro)
-                else:
-                    ev = title_fn(t, t["items"], sec, work / "f0", intro)
-                slides.append((work / "f0", a, sec, ev))
-                revealed = {}
-                for pos, (rank, text) in enumerate(body):
-                    it, note = t["items"][rank - 1]
-                    a = work / f"s{rank}.wav"
-                    sec = synth(text, spk, a) + 0.4
+            if t.get("kind") == "agete":  # 「神商品あげてけ」型は作りが別（agete.py）
+                import agete
+                with tempfile.TemporaryDirectory() as tmp:
+                    work = Path(tmp)
+                    slides = agete.slides(t, spk, work, reading)
+                    name = f"shorts/{day}-{t['key']}.mp4"
+                    make_video_anim(slides, out_dir / name, work, seed=dt.date.fromisoformat(day).toordinal() + n)
+            else:
+                with tempfile.TemporaryDirectory() as tmp:
+                    work = Path(tmp)
+                    script = {**PAT["script"], "order": t.get("order", PAT["script"]["order"])}  # クイズは答えを最後に出すので3位から
+                    intro, body, end_text = design.lines_for(
+                        script, t["what"], [(spoken_name(it, reading), t["fact"](it)) for it, _ in t["items"]])
+                    intro = t.get("intro", intro)
+                    if t.get("say"):  # VS・謎解き・選び方：順位ではない読み上げ（語尾だけ型のしゃべり方に合わせる）
+                        tail = {"pop": "なのだ。", "notebook": "だよ！"}.get(PAT["key"], "です。")
+                        body = [(r, t["say"][r].format(name=n, fact=t["fact"](t["items"][r - 1][0])) + tail)
+                                for r, n in ((r, spoken_name(t["items"][r - 1][0], reading)) for r, _ in body)]
+                    # 最後は必ず「楽天ROOMで、らんくまと検索」（ショートは説明欄のリンクを押せないので、ROOM のアプリ内検索で来てもらう）
+                    end_text = (t["end"] + " " if t.get("end") else "") + ROOM_CTA.get(PAT["key"], ROOM_CTA[""])
+                    line1 = "楽天ランキング速報" if t["theme"] == "red" else "ふるさと納税 人気返礼品ランキング"
+                    slides = []
+                    hw = work / "h.wav"  # 最初の1.3秒は声なし（BGMと効果音だけ）で商品を見せる
+                    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "lavfi", "-i", "anullsrc=r=44100:cl=mono",
+                                    "-t", "1.3", str(hw)], check=True)
+                    slides.append((work / "fh", hw, 1.3, anim_hook(t, 1.3, work / "fh")))
+                    a = work / "s0.wav"
+                    sec = synth(intro, spk, a) + 0.4
                     if PAT["video"] == "pop":
-                        ev = anim_item(t["theme"], rank, it, t["label"], note, text, sec, work / f"f{rank}",
-                                       seed=n * 10 + rank, mouth=mouth_curve(a, sec), label=t.get("labels", {}).get(rank))
+                        ev = anim_title(t["theme"], t["title"], f"{m}月{d}日時点", sec, work / "f0", seed=n,
+                                        mouth=mouth_curve(a, sec), text=intro)
                     else:
-                        ev = item_fn(t, rank, pos, it, note, sec, work / f"f{rank}", text, dict(revealed))
-                        import reels
-                        revealed[rank] = reels.mini_name(it)
-                    slides.append((work / f"f{rank}", a, sec, ev))
-                a = work / "s9.wav"
-                sec = synth(end_text, spk, a) + 0.4
-                if PAT["video"] == "pop":
-                    ev = anim_end(t["theme"], line1, sec, work / "f9", mouth=mouth_curve(a, sec), text=end_text)
-                else:
-                    ev = end_fn(t, sec, work / "f9", end_text, line1, revealed)
-                slides.append((work / "f9", a, sec, ev))
-                # ファイル名はテーマごとに決める（同じ日に作り直しても、予約済みのタイトルと中身がずれないように）
-                name = f"shorts/{day}-{t['key']}.mp4"
-                make_video_anim(slides, out_dir / name, work, seed=dt.date.fromisoformat(day).toordinal() + n)
+                        ev = title_fn(t, t["items"], sec, work / "f0", intro)
+                    slides.append((work / "f0", a, sec, ev))
+                    revealed = {}
+                    for pos, (rank, text) in enumerate(body):
+                        it, note = t["items"][rank - 1]
+                        a = work / f"s{rank}.wav"
+                        sec = synth(text, spk, a) + 0.4
+                        if PAT["video"] == "pop":
+                            ev = anim_item(t["theme"], rank, it, t["label"], note, text, sec, work / f"f{rank}",
+                                           seed=n * 10 + rank, mouth=mouth_curve(a, sec), label=t.get("labels", {}).get(rank))
+                        else:
+                            ev = item_fn(t, rank, pos, it, note, sec, work / f"f{rank}", text, dict(revealed))
+                            import reels
+                            revealed[rank] = reels.mini_name(it)
+                        slides.append((work / f"f{rank}", a, sec, ev))
+                    a = work / "s9.wav"
+                    sec = synth(end_text, spk, a) + 0.4
+                    if PAT["video"] == "pop":
+                        ev = anim_end(t["theme"], line1, sec, work / "f9", mouth=mouth_curve(a, sec), text=end_text)
+                    else:
+                        ev = end_fn(t, sec, work / "f9", end_text, line1, revealed)
+                    slides.append((work / "f9", a, sec, ev))
+                    # ファイル名はテーマごとに決める（同じ日に作り直しても、予約済みのタイトルと中身がずれないように）
+                    name = f"shorts/{day}-{t['key']}.mp4"
+                    make_video_anim(slides, out_dir / name, work, seed=dt.date.fromisoformat(day).toordinal() + n)
             made.append({"file": name, "title": video_title(t, m, d), "desc": description(t, day, site), "theme": t["theme"], "key": t["key"],
                          "lead": t.get("lead"), "tags": t.get("tags"),  # Instagram の1行目とタグ（テーマの枠だけ）
                          # 曜日のテーマの商品（X・Threads の投稿にも使う）。見出し（安い・チェック1など）も添える

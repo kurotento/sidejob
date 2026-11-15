@@ -332,6 +332,12 @@ def main():
         try:  # YouTube ショート動画（YouTube へのアップロードは手動。X には Buffer 経由で投稿）
             import shorts
             slog = []
+            try:  # 明日の「神商品あげてけ」の商品を今日のランキングから選んでおく（Muse にレビューを読んでもらうため）
+                import agete
+                if agete.is_day(agete.tomorrow(day)):
+                    agete.prepare(results, agete.tomorrow(day), cfg["base_url"])
+            except Exception as ex:  # noqa: BLE001
+                print(f"[agete] 準備に失敗: {ex}", file=sys.stderr)
             videos = shorts.build(cfg, results, budget, cats, day, OUT_DIR, slog)
             for line in slog:
                 print(line)

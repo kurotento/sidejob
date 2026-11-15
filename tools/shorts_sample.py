@@ -50,6 +50,51 @@ if len(sys.argv) > 2 and sys.argv[2] == "themes":
         for v in made:
             (out / day / v["file"]).rename(out / f"{day}-{v['key']}.mp4")
             log.append("   " + v["desc"].split("\n")[0])
+elif len(sys.argv) > 2 and sys.argv[2] == "agete":  # 「神商品あげてけ」型を1本（直近のランキングから。レビューの吹き出しは届いていれば）
+    import build
+    import agete
+    last = sorted(p.name for p in (ROOT / "data" / "history").iterdir())[-1]
+    results = {}
+    for g in cfg["genres"]:
+        f = ROOT / "data" / "history" / last / f"{g['slug']}.json"
+        if f.exists():
+            results[g["slug"]] = json.loads(f.read_text(encoding="utf-8"))
+    day = "2026-11-18"
+    agete.prepare(results, day, cfg["base_url"])
+    t = agete.topic(cfg, day)
+    if not t:
+        log.append("agete: 商品が足りず作れない")
+    else:
+        for it, note in t["items"]:
+            log.append(f"   {note}｜{it['price']:,}円｜{it['name'][:60]}｜{' / '.join(t['bubbles'][it['code']])}")
+        orig = shorts.topics
+        shorts.topics = lambda *a, t=t: [t]
+        made = shorts.build(cfg, results, [], [], day, out / day, log)
+        shorts.topics = orig
+        for v in made:
+            (out / day / v["file"]).rename(out / f"{v['key']}.mp4")
+            log.append("   タイトル: " + v["title"])
+elif len(sys.argv) > 2 and sys.argv[2] == "furusato":  # ふるさと納税の4つの型を1本ずつ
+    import furusato
+    fcats = furusato.fetch_all(cfg)
+    for k, kind in enumerate(shorts.FURU_KINDS):
+        day = next((dt.date(2026, 11, 17) + dt.timedelta(days=j)).isoformat() for j in range(8)
+                   if shorts.FURU_KINDS[(dt.date(2026, 11, 17) + dt.timedelta(days=j)).toordinal() % len(shorts.FURU_KINDS)] == kind
+                   and (dt.date(2026, 11, 17) + dt.timedelta(days=j)).weekday() != 4)
+        t = shorts.furusato_topic(cfg, fcats, day)
+        if not t:
+            log.append(f"{kind}: 商品が足りず作れない")
+            continue
+        log.append(f"{kind} {t['key']}（型: {design.video_pattern(day, cfg)['key']}）")
+        for it, note in t["items"]:
+            log.append(f"   {note}｜{it['price']:,}円｜{it['name'][:60]}")
+        orig = shorts.topics
+        shorts.topics = lambda *a, t=t: [t]
+        made = shorts.build(cfg, {}, [], fcats, day, out / day, log)
+        shorts.topics = orig
+        for v in made:
+            (out / day / v["file"]).rename(out / f"{v['key']}.mp4")
+            log.append("   タイトル: " + v["title"])
 elif len(sys.argv) > 2 and sys.argv[2] == "xmas":  # クリスマスの枠を、テーマごとに1本ずつ（冒頭の商品カット・タイトル込み）
     for k, th in enumerate(shorts.XMAS):
         day = (dt.date(2026, 11, 14) + dt.timedelta(days=k)).isoformat()
