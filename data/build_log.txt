@@ -1,45 +1,44 @@
-2026-11-15 model=gemini-3.5-flash-lite 新規7件 / 対象8件
-book:22104406: ルール違反または不完全な出力のため不採用
-
-2026-11-15 model=gemini-3.5-flash-lite 新規15件 / 対象17件
-kumamoto-food:10004307: ルール違反または不完全な出力のため不採用
-gracevally:10000008: ルール違反または不完全な出力のため不採用
-2026-11-15 model=gemini-3.5-flash-lite 新規0件 / 対象1件
+2026-11-16 model=gemini-3.5-flash-lite 新規7件 / 対象9件
+darkangel:10036221: ルール違反または不完全な出力のため不採用
+darkangel:10036975: ルール違反または不完全な出力のため不採用
+2026-11-16 model=gemini-3.5-flash-lite 新規2件 / 対象2件
+2026-11-16 model=gemini-3.5-flash-lite 新規9件 / 対象9件
+2026-11-16 model=gemini-3.5-flash-lite 新規0件 / 対象1件
 gracevally:10000008: ルール違反または不完全な出力のため不採用
 [food] 30件
 [beauty] 30件
 [appliances] 30件
 [interior] 30件
-[daily] 30件
+[daily] 29件
 [baby] 30件
-[budget] 総合597件中 52件が条件に一致
+[budget] 総合598件中 59件が条件に一致
 [gemini] キーの確認: OK（gemini-3.5-flash-lite）
-[names] 短い名前 新規73件 / 対象75件
+[names] 短い名前 新規74件 / 対象80件
 [furusato:meat] 30件
 [furusato:seafood] 30件
 [furusato:rice] 30件
 [furusato:fruit] 30件
 [furusato:sweets] 30件
 [furusato:daily] 30件
-[names] 短い名前 新規1件 / 対象1件
+[names] 短い名前 新規7件 / 対象7件
 [furusato] 69ページ
 [story] 素材 3件
 生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
-[shorts] 作り：まとめ（黒帯タイトルと順位一覧／画像は速報風）／声：No.7
-[shorts] shorts/2026-11-15-oshikatsu.mp4 37秒 推し活グッズ
+[shorts] 作り：ポップ（らんくまのランキング）／声：ずんだもん
+[shorts] shorts/2026-11-16-oshikatsu.mp4 36秒 推し活グッズ
 人気TOP3
-[shorts] shorts/2026-11-15-xmas-coffret.mp4 37秒 クリスマスコフレ
-人気TOP3
-[shorts] shorts/2026-11-15-furusato-fruit.mp4 39秒 ふるさと納税
-フルーツの人気TOP3
+[shorts] shorts/2026-11-16-xmas-gift-her.mp4 44秒 女性へのクリスマス
+プレゼントTOP3
+[shorts] shorts/2026-11-16-furusato-deadline.mp4 47秒 ふるさと納税
+年内に届く返礼品
 [shorts] 動画 3本
-[room] 説明を取って紹介文を作成: 16/26件
-[room] 今日の動画の商品 3件・1000円台 1件・ほかのジャンル 13件・ふるさと納税 0件
+[room] 説明を取って紹介文を作成: 10/29件
+[room] 今日の動画の商品 3件・1000円台 5件・ほかのジャンル 7件・ふるさと納税 2件
 [room] 投稿リスト 17件
 [threads] 投稿 6本
 [pinterest] RSS に 3件追加
 [sns] Instagram 予約表に 4件追加
 [sns] Threads・Instagram 計画 7件
-[names] 短い名前 新規18件 / 対象23件
+[names] 短い名前 新規9件 / 対象10件
 [replies] 質問 43件
 [report] テーマ 9件
