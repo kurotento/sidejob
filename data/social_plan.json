@@ -1,52 +1,33 @@
 {
- "day": "2026-11-16",
+ "day": "2026-11-17",
  "sale": [],
  "posts": [
   {
-   "kind": "alert",
-   "time": "11/16 12:15",
-   "due": "2026-11-16T03:03:48.000Z",
-   "text": "楽天 #PR\n推し活グッズ おすすめ\n\n推し活グッズ オリジナル お守り\n1,200円\n★4.9（レビュー560件）\n👇\nhttps://hb.afl.rakuten.co.jp/hgc/g00so45o.i7mec33c.g00so45o.i7med87e/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ftiarise%2Fomamori-st%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Ftiarise%2Fi%2F10000431%2F&rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90\n#推し活 #推し活グッズ #痛バ #楽天購入品",
-   "image": "",
-   "video": "",
-   "codes": []
-  },
-  {
    "kind": "risers",
-   "time": "13:30",
-   "due": "2026-11-16T04:08:30.000Z",
-   "text": "楽天 #PR\n昨日からぐんぐん順位が上がってる\n1️⃣アタック 抗菌EX 洗濯洗剤 詰替… 6,171円（22位UP）\n2️⃣簡易トイレ 非常用トイレセット 防災…（18位UP）\n3️⃣業務用マルチクリーナー 500ml 1,690円（14位UP）\n👇\nhttps://kurotento.github.io/sidejob/\n#アタック #簡易トイレ #業務用マルチクリーナー",
-   "image": "https://kurotento.github.io/sidejob/social/2026-11-16-00-risers.png",
-   "codes": [
-    "rakuten24:11128644",
-    "hiromifashionhouse:10005004",
-    "orbtech:10000027"
-   ]
-  },
-  {
-   "kind": "single",
    "time": "18:00",
-   "due": "2026-11-16T08:18:16.000Z",
-   "text": "楽天 #PR\nは！昨日より9円値下がりしてる！\n\n裏起毛レギンス レディース もこもこ リブレギンス\n1,590円、送料無料！（★4.3）\nこれは、毛布をはいているかのような極厚の裏起毛が特徴的なリブレギンスだよ。\n👇\nhttps://kurotento.github.io/sidejob/item-darkangel-10036257.html\n#リブレギンス",
-   "image": "https://kurotento.github.io/sidejob/social/2026-11-16-01-single.jpg",
+   "due": "2026-11-17T08:57:44.000Z",
+   "text": "楽天 #PR\n今これ急に売れてる📈\n1️⃣Yunth 生ビタミンC 美白美容液 1ml×28包（23位UP）\n2️⃣猫犬 うんち処理袋 ペット用 処理袋 1,880円（22位UP）\n3️⃣N organic Vie 福袋2027 9点セット… 15,400円（17位UP）\n👇\nhttps://kurotento.github.io/sidejob/\n#美白美容液 #猫犬 #福袋",
+   "image": "https://kurotento.github.io/sidejob/social/2026-11-17-00-risers.png",
    "codes": [
-    "darkangel:10036257"
+    "yunth:10000000",
+    "hanakosshop:10004528",
+    "norganic:10000140"
    ]
   },
   {
    "kind": "video",
-   "time": "11/16 20:30",
-   "due": "2026-11-16T11:44:46.000Z",
-   "text": "楽天 #PR\n🎬1位は1,200円｜推し活グッズ 人気TOP3【11/16】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#推し活 #推し活グッズ #痛バ #楽天購入品",
+   "time": "11/17 20:30",
+   "due": "2026-11-17T10:47:15.000Z",
+   "text": "楽天 #PR\n🎬掃除機 安い vs 高い【11/17】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#掃除機 #比較 #買い物 #楽天購入品",
    "image": "",
-   "video": "https://kurotento.github.io/sidejob/shorts/2026-11-16-oshikatsu.mp4",
+   "video": "https://kurotento.github.io/sidejob/shorts/2026-11-17-vs.mp4",
    "codes": []
   },
   {
    "kind": "alert",
-   "time": "11/16 21:00",
-   "due": "2026-11-16T12:28:53.000Z",
-   "text": "楽天 #PR\n今日の売れ筋、楽天ROOMにもまとめたよ🛍\n1000円台・送料無料の買い回り候補はこちら\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
+   "time": "11/17 21:00",
+   "due": "2026-11-17T11:41:16.000Z",
+   "text": "楽天 #PR\n収納・日用品の人気どころを楽天ROOMに集めてます📦\n寝る前のお買い物チェックにどうぞ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
    "codes": []
