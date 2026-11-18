@@ -1,97 +1,43 @@
-2026-11-17 model=gemini-3.5-flash-lite 新規2件 / 対象4件
-darkangel:10036275: HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
+2026-11-18 model=gemini-3.5-flash-lite 新規5件 / 対象6件
+reemo:10000006: ルール違反または不完全な出力のため不採用
 
-darkangel:10036975: HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-
-2026-11-17 model=gemini-3.5-flash-lite 新規6件 / 対象9件
-darkangel:10036275: HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-misaki-kajuen:10000293: HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-hoshinoweb:10002849: HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-2026-11-17 model=gemini-3.5-flash-lite 新規0件 / 対象1件
-gracevally:10000008: HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
+2026-11-18 model=gemini-3.5-flash-lite 新規13件 / 対象13件
+2026-11-18 model=gemini-3.5-flash-lite 新規0件 / 対象1件
+gracevally:10000008: ルール違反または不完全な出力のため不採用
 [food] 30件
-[beauty] 30件
-[appliances] 28件
+[beauty] 29件
+[appliances] 30件
 [interior] 30件
-[daily] 29件
-[baby] 30件
-[budget] 総合596件中 63件が条件に一致
+[daily] 30件
+[baby] 29件
+[budget] 総合598件中 72件が条件に一致
 [gemini] キーの確認: OK（gemini-3.5-flash-lite）
-[names] gemini-3.5-flash-lite 失敗: HTTP Error 503: Service Unavailable
-[names] gemini-3.8-flash 失敗: The read operation timed out
-[names] gemini-3.5-flash-lite 失敗: HTTP Error 503: Service Unavailable
-[names] gemini-3.8-flash 失敗: HTTP Error 503: Service Unavailable
-[names] 短い名前 新規0件 / 対象54件
+[names] 短い名前 新規65件 / 対象68件
 [furusato:meat] 30件
 [furusato:seafood] 30件
 [furusato:rice] 30件
 [furusato:fruit] 30件
 [furusato:sweets] 30件
 [furusato:daily] 30件
-[names] gemini-3.5-flash-lite 失敗: HTTP Error 503: Service Unavailable
-[names] gemini-3.8-flash 失敗: HTTP Error 503: Service Unavailable
-[names] 短い名前 新規0件 / 対象16件
+[names] 短い名前 新規23件 / 対象24件
 [furusato] 69ページ
 [story] 素材 3件
 生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
-[shorts] 作り：マガジン（写真と明朝体の特集ページ）／声：冥鳴ひまり
-[shorts] shorts/2026-11-17-vs.mp4 46秒 掃除機
-安い vs 高い
-[shorts] shorts/2026-11-17-xmas-gift-him.mp4 39秒 男性へのクリスマス
-プレゼントTOP3
-[shorts] shorts/2026-11-17-furusato-season.mp4 41秒 年末年始に
-ふるさと納税のおせち
+[shorts] 作り：イラスト（集中線といらすとや／画像は手書きメモ風）／声：春日部つむぎ
+[shorts] shorts/2026-11-18-agete.mp4 38秒 楽天で買ってよかった
+神商品あげてけ
+[shorts] shorts/2026-11-18-xmas-deco.mp4 34秒 クリスマスの
+飾りつけTOP3
+[shorts] shorts/2026-11-18-furusato-qty.mp4 46秒 ふるさと納税クイズ
+1万円で何kg届く？
 [shorts] 動画 3本
-[room] 説明を取って紹介文を作成: 6/29件
-[room] 今日の動画の商品 3件・1000円台 2件・ほかのジャンル 3件・ふるさと納税 0件
-[room] 投稿リスト 8件
-[threads] 投稿 4本
+[room] 説明を取って紹介文を作成: 14/25件
+[room] 今日の動画の商品 3件・1000円台 3件・ほかのジャンル 10件・ふるさと納税 0件
+[room] 投稿リスト 16件
+[threads] 投稿 6本
 [pinterest] RSS に 3件追加
 [sns] Instagram 予約表に 4件追加
 [sns] Threads・Instagram 計画 6件
-[names] gemini-3.5-flash-lite 失敗: HTTP Error 503: Service Unavailable
-[names] gemini-3.8-flash 失敗: HTTP Error 503: Service Unavailable
-[names] 短い名前 新規0件 / 対象19件
+[names] 短い名前 新規32件 / 対象37件
 [replies] 質問 43件
 [report] テーマ 9件

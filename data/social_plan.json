@@ -1,33 +1,41 @@
 {
- "day": "2026-11-17",
+ "day": "2026-11-18",
  "sale": [],
  "posts": [
   {
+   "kind": "event",
+   "time": "13:30",
+   "due": "2026-11-18T04:10:16.000Z",
+   "text": "楽天 #PR\n今日は楽天のご愛顧感謝デー！\n会員ランクによってポイントが変わる日だよ\n（条件は楽天の公式ページで確認してね）\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html",
+   "image": "",
+   "codes": []
+  },
+  {
    "kind": "risers",
    "time": "18:00",
-   "due": "2026-11-17T08:57:44.000Z",
-   "text": "楽天 #PR\n今これ急に売れてる📈\n1️⃣Yunth 生ビタミンC 美白美容液 1ml×28包（23位UP）\n2️⃣猫犬 うんち処理袋 ペット用 処理袋 1,880円（22位UP）\n3️⃣N organic Vie 福袋2027 9点セット… 15,400円（17位UP）\n👇\nhttps://kurotento.github.io/sidejob/\n#美白美容液 #猫犬 #福袋",
-   "image": "https://kurotento.github.io/sidejob/social/2026-11-17-00-risers.png",
+   "due": "2026-11-18T08:41:59.000Z",
+   "text": "楽天 #PR\nランキング急上昇中のやつ\n1️⃣水切りワイパー スクイージー ガラスワイパー（26位UP）\n2️⃣天板 山善 YAMAZEN チェスト用 収納ケース用…（22位UP）\n3️⃣ハグモッチ 抱き枕 枕（21位UP）\n👇\nhttps://kurotento.github.io/sidejob/\n#水切りワイパー #天板 #ハグモッチ",
+   "image": "https://kurotento.github.io/sidejob/social/2026-11-18-01-risers.png",
    "codes": [
-    "yunth:10000000",
-    "hanakosshop:10004528",
-    "norganic:10000140"
+    "angelingg:10001028",
+    "e-kurashi:10048739",
+    "luckyspread:10000001"
    ]
   },
   {
    "kind": "video",
-   "time": "11/17 20:30",
-   "due": "2026-11-17T10:47:15.000Z",
-   "text": "楽天 #PR\n🎬掃除機 安い vs 高い【11/17】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#掃除機 #比較 #買い物 #楽天購入品",
+   "time": "11/18 20:30",
+   "due": "2026-11-18T10:54:14.000Z",
+   "text": "楽天 #PR\n🎬楽天で買ってよかった 神商品あげてけ【11/18】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
-   "video": "https://kurotento.github.io/sidejob/shorts/2026-11-17-vs.mp4",
+   "video": "https://kurotento.github.io/sidejob/shorts/2026-11-18-agete.mp4",
    "codes": []
   },
   {
    "kind": "alert",
-   "time": "11/17 21:00",
-   "due": "2026-11-17T11:41:16.000Z",
-   "text": "楽天 #PR\n収納・日用品の人気どころを楽天ROOMに集めてます📦\n寝る前のお買い物チェックにどうぞ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
+   "time": "11/18 21:00",
+   "due": "2026-11-18T11:35:15.000Z",
+   "text": "楽天 #PR\nふるさと納税の人気返礼品も楽天ROOMで一覧にしてるよ🎁\nレビューが多い定番を中心に\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
    "codes": []
