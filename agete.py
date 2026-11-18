@@ -15,6 +15,8 @@ from pathlib import Path
 
 DIR = Path(__file__).resolve().parent / "data" / "agete"
 N = 6  # 第6位から第1位まで
+CAND = 9  # Muse に口コミを頼む候補の数。口コミが取れた商品だけ動画に出す（11/18 黒さま「口コミがない商品は除外」）
+MIN_ITEMS = 5  # 口コミが取れた商品がこれより少ない日は、あげてけをやめて曜日のテーマにする
 BUBBLE_COLORS = [(230, 40, 60), (40, 170, 70), (40, 90, 220)]
 
 
@@ -54,7 +56,7 @@ def prepare(results, day, base_url):
         if any(similar(it, o) for o in picks):
             continue
         picks.append(it)
-        if len(picks) == N:
+        if len(picks) == CAND:
             break
     if len(picks) < N:
         return None
@@ -72,20 +74,20 @@ def topic(cfg, day):
     data = json.loads(path.read_text(encoding="utf-8"))
     rv_path = DIR / f"{day}_reviews.json"
     reviews = json.loads(rv_path.read_text(encoding="utf-8")) if rv_path.exists() else {}
+    def voices(it):
+        return [s.strip() for s in reviews.get(it["code"], []) if 4 <= len(s.strip()) <= 34][:3]
+
     items = []
     for it in data["items"]:
+        if not voices(it):  # 口コミの吹き出しが出せない商品は出さない（口コミを紹介するのがこの枠の売り）
+            continue
         f = latest(it, cfg["base_url"])  # 売り切れは外し、値段は最新に
         if f:
             items.append(f)
-    if len(items) < 5:
+    if len(items) < MIN_ITEMS:
         return None
-    items = list(reversed(items[:N]))  # 6位（レビューの少ないほう）から1位の順に並べる
-    bubbles = {}
-    for it in items:
-        got = [s.strip() for s in reviews.get(it["code"], []) if 4 <= len(s.strip()) <= 34][:3]
-        rate = f"★{it['rating']:.1f}" if it.get("rating") else ""
-        fact = [f"レビュー{it['reviews']:,}件で{rate}", f"{it['price']:,}円{'〜' if it.get('from') else ''}で買える"]
-        bubbles[it["code"]] = (got + fact)[:3] if got else fact
+    items = list(reversed(items[:N]))  # 最下位（レビューの少ないほう）から1位の順に並べる
+    bubbles = {it["code"]: voices(it) for it in items}
     return dict(key="agete", kind="agete", theme="red", title="楽天で買ってよかった\n神商品あげてけ", tag="楽天購入品", label="楽天の価格",
                 items=[(it, f"第{len(items) - i}位") for i, it in enumerate(items)],
                 labels={i + 1: f"第{len(items) - i}位" for i in range(len(items))},
