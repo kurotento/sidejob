@@ -1296,7 +1296,7 @@ def theme_topic(cfg, fcats, day, results=None, th=None):
             return t
         for w in th["words"]:
             for it in search_items(w, base):
-                if it["code"] not in seen and must.search(it["name"] if th.get("anywhere") else head_of(it)) and not ng.search(it["name"]) and fresh(it)                         and (not th.get("fuku") or (fuku_ok(it) and re.search(th["about"], it["name"]) and not re.search(th.get("not_about") or "$^", it["name"]))):  # 福袋は、その枠のもの（服の枠にシャンプー等を入れない）
+                if it["code"] not in seen and must.search(it["name"] if th.get("anywhere") else head_of(it)) and not ng.search(it["name"]) and fresh(it)                         and (not th.get("fuku") or (fuku_ok(it) and re.search(th["about"], it["name"] if th.get("about_all") else it["name"][:60]) and not re.search(th.get("not_about") or "$^", it["name"]))):  # 福袋は、その枠のもの（服の枠にシャンプー等を入れない）
                     seen.add(it["code"])
                     pool.append(it)
         pool.sort(key=fuku_key if th.get("fuku") else (lambda x: -x["reviews"]))
@@ -1429,7 +1429,7 @@ def furusato_one(cfg, fcats, day, kind):
 
 # 福袋の枠（2026-11-16〜）：11月はあげてけでない日の水・木・土・日、12/1〜1/3は毎日、曜日のテーマの枠に入れる（あげてけの日は、12月はあげてけを福袋版に）
 FUKU = [
-    dict(key="fuku-cosme", kind="search", anywhere=True, about=r"コスメ|化粧|スキンケア|美容|メイク|ファンデ|リップ|美容液|化粧水|シャンプー|トリートメント|ヘアケア|ボディ|香水", tag="福袋", title="コスメの福袋\n人気TOP3", what="楽天でレビューが多いコスメの福袋",
+    dict(key="fuku-cosme", kind="search", anywhere=True, about_all=True, about=r"コスメ|化粧|スキンケア|美容|メイク|ファンデ|リップ|美容液|化粧水|シャンプー|トリートメント|ヘアケア|ボディ|香水", tag="福袋", title="コスメの福袋\n人気TOP3", what="楽天でレビューが多いコスメの福袋",
          words=["福袋 2027 コスメ", "コスメ 福袋", "スキンケア 福袋"], must=r"福袋|ハッピーバッグ"),
     dict(key="fuku-food", kind="search", anywhere=True, about=r"食品|グルメ|お菓子|菓子|スイーツ|チョコ|チーズ|乳製品|フリーズドライ|肉|カニ|蟹|海鮮|コーヒー|珈琲|紅茶|お茶|米|果物|フルーツ|おせち|ドリンク|酒|ラーメン|麺|食", tag="福袋", title="食べ物の福袋\n人気TOP3", what="楽天でレビューが多い食べ物の福袋",
          words=["福袋 2027 食品", "グルメ 福袋", "お菓子 福袋"], must=r"福袋|ハッピーバッグ"),
@@ -1452,7 +1452,7 @@ def fuku_ok(it):
         return False
     head = " ".join(name_words(n)[:2])  # 「スタイ セット 福袋」のように、3語目以降の福袋は数えない
     return bool(re.search(r"福袋|ハッピーバッグ", head)
-                or re.search(r"福袋.{0,6}2027|2027.{0,12}福袋|【[^】]*(福袋[^】]*2027|2027[^】]*福袋)[^】]*】", n))  # 【福袋】だけの物（タオル・スタイのセット等）は2027の福袋のときだけ
+                or re.search(r"福袋.{0,6}2027|2027.{0,12}福袋|【[^】]*(福袋[^】]*2027|2027[^】]*福袋)[^】]*】", n[:45]))  # 名前の頭のほうだけ（後ろに「福袋 2027」を並べた靴下などを拾わない、11/19）  # 【福袋】だけの物（タオル・スタイのセット等）は2027の福袋のときだけ
 
 
 def fuku_key(it):
