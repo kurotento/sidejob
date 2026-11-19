@@ -33,7 +33,12 @@ jobs:
       - name: Install image tools
         run: |
           pip install --quiet Pillow numpy gspread
-          sudo apt-get install -y -qq fonts-noto-cjk ffmpeg > /dev/null
+          # apt の一時的な失敗（11/19 に exit 100）に備えて、一覧を更新してから最大3回試す
+          for i in 1 2 3; do
+            sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-cjk ffmpeg > /dev/null && break
+            [ $i = 3 ] && exit 1
+            echo "apt に失敗、30秒後にやり直し（$i 回目）"; sleep 30
+          done
       - name: Build site
         env:
           RAKUTEN_APP_ID: ${{ secrets.RAKUTEN_APP_ID }}
