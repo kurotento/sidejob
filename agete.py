@@ -18,6 +18,12 @@ N = 6  # 第6位から第1位まで
 CAND = 9  # Muse に口コミを頼む候補の数。口コミが取れた商品だけ動画に出す（11/18 黒さま「口コミがない商品は除外」）
 MIN_ITEMS = 5  # 口コミが取れた商品がこれより少ない日は、あげてけをやめて曜日のテーマにする
 BUBBLE_COLORS = [(230, 40, 60), (40, 170, 70), (40, 90, 220)]
+MAX_SEC = 60  # 動画全体の長さの上限。超える日は下の順位から吹き出しを減らす（1商品1つまで）
+
+
+def read_sec(txt):
+    """吹き出し1つを読み終える時間（11/19 黒さま「読む時間がないぐらい早すぎる」）."""
+    return max(2.5, len(txt) * 0.15 + 1.0)
 
 
 def item_page(it):
@@ -132,7 +138,10 @@ def item_frames(it, rank, bubbles, dur, out, seed=0):
     cols = BUBBLE_COLORS[:]
     rnd.shuffle(cols)
     out.mkdir(parents=True, exist_ok=True)
-    appear = [0.5 + i * (max(dur - 1.2, 1.0) / max(len(bubbles), 1)) for i in range(len(bubbles))]
+    appear, at = [], 0.5  # 前の吹き出しを読み終えたら次を出す
+    for txt in bubbles:
+        appear.append(at)
+        at += read_sec(txt)
     for f in range(int(dur * FPS)):
         t = f / FPS
         img = bg.copy()
@@ -208,15 +217,30 @@ def slides(t, spk, work, reading):
     out = []
     a = work / "a0.wav"
     sec = synth(f"楽天で買ってよかった、{'福袋' if t.get('fuku') else '神商品'}あげてけ。第6位から発表します。", spk, a) + 0.3
-    out.append((work / "a0", a, sec, title_frames(t, sec, work / "a0")))
+    head = (work / "a0", a, sec, title_frames(t, sec, work / "a0"))
+    a9 = work / "a9.wav"
+    end_sec = synth("ほかにもあったら、コメントで教えてね。紹介した商品は、楽天ルームで、らんくま、と検索してください。", spk, a9) + 0.4
+    n = len(t["items"])
+    voice, bub = {}, {}
     for i, (it, label) in enumerate(t["items"]):
-        rank = len(t["items"]) - i
-        a = work / f"a{rank}.wav"
-        sec = max(synth(f"第{rank}位、{spoken_name(it, reading)}。", spk, a) + 0.4, 1.0 + 0.9 * len(t["bubbles"][it["code"]]))
-        out.append((work / f"a{rank}", a, sec, item_frames(it, rank, t["bubbles"][it["code"]], sec, work / f"a{rank}", seed=rank)))
-    a = work / "a9.wav"
-    sec = synth("ほかにもあったら、コメントで教えてね。紹介した商品は、楽天ルームで、らんくま、と検索してください。", spk, a) + 0.4
-    out.append((work / "a9", a, sec, end_frames(sec, work / "a9")))
+        rank = n - i
+        voice[rank] = synth(f"第{rank}位、{spoken_name(it, reading)}。", spk, work / f"a{rank}.wav") + 0.4
+        bub[rank] = list(t["bubbles"][it["code"]])
+
+    def item_sec(rank):
+        return max(voice[rank], 0.5 + sum(read_sec(s) for s in bub[rank]))
+
+    while sec + end_sec + sum(item_sec(r) for r in bub) > MAX_SEC:  # 長すぎる日は、吹き出しの多い商品の下の順位から1つ減らす
+        r = max((r for r in bub if len(bub[r]) > 1), key=lambda r: (len(bub[r]), r), default=None)
+        if r is None:
+            break
+        bub[r].pop()
+    out = [head]
+    for i, (it, label) in enumerate(t["items"]):
+        rank = n - i
+        s = item_sec(rank)
+        out.append((work / f"a{rank}", work / f"a{rank}.wav", s, item_frames(it, rank, bub[rank], s, work / f"a{rank}", seed=rank)))
+    out.append((work / "a9", a9, end_sec, end_frames(end_sec, work / "a9")))
     return out
 
 
