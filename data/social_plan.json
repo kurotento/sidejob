@@ -1,43 +1,45 @@
 {
- "day": "2026-11-18",
+ "day": "2026-11-19",
  "sale": [],
  "posts": [
   {
-   "kind": "event",
-   "time": "13:30",
-   "due": "2026-11-18T04:10:16.000Z",
-   "text": "楽天 #PR\n今日は楽天のご愛顧感謝デー！\n会員ランクによってポイントが変わる日だよ\n（条件は楽天の公式ページで確認してね）\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html",
-   "image": "",
-   "codes": []
-  },
-  {
    "kind": "risers",
-   "time": "18:00",
-   "due": "2026-11-18T08:41:59.000Z",
-   "text": "楽天 #PR\nランキング急上昇中のやつ\n1️⃣水切りワイパー スクイージー ガラスワイパー（26位UP）\n2️⃣天板 山善 YAMAZEN チェスト用 収納ケース用…（22位UP）\n3️⃣ハグモッチ 抱き枕 枕（21位UP）\n👇\nhttps://kurotento.github.io/sidejob/\n#水切りワイパー #天板 #ハグモッチ",
-   "image": "https://kurotento.github.io/sidejob/social/2026-11-18-01-risers.png",
+   "time": "13:30",
+   "due": "2026-11-19T04:30:00.000Z",
+   "text": "楽天 #PR\n昨日からぐんぐん順位が上がってる\n1️⃣セラミックヒーター ファンヒーター（15位UP）\n2️⃣シーリングライト LED（15位UP）\n3️⃣アリエール 液体 洗濯洗剤 詰め替え 8,602円（13位UP）\n👇\nhttps://kurotento.github.io/sidejob/\n#セラミックヒーター #シーリングライト #アリエール",
+   "image": "https://kurotento.github.io/sidejob/social/2026-11-19-00-risers.png",
    "codes": [
-    "angelingg:10001028",
-    "e-kurashi:10048739",
-    "luckyspread:10000001"
+    "enterb:10000081",
+    "chihuahua:10000009",
+    "rakuten24:11163653"
    ]
   },
   {
-   "kind": "video",
-   "time": "11/18 20:30",
-   "due": "2026-11-18T10:54:14.000Z",
-   "text": "楽天 #PR\n🎬楽天で買ってよかった 神商品あげてけ【11/18】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
-   "image": "",
-   "video": "https://kurotento.github.io/sidejob/shorts/2026-11-18-agete.mp4",
-   "codes": []
+   "kind": "single",
+   "time": "18:00",
+   "due": "2026-11-19T08:17:34.000Z",
+   "text": "楽天 #PR\nこれ1000円台なのに送料無料\n\n僕には鳥の言葉がわかる 鈴木 俊貴\n1,870円、送料無料！（★4.8）\n鈴木俊貴による単行本『僕には鳥の言葉がわかる』は、シジュウカラの言語能力を発見した動物言語学者による初めての本だよ。\n👇\nhttps://kurotento.github.io/sidejob/item-book-21471602.html\n#僕には鳥の言葉がわかる",
+   "image": "https://kurotento.github.io/sidejob/social/2026-11-19-01-single.jpg",
+   "codes": [
+    "book:21471602"
+   ]
   },
   {
    "kind": "alert",
-   "time": "11/18 21:00",
-   "due": "2026-11-18T11:35:15.000Z",
-   "text": "楽天 #PR\nふるさと納税の人気返礼品も楽天ROOMで一覧にしてるよ🎁\nレビューが多い定番を中心に\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
+   "time": "11/19 21:00",
+   "due": "2026-11-19T11:43:51.000Z",
+   "text": "楽天 #PR\n楽天ROOMを更新したよ✨\n今日ランキングに入っていたものを追加しました\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
+   "codes": []
+  },
+  {
+   "kind": "video",
+   "time": "11/19 20:30",
+   "due": "2026-11-19T12:38:15.000Z",
+   "text": "楽天 #PR\n🎬1位は1,430円〜｜子どもの福袋 人気TOP3【11/19】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#福袋 #福袋2027 #福袋予約 #楽天購入品",
+   "image": "",
+   "video": "https://kurotento.github.io/sidejob/shorts/2026-11-19-fuku-kids.mp4",
    "codes": []
   }
  ]

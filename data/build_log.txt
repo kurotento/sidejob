@@ -1,43 +1,46 @@
-2026-11-18 model=gemini-3.5-flash-lite 新規5件 / 対象6件
-reemo:10000006: ルール違反または不完全な出力のため不採用
+2026-11-19 model=gemini-3.5-flash-lite 新規7件 / 対象9件
+redial:10000271: ルール違反または不完全な出力のため不採用
+book:21966387: Expecting ':' delimiter: line 8 column 7 (char 373)
 
-2026-11-18 model=gemini-3.5-flash-lite 新規13件 / 対象13件
-2026-11-18 model=gemini-3.5-flash-lite 新規0件 / 対象1件
+2026-11-19 model=gemini-3.5-flash-lite 新規19件 / 対象21件
+gracevally:10000008: ルール違反または不完全な出力のため不採用
+cosrx-official:10000250: ルール違反または不完全な出力のため不採用
+2026-11-19 model=gemini-3.5-flash-lite 新規0件 / 対象1件
 gracevally:10000008: ルール違反または不完全な出力のため不採用
 [food] 30件
-[beauty] 29件
+[beauty] 30件
 [appliances] 30件
 [interior] 30件
 [daily] 30件
-[baby] 29件
-[budget] 総合598件中 72件が条件に一致
+[baby] 30件
+[budget] 総合597件中 63件が条件に一致
 [gemini] キーの確認: OK（gemini-3.5-flash-lite）
-[names] 短い名前 新規65件 / 対象68件
+[names] 短い名前 新規50件 / 対象77件
 [furusato:meat] 30件
 [furusato:seafood] 30件
 [furusato:rice] 30件
 [furusato:fruit] 30件
 [furusato:sweets] 30件
 [furusato:daily] 30件
-[names] 短い名前 新規23件 / 対象24件
+[names] 短い名前 新規7件 / 対象7件
 [furusato] 69ページ
 [story] 素材 3件
 生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
-[shorts] 作り：イラスト（集中線といらすとや／画像は手書きメモ風）／声：春日部つむぎ
-[shorts] shorts/2026-11-18-agete.mp4 38秒 楽天で買ってよかった
-神商品あげてけ
-[shorts] shorts/2026-11-18-xmas-deco.mp4 34秒 クリスマスの
-飾りつけTOP3
-[shorts] shorts/2026-11-18-furusato-qty.mp4 46秒 ふるさと納税クイズ
-1万円で何kg届く？
+[shorts] 作り：まとめ（黒帯タイトルと順位一覧／画像は速報風）／声：No.7
+[shorts] shorts/2026-11-19-fuku-kids.mp4 38秒 子どもの福袋
+人気TOP3
+[shorts] shorts/2026-11-19-xmas-kids.mp4 34秒 子どもへのクリスマス
+おもちゃ人気TOP3
+[shorts] shorts/2026-11-19-furusato-deadline.mp4 44秒 ふるさと納税
+年内に届く返礼品
 [shorts] 動画 3本
-[room] 説明を取って紹介文を作成: 14/25件
-[room] 今日の動画の商品 3件・1000円台 3件・ほかのジャンル 10件・ふるさと納税 0件
-[room] 投稿リスト 16件
+[room] 説明を取って紹介文を作成: 19/29件
+[room] 今日の動画の商品 3件・1000円台 6件・ほかのジャンル 13件・ふるさと納税 0件
+[room] 投稿リスト 22件
 [threads] 投稿 6本
 [pinterest] RSS に 3件追加
 [sns] Instagram 予約表に 4件追加
 [sns] Threads・Instagram 計画 6件
-[names] 短い名前 新規32件 / 対象37件
+[names] 短い名前 新規29件 / 対象42件
 [replies] 質問 43件
-[report] テーマ 9件
+[report] テーマ 8件
