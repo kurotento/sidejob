@@ -1,1 +1,11 @@
 2026-11-20 計画 4件（セール判定: なし / 残り枠 2 / 候補 59）
+2026-11-20 X は 2026-11-23 まで休止中のため予約しない
+--- 12:12 予約処理[threads]: 空き枠 10 / 未予約 3
+11/20 19:00 threads: 予約（返信つき） / 141文字
+11/20 20:15 video: 予約 / 185文字
+11/20 21:30 threads: 予約（返信つき） / 237文字
+--- 12:12 予約処理[instagram]: 空き枠 10 / 未予約 0
+--- 12:12 予約処理[youtube]: 空き枠 10 / 未予約 3
+11/20 17:30 short: 予約 / 677文字
+11/20 19:00 short: 予約 / 514文字
+11/20 20:30 short: 失敗 You have already scheduled the maximum number of posts YouTube allows in a day (2). Please consider scheduling this post for another day.
