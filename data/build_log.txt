@@ -1,46 +1,54 @@
-2026-11-19 model=gemini-3.5-flash-lite 新規7件 / 対象9件
-redial:10000271: ルール違反または不完全な出力のため不採用
-book:21966387: Expecting ':' delimiter: line 8 column 7 (char 373)
+2026-11-20 model=gemini-3.5-flash-lite 新規4件 / 対象6件
+book:22162305: Expecting ':' delimiter: line 9 column 7 (char 358)
+morecon2:10001233: Expecting value: line 4 column 5 (char 201)
 
-2026-11-19 model=gemini-3.5-flash-lite 新規19件 / 対象21件
-gracevally:10000008: ルール違反または不完全な出力のため不採用
-cosrx-official:10000250: ルール違反または不完全な出力のため不採用
-2026-11-19 model=gemini-3.5-flash-lite 新規0件 / 対象1件
+2026-11-20 model=gemini-3.5-flash-lite 新規15件 / 対象16件
+ventuno:10000605: HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+2026-11-20 model=gemini-3.5-flash-lite 新規0件 / 対象1件
 gracevally:10000008: ルール違反または不完全な出力のため不採用
 [food] 30件
 [beauty] 30件
-[appliances] 30件
+[appliances] 29件
 [interior] 30件
 [daily] 30件
 [baby] 30件
-[budget] 総合597件中 63件が条件に一致
+[budget] 総合599件中 49件が条件に一致
 [gemini] キーの確認: OK（gemini-3.5-flash-lite）
-[names] 短い名前 新規50件 / 対象77件
+[names] gemini-3.5-flash-lite 失敗: HTTP Error 503: Service Unavailable
+[names] gemini-3.8-flash 失敗: The read operation timed out
+[names] 短い名前 新規38件 / 対象76件
 [furusato:meat] 30件
 [furusato:seafood] 30件
 [furusato:rice] 30件
 [furusato:fruit] 30件
 [furusato:sweets] 30件
 [furusato:daily] 30件
-[names] 短い名前 新規7件 / 対象7件
+[names] 短い名前 新規15件 / 対象16件
 [furusato] 69ページ
 [story] 素材 3件
 生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
-[shorts] 作り：まとめ（黒帯タイトルと順位一覧／画像は速報風）／声：No.7
-[shorts] shorts/2026-11-19-fuku-kids.mp4 38秒 子どもの福袋
+[shorts] 作り：ポップ（らんくまのランキング）／声：ずんだもん
+[shorts] shorts/2026-11-20-agete.mp4 58秒 楽天で買ってよかった
+神商品あげてけ
+[shorts] shorts/2026-11-20-xmas-coffret.mp4 41秒 クリスマスコフレ
 人気TOP3
-[shorts] shorts/2026-11-19-xmas-kids.mp4 34秒 子どもへのクリスマス
-おもちゃ人気TOP3
-[shorts] shorts/2026-11-19-furusato-deadline.mp4 44秒 ふるさと納税
+[shorts] shorts/2026-11-20-furusato-deadline.mp4 50秒 ふるさと納税
 年内に届く返礼品
 [shorts] 動画 3本
-[room] 説明を取って紹介文を作成: 19/29件
-[room] 今日の動画の商品 3件・1000円台 6件・ほかのジャンル 13件・ふるさと納税 0件
-[room] 投稿リスト 22件
+[room] 説明を取って紹介文を作成: 15/22件
+[room] 今日の動画の商品 3件・1000円台 5件・ほかのジャンル 11件・ふるさと納税 0件
+[room] 投稿リスト 19件
 [threads] 投稿 6本
 [pinterest] RSS に 3件追加
 [sns] Instagram 予約表に 4件追加
 [sns] Threads・Instagram 計画 6件
-[names] 短い名前 新規29件 / 対象42件
+[names] 短い名前 新規56件 / 対象62件
 [replies] 質問 43件
-[report] テーマ 8件
+[report] テーマ 7件
