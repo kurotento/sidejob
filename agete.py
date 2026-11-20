@@ -131,7 +131,7 @@ def _bubble(d, font, text, x, y, w, color):
 
 def item_frames(it, rank, bubbles, dur, out, seed=0):
     from PIL import ImageDraw
-    from shorts import FPS, H, W, fetch_image, font, pr_badge, short_name
+    from shorts import FPS, H, W, fetch_image, font, pr_badge, short_name, wrap_cut
     pic = fetch_image(it.get("image"))
     bg = _bg(pic, W, H)
     rnd = random.Random(seed)
@@ -142,6 +142,12 @@ def item_frames(it, rank, bubbles, dur, out, seed=0):
     for txt in bubbles:
         appear.append(at)
         at += read_sec(txt)
+    # 商品名は1行で画面の幅に収める（11/20 黒さま「商品名が見切れてる」）。字を小さくしても入らなければ言葉の切れ目で「…」
+    d = ImageDraw.Draw(bg.copy())
+    name, nsize = short_name(it["name"], 40), 54
+    while nsize > 40 and d.textlength(name, font=font(nsize)) > W - 100:
+        nsize -= 2
+    name = wrap_cut(d, name, font(nsize), W - 100, 1)[0]
     for f in range(int(dur * FPS)):
         t = f / FPS
         img = bg.copy()
@@ -155,8 +161,7 @@ def item_frames(it, rank, bubbles, dur, out, seed=0):
             p2 = pic.convert("RGB").resize((int(pic.width * sc), int(pic.height * sc)))
             img.paste(p2, ((W - p2.width) // 2, 420 + (box - p2.height) // 2))
             d = ImageDraw.Draw(img)
-        name = short_name(it["name"], 24)
-        d.text((W // 2, 1100), name, font=font(54), fill=(255, 255, 255), anchor="mm", stroke_width=6, stroke_fill=(0, 0, 0))
+        d.text((W // 2, 1100), name, font=font(nsize), fill=(255, 255, 255), anchor="mm", stroke_width=6, stroke_fill=(0, 0, 0))
         y = 1170
         for i, (txt, at) in enumerate(zip(bubbles, appear)):
             if t >= at:

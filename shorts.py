@@ -135,6 +135,38 @@ def wrap(draw, text, f, width, lines):
     return out
 
 
+def wrap_cut(draw, text, f, width, lines):
+    """wrap と同じだが、入りきらないときは最後の行を言葉の切れ目で切って「…」を付ける（11/20 名前が「化」「27 C」で切れていた）."""
+    def fits(s):
+        return draw.textlength(s, font=f) <= width
+
+    out, cur = [], ""
+    for w in text.split():  # 単語の切れ目で折り返す（「クリスマ／スコフレ」にしない）
+        cand = f"{cur} {w}".strip()
+        if fits(cand):
+            cur = cand
+            continue
+        if cur:
+            out.append(cur)
+        cur = w
+        while not fits(cur):  # 1語で1行に入らないときだけ、字の途中で折る
+            k = len(cur)
+            while k > 1 and not fits(cur[:k]):
+                k -= 1
+            out.append(cur[:k])
+            cur = cur[k:]
+    if cur:
+        out.append(cur)
+    if len(out) <= lines:
+        return out
+    out = out[:lines]
+    last = out[-1]
+    while last and not fits(last + "…"):
+        last = last.rsplit(" ", 1)[0] if " " in last else last[:-1]
+    out[-1] = last.rstrip(" 　・/") + "…"
+    return out
+
+
 def pr_badge(d):
     d.rounded_rectangle([40, 60, 170, 120], radius=14, fill=(255, 255, 255))
     d.text((105, 90), "PR", font=font(40), fill=(30, 30, 30), anchor="mm")
@@ -212,7 +244,7 @@ def item_slide(bg, rank, it, price_label, note, theme, path, text=""):
     d.text((160, top + 50), f"{rank}", font=font(100), fill=(255, 255, 255), anchor="mm")
     d.text((160, top + 122), "位", font=font(36), fill=(255, 255, 255), anchor="mm")
     y = top + box + 50
-    for line in wrap(d, short_name(it["name"], 60), font(50), 820, 2):
+    for line in wrap_cut(d, short_name(it["name"], 60), font(50), 820, 2):
         d.text((90, y), line, font=font(50), fill=(29, 29, 31))
         y += 66
     accent = THEMES[theme][1]
@@ -636,7 +668,7 @@ def anim_item(theme, rank, it, price_label, note, text, dur, out, seed, mouth=()
         pic = pic.resize((int(pic.width * scale), int(pic.height * scale)))
         card.paste(pic, ((W - 100 - pic.width) // 2, 30 + (box - pic.height) // 2))
     y = box + 50
-    for line in wrap(kd, short_name(it["name"], 60), font(50), 820, 2):
+    for line in wrap_cut(kd, short_name(it["name"], 60), font(50), 820, 2):
         kd.text((40, y), line, font=font(50), fill=(29, 29, 31))
         y += 66
     accent = THEMES[theme][1]
