@@ -1,54 +1,45 @@
-2026-11-20 model=gemini-3.5-flash-lite 新規4件 / 対象6件
-book:22162305: Expecting ':' delimiter: line 9 column 7 (char 358)
-morecon2:10001233: Expecting value: line 4 column 5 (char 201)
+2026-11-21 model=gemini-3.5-flash-lite 新規14件 / 対象14件
 
-2026-11-20 model=gemini-3.5-flash-lite 新規15件 / 対象16件
-ventuno:10000605: HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-2026-11-20 model=gemini-3.5-flash-lite 新規0件 / 対象1件
-gracevally:10000008: ルール違反または不完全な出力のため不採用
+2026-11-21 model=gemini-3.5-flash-lite 新規16件 / 対象17件
+exception5251:10000495: ルール違反または不完全な出力のため不採用
+2026-11-21 model=gemini-3.5-flash-lite 新規1件 / 対象2件
+kawasakigroup:10002566: ルール違反または不完全な出力のため不採用
 [food] 30件
 [beauty] 30件
-[appliances] 29件
+[appliances] 30件
 [interior] 30件
 [daily] 30件
 [baby] 30件
-[budget] 総合599件中 49件が条件に一致
+[budget] 総合598件中 72件が条件に一致
 [gemini] キーの確認: OK（gemini-3.5-flash-lite）
-[names] gemini-3.5-flash-lite 失敗: HTTP Error 503: Service Unavailable
-[names] gemini-3.8-flash 失敗: The read operation timed out
-[names] 短い名前 新規38件 / 対象76件
+[names] 短い名前 新規118件 / 対象167件
 [furusato:meat] 30件
 [furusato:seafood] 30件
 [furusato:rice] 30件
 [furusato:fruit] 30件
 [furusato:sweets] 30件
 [furusato:daily] 30件
-[names] 短い名前 新規15件 / 対象16件
+[names] 短い名前 新規7件 / 対象9件
 [furusato] 69ページ
 [story] 素材 3件
 生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
-[shorts] 作り：ポップ（らんくまのランキング）／声：ずんだもん
-[shorts] shorts/2026-11-20-agete.mp4 58秒 楽天で買ってよかった
-神商品あげてけ
-[shorts] shorts/2026-11-20-xmas-coffret.mp4 41秒 クリスマスコフレ
+[shorts] 作り：マガジン（写真と明朝体の特集ページ）／声：冥鳴ひまり
+[shorts] shorts/2026-11-21-fuku-food.mp4 36秒 食べ物の福袋
 人気TOP3
-[shorts] shorts/2026-11-20-furusato-deadline.mp4 50秒 ふるさと納税
-年内に届く返礼品
+[shorts] shorts/2026-11-21-xmas-gift-her.mp4 40秒 女性へのクリスマス
+プレゼントTOP3
+[shorts] shorts/2026-11-21-furusato-qty.mp4 45秒 ふるさと納税クイズ
+1万円で何kg届く？
 [shorts] 動画 3本
-[room] 説明を取って紹介文を作成: 15/22件
-[room] 今日の動画の商品 3件・1000円台 5件・ほかのジャンル 11件・ふるさと納税 0件
-[room] 投稿リスト 19件
+[room] 説明を取って紹介文を作成: 17/23件
+[room] 今日の動画の商品 3件・1000円台 11件・ほかのジャンル 8件・ふるさと納税 0件
+[room] 投稿リスト 22件
 [threads] 投稿 6本
 [pinterest] RSS に 3件追加
 [sns] Instagram 予約表に 4件追加
 [sns] Threads・Instagram 計画 6件
-[names] 短い名前 新規56件 / 対象62件
+[names] gemini-3.5-flash-lite 失敗: HTTP Error 503: Service Unavailable
+[names] gemini-3.8-flash 失敗: The read operation timed out
+[names] 短い名前 新規0件 / 対象31件
 [replies] 質問 43件
-[report] テーマ 7件
+[report] テーマ 6件
