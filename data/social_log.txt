@@ -10,3 +10,7 @@
 11/22 17:30 short: 予約 / 585文字
 11/22 19:00 short: 予約 / 508文字
 11/22 20:30 short: 失敗 You have already scheduled the maximum number of posts YouTube allows in a day (2). Please consider scheduling this post for another day.
+2026-11-22 X は 2026-11-23 まで休止中のため予約しない
+--- 22:27 予約処理[threads]: 空き枠 10 / 未予約 0
+--- 22:27 予約処理[instagram]: 空き枠 10 / 未予約 0
+--- 22:27 予約処理[youtube]: 空き枠 10 / 未予約 0
