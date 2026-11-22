@@ -1,45 +1,41 @@
-2026-11-21 model=gemini-3.5-flash-lite 新規14件 / 対象14件
+2026-11-22 model=gemini-3.5-flash-lite 新規3件 / 対象3件
 
-2026-11-21 model=gemini-3.5-flash-lite 新規16件 / 対象17件
-exception5251:10000495: ルール違反または不完全な出力のため不採用
-2026-11-21 model=gemini-3.5-flash-lite 新規1件 / 対象2件
-kawasakigroup:10002566: ルール違反または不完全な出力のため不採用
+2026-11-22 model=gemini-3.5-flash-lite 新規7件 / 対象7件
+
 [food] 30件
 [beauty] 30件
 [appliances] 30件
 [interior] 30件
 [daily] 30件
 [baby] 30件
-[budget] 総合598件中 72件が条件に一致
+[budget] 総合600件中 67件が条件に一致
 [gemini] キーの確認: OK（gemini-3.5-flash-lite）
-[names] 短い名前 新規118件 / 対象167件
+[names] 短い名前 新規85件 / 対象110件
 [furusato:meat] 30件
 [furusato:seafood] 30件
 [furusato:rice] 30件
 [furusato:fruit] 30件
 [furusato:sweets] 30件
 [furusato:daily] 30件
-[names] 短い名前 新規7件 / 対象9件
+[names] 短い名前 新規2件 / 対象2件
 [furusato] 69ページ
 [story] 素材 3件
 生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
-[shorts] 作り：マガジン（写真と明朝体の特集ページ）／声：冥鳴ひまり
-[shorts] shorts/2026-11-21-fuku-food.mp4 36秒 食べ物の福袋
-人気TOP3
-[shorts] shorts/2026-11-21-xmas-gift-her.mp4 40秒 女性へのクリスマス
+[shorts] 作り：イラスト（集中線といらすとや／画像は手書きメモ風）／声：春日部つむぎ
+[shorts] shorts/2026-11-22-agete.mp4 57秒 楽天で買ってよかった
+神商品あげてけ
+[shorts] shorts/2026-11-22-xmas-gift-him.mp4 37秒 男性へのクリスマス
 プレゼントTOP3
-[shorts] shorts/2026-11-21-furusato-qty.mp4 45秒 ふるさと納税クイズ
-1万円で何kg届く？
+[shorts] shorts/2026-11-22-furusato-deadline.mp4 43秒 ふるさと納税
+年内に届く返礼品
 [shorts] 動画 3本
-[room] 説明を取って紹介文を作成: 17/23件
-[room] 今日の動画の商品 3件・1000円台 11件・ほかのジャンル 8件・ふるさと納税 0件
-[room] 投稿リスト 22件
+[room] 説明を取って紹介文を作成: 8/15件
+[room] 今日の動画の商品 3件・1000円台 3件・ほかのジャンル 5件・ふるさと納税 0件
+[room] 投稿リスト 11件
 [threads] 投稿 6本
 [pinterest] RSS に 3件追加
 [sns] Instagram 予約表に 4件追加
-[sns] Threads・Instagram 計画 6件
-[names] gemini-3.5-flash-lite 失敗: HTTP Error 503: Service Unavailable
-[names] gemini-3.8-flash 失敗: The read operation timed out
-[names] 短い名前 新規0件 / 対象31件
+[sns] Threads・Instagram 計画 7件
+[names] 短い名前 新規20件 / 対象30件
 [replies] 質問 43件
-[report] テーマ 6件
+[report] テーマ 5件
