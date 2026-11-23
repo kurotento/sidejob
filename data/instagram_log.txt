@@ -187,3 +187,7 @@
 11/22 19:20 2026-11-22 18:00:00 story: エラー {"error":{"message":"Error validating access token: You cannot access the app till you log in to www.instagram.com and follow the instructions given.","type":"OAuthException","code":190,"error_subcode
 11/23 02:58 2026-11-22 21:00:00 post: 完了 media_id=17953860351054700
 11/23 02:58 2026-11-22 21:15:00 story: 完了 media_id=17931959175181722
+11/23 23:40 2026-11-23 18:00:00 post: 完了 media_id=18234605587325186
+11/23 23:40 2026-11-23 21:00:00 post: 完了 media_id=17905085763438074
+11/23 23:40 2026-11-23 18:00:00 story: 完了 media_id=18575267860075416
+11/23 23:40 2026-11-23 21:15:00 story: 完了 media_id=18136187956684149
