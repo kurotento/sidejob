@@ -110,6 +110,8 @@ def save_dm(cfg, day, videos):
 
 
 def item(service, kind, t, text, image="", video=""):
+    # 11/23 Threads の本文に「\n」が文字のまま入った（AIの文章が改行を \n と書いて返した日がある）。本物の改行に直す
+    text = text.replace("\\n", "\n")
     return {"service": service, "kind": kind, "time": t.strftime("%m/%d %H:%M"),
             "due": t.astimezone(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z"),
             "text": text, "image": image, "video": video, "codes": []}
