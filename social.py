@@ -14,6 +14,8 @@ import re
 import shutil
 import time
 import unicodedata
+import urllib.error
+import urllib.parse
 import urllib.request
 from pathlib import Path
 
@@ -858,8 +860,83 @@ def tag_links(post, service):
     return out
 
 
+# ---------- YouTube（公式API） ----------
+# 2026-11-23 黒さま指示で YouTube ショートは Buffer をやめて公式APIで予約する。
+# Buffer 無料プランは YouTube が「直近24時間で2本」までで、1日3本のうち1本が毎日弾かれていたため。
+# API はアップロード1日100本まで（他の機能とは別枠・無料）。公開予約（publishAt）もできる。
+# 鍵は GitHub の Secrets：YT_CLIENT_ID / YT_CLIENT_SECRET / YT_REFRESH_TOKEN（tools/yt_auth.py で取る。らんくまのチャンネルで許可）
+YT_KEYS = ("YT_CLIENT_ID", "YT_CLIENT_SECRET", "YT_REFRESH_TOKEN")
+
+
+def yt_ready():
+    return all(os.environ.get(k) for k in YT_KEYS)
+
+
+def yt_token():
+    body = urllib.parse.urlencode({"client_id": os.environ["YT_CLIENT_ID"], "client_secret": os.environ["YT_CLIENT_SECRET"],
+                                   "refresh_token": os.environ["YT_REFRESH_TOKEN"], "grant_type": "refresh_token"}).encode()
+    with urllib.request.urlopen(urllib.request.Request("https://oauth2.googleapis.com/token", data=body), timeout=30) as r:
+        return json.loads(r.read())["access_token"]
+
+
+def yt_upload(token, post, desc):
+    """動画を上げて、post["due"] の時刻に公開されるよう予約する。動画IDを返す."""
+    with urllib.request.urlopen(post["video"], timeout=120) as r:
+        video = r.read()
+    meta = {"snippet": {"title": post.get("title", "")[:100], "description": desc[:5000], "categoryId": "26",
+                        "defaultLanguage": "ja", "defaultAudioLanguage": "ja"},
+            "status": {"privacyStatus": "private", "publishAt": post["due"].replace(".000Z", "Z"),
+                       "selfDeclaredMadeForKids": False}}
+    start = urllib.request.Request(
+        "https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status&notifySubscribers=true",
+        data=json.dumps(meta).encode(), method="POST",
+        headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json; charset=UTF-8",
+                 "X-Upload-Content-Type": "video/mp4", "X-Upload-Content-Length": str(len(video))})
+    with urllib.request.urlopen(start, timeout=60) as r:
+        where = r.headers["Location"]
+    put = urllib.request.Request(where, data=video, method="PUT", headers={"Content-Type": "video/mp4"})
+    with urllib.request.urlopen(put, timeout=600) as r:
+        return json.loads(r.read())["id"]
+
+
+def schedule_youtube_api(posts, log, posted, day):
+    """YouTube のショートを公式APIで予約する（Buffer の枠は使わない）."""
+    now = dt.datetime.now(dt.timezone.utc)
+    due = lambda post: dt.datetime.strptime(post["due"], "%Y-%m-%dT%H:%M:%S.000Z").replace(tzinfo=dt.timezone.utc)  # noqa: E731
+    todo = sorted((x for x in posts if not x.get("scheduled") and due(x) > now + dt.timedelta(minutes=5)), key=due)
+    log.append(f"--- {dt.datetime.now(JST):%H:%M} 予約処理[youtube]: API / 未予約 {len(todo)}")
+    if not todo:
+        return
+    try:
+        token = yt_token()
+    except Exception as ex:  # noqa: BLE001
+        for post in todo:
+            log.append(f"{post['time']} {post['kind']}: 失敗 YouTube API にログインできない（{str(ex)[:120]}）")
+        return
+    for post in todo:
+        if not wait_until_live(post["video"]):
+            log.append(f"{post['time']} {post['kind']}: 失敗 動画が公開されていない")
+            continue
+        try:
+            vid = yt_upload(token, post, tag_links(post, "youtube")["text"])
+        except urllib.error.HTTPError as ex:
+            log.append(f"{post['time']} {post['kind']}: 失敗 YouTube API {ex.code} {ex.read()[:200].decode('utf-8', 'replace')}")
+            continue
+        except Exception as ex:  # noqa: BLE001
+            log.append(f"{post['time']} {post['kind']}: 失敗 {ex}")
+            continue
+        post["scheduled"] = True
+        post["yt_id"] = vid
+        for c in post["codes"]:
+            posted[c] = day
+        log.append(f"{post['time']} {post['kind']}: 予約（API {vid}） / {x_len(post['text'])}文字")
+
+
 def schedule(key, posts, service, log, posted, day):
     """posts（同じチャンネル向け）のうち未予約のものを、空き枠の範囲で予約する."""
+    if service == "youtube" and yt_ready():
+        schedule_youtube_api(posts, log, posted, day)
+        return
     now = dt.datetime.now(dt.timezone.utc)
     due = lambda post: dt.datetime.strptime(post["due"], "%Y-%m-%dT%H:%M:%S.000Z").replace(tzinfo=dt.timezone.utc)  # noqa: E731
     pending = sum(1 for x in posts if x.get("scheduled") and due(x) > now)

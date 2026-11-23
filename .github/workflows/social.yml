@@ -27,6 +27,9 @@ jobs:
       - name: Schedule remaining X posts on Buffer
         env:
           BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
         run: python social.py
       - name: Commit posting record
         run: |
