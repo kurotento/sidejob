@@ -1,16 +1,20 @@
-2026-11-22 model=gemini-3.5-flash-lite 新規3件 / 対象3件
+2026-11-23 model=gemini-3.5-flash-lite 新規9件 / 対象11件
+chirancha:10000313: ルール違反または不完全な出力のため不採用
+toucher-home:10002939: ルール違反または不完全な出力のため不採用
 
-2026-11-22 model=gemini-3.5-flash-lite 新規7件 / 対象7件
-
+2026-11-23 model=gemini-3.5-flash-lite 新規5件 / 対象7件
+e-up-eishin:10000112: ルール違反または不完全な出力のため不採用
+tirtir:10001051: ルール違反または不完全な出力のため不採用
+2026-11-23 model=gemini-3.5-flash-lite 新規1件 / 対象1件
 [food] 30件
 [beauty] 30件
-[appliances] 30件
+[appliances] 29件
 [interior] 30件
 [daily] 30件
 [baby] 30件
-[budget] 総合600件中 67件が条件に一致
+[budget] 総合597件中 72件が条件に一致
 [gemini] キーの確認: OK（gemini-3.5-flash-lite）
-[names] 短い名前 新規85件 / 対象110件
+[names] 短い名前 新規61件 / 対象72件
 [furusato:meat] 30件
 [furusato:seafood] 30件
 [furusato:rice] 30件
@@ -21,21 +25,21 @@
 [furusato] 69ページ
 [story] 素材 3件
 生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
-[shorts] 作り：イラスト（集中線といらすとや／画像は手書きメモ風）／声：春日部つむぎ
-[shorts] shorts/2026-11-22-agete.mp4 57秒 楽天で買ってよかった
-神商品あげてけ
-[shorts] shorts/2026-11-22-xmas-gift-him.mp4 37秒 男性へのクリスマス
-プレゼントTOP3
-[shorts] shorts/2026-11-22-furusato-deadline.mp4 43秒 ふるさと納税
-年内に届く返礼品
+[shorts] 作り：まとめ（黒帯タイトルと順位一覧／画像は速報風）／声：No.7
+[shorts] shorts/2026-11-23-oshikatsu.mp4 36秒 推し活グッズ
+人気TOP3
+[shorts] shorts/2026-11-23-xmas-deco.mp4 34秒 クリスマスの
+飾りつけTOP3
+[shorts] shorts/2026-11-23-furusato-season.mp4 36秒 年末年始に
+ふるさと納税のかに
 [shorts] 動画 3本
-[room] 説明を取って紹介文を作成: 8/15件
-[room] 今日の動画の商品 3件・1000円台 3件・ほかのジャンル 5件・ふるさと納税 0件
-[room] 投稿リスト 11件
+[room] 説明を取って紹介文を作成: 6/16件
+[room] 今日の動画の商品 3件・1000円台 8件・ほかのジャンル 3件・ふるさと納税 0件
+[room] 投稿リスト 14件
 [threads] 投稿 6本
 [pinterest] RSS に 3件追加
 [sns] Instagram 予約表に 4件追加
 [sns] Threads・Instagram 計画 7件
-[names] 短い名前 新規20件 / 対象30件
+[names] 短い名前 新規11件 / 対象11件
 [replies] 質問 43件
 [report] テーマ 5件

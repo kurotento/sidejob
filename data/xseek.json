@@ -1,5 +1,5 @@
 {
-"day": "2026-11-22",
+"day": "2026-11-23",
 "words": [
 [
 "加湿器",
@@ -7,7 +7,7 @@
 {
 "name": "ハイブリッド加湿器 大容量 5L",
 "price": 6780,
-"reviews": 11782,
+"reviews": 11825,
 "rating": 4.29,
 "url": "https://item.rakuten.co.jp/liberesta/aqua-m1/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -19,7 +19,7 @@
 {
 "name": "加湿器 卓上 超音波 次亜塩素酸水対応 350ml",
 "price": 1880,
-"reviews": 9844,
+"reviews": 9867,
 "rating": 4.45,
 "url": "https://item.rakuten.co.jp/milicute-himawari/x06-1/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -31,8 +31,8 @@
 {
 "name": "超音波加湿器 大容量 卓上 小型",
 "price": 2499,
-"reviews": 6347,
-"rating": 4.38,
+"reviews": 6382,
+"rating": 4.37,
 "url": "https://item.rakuten.co.jp/gracevally/grace-j1/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
 "上部から直接給水できタンクの取り外しが不要",
@@ -41,15 +41,15 @@
 ]
 },
 {
-"name": "加湿器 特許取得 大容量 6.5L ハイブリッド",
-"price": 12999,
-"reviews": 6144,
-"rating": 4.36,
-"url": "https://item.rakuten.co.jp/dondon/jxh-002/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
+"name": "加湿器 大容量 卓上 9L スチーム式 5重除菌",
+"price": 16900,
+"reviews": 4814,
+"rating": 4.45,
+"url": "https://item.rakuten.co.jp/delishop/b2210b/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
-"UVライトとヒーターによるW除菌機能を搭載している",
-"約6.5Lの大容量タンクで上部から簡単に給水できる",
-"12パターンの加湿量切り替えと自動加湿調整が可能"
+"9Lの大容量タンクで最大120時間連続運転が可能",
+"5つの除菌機能で清潔なミストを部屋の隅々まで届ける",
+"AIスマート加湿や睡眠モードなどの機能が充実"
 ]
 }
 ]
@@ -166,7 +166,7 @@
 {
 "name": "れんげ化粧水 140cc",
 "price": 1200,
-"reviews": 9935,
+"reviews": 9942,
 "rating": 4.74,
 "url": "https://item.rakuten.co.jp/renngekesyousui/10000002/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -178,7 +178,7 @@
 {
 "name": "Anua 化粧水",
 "price": 2950,
-"reviews": 3162,
+"reviews": 3165,
 "rating": 4.72,
 "url": "https://item.rakuten.co.jp/anuajapan/anua00023/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -202,7 +202,7 @@
 {
 "name": "セラミド 化粧水 ミスト",
 "price": 3280,
-"reviews": 1339,
+"reviews": 1340,
 "rating": 4.55,
 "url": "https://item.rakuten.co.jp/norph/uj-l01/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -219,8 +219,8 @@
 {
 "name": "毛布 シングル セミダブル ブランケット",
 "price": 1580,
-"reviews": 11519,
-"rating": 4.59,
+"reviews": 11524,
+"rating": 4.58,
 "url": "https://item.rakuten.co.jp/dondon/mf-003/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
 "吸湿発熱素材で汗や蒸気を吸収して発熱する",
@@ -231,7 +231,7 @@
 {
 "name": "毛布 bon moment",
 "price": 2640,
-"reviews": 9148,
+"reviews": 9150,
 "rating": 4.62,
 "url": "https://item.rakuten.co.jp/angers/111778/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -272,7 +272,7 @@
 {
 "name": "山善 電気毛布 YMS-40 YMK-60",
 "price": 2980,
-"reviews": 4130,
+"reviews": 4133,
 "rating": 4.37,
 "url": "https://item.rakuten.co.jp/e-kurashi/1338101/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -284,7 +284,7 @@
 {
 "name": "電気毛布 掛け敷き モコモコブランケット",
 "price": 12900,
-"reviews": 3928,
+"reviews": 3941,
 "rating": 4.56,
 "url": "https://item.rakuten.co.jp/hitidear/cozywave-g1/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -296,7 +296,7 @@
 {
 "name": "EPEIOS 電気毛布",
 "price": 8900,
-"reviews": 3556,
+"reviews": 3563,
 "rating": 4.63,
 "url": "https://item.rakuten.co.jp/mpowjapan/gfeb013000/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -308,7 +308,7 @@
 {
 "name": "電気毛布 敷き 掛け ブランケット",
 "price": 7760,
-"reviews": 3227,
+"reviews": 3257,
 "rating": 4.51,
 "url": "https://item.rakuten.co.jp/ennshopstore/bx88pj/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -349,7 +349,7 @@
 {
 "name": "蓄熱式湯たんぽ 充電式 コードレス カバー付き",
 "price": 1980,
-"reviews": 841,
+"reviews": 842,
 "rating": 4.53,
 "url": "https://item.rakuten.co.jp/creaswing/gds-311-0002/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -376,9 +376,9 @@
 "ヒーター",
 [
 {
-"name": "ヒーター 人感センサー 電気ストーブ 足元 オフィス",
+"name": "人感センサー セラミックヒーター ファンヒーター",
 "price": 5999,
-"reviews": 14757,
+"reviews": 14758,
 "rating": 4.4,
 "url": "https://item.rakuten.co.jp/dondon/mdht-001/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -390,7 +390,7 @@
 {
 "name": "セラミックヒーター ファンヒーター 人感センサー",
 "price": 3277,
-"reviews": 6987,
+"reviews": 7013,
 "rating": 4.35,
 "url": "https://item.rakuten.co.jp/enterb/hw-g1-1/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -402,7 +402,7 @@
 {
 "name": "パネルヒーター 足元ヒーター リモコン付き",
 "price": 8980,
-"reviews": 6769,
+"reviews": 6771,
 "rating": 4.5,
 "url": "https://item.rakuten.co.jp/auc-risecreation/y0721/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -414,7 +414,7 @@
 {
 "name": "山善 セラミックヒーター 人感センサー 省エネ",
 "price": 5832,
-"reviews": 5874,
+"reviews": 5875,
 "rating": 4.32,
 "url": "https://item.rakuten.co.jp/e-kurashi/1484987/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [

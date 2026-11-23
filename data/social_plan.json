@@ -1,12 +1,12 @@
 {
- "day": "2026-11-22",
+ "day": "2026-11-23",
  "sale": [],
  "posts": [
   {
    "kind": "alert",
-   "time": "11/22 12:15",
-   "due": "2026-11-22T03:07:30.000Z",
-   "text": "楽天 #PR\nクリスマスプレゼント 男性向け\n\n男の夢枕 （寝汗の臭いや年齢臭も気にならない\n7,700円\n★4.4（レビュー3,457件）\n👇\nhttps://hb.afl.rakuten.co.jp/hgc/g00px5io.i7mec17c.g00px5io.i7med10e/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Foyasumi%2F104-000001-19%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Foyasumi%2Fi%2F10047702%2F&rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90\n#クリスマスプレゼント #彼氏へのプレゼント #ギフト #楽天購入品",
+   "time": "11/23 12:15",
+   "due": "2026-11-23T03:03:51.000Z",
+   "text": "楽天 #PR\n推し活グッズ おすすめ\n\nクリアバッグ 大容量 推し活 痛バッグ うちわ収納 40×40×13cm トート…\n1,780円〜\n★4.6（レビュー271件）\n👇\nhttps://hb.afl.rakuten.co.jp/hgc/g00ui2so.i7mece85.g00ui2so.i7med3c7/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fdamoa2021%2Fv-angle432-439%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fdamoa2021%2Fi%2F10000058%2F&rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90\n#推し活 #推し活グッズ #痛バ #楽天購入品",
    "image": "",
    "video": "",
    "codes": []
@@ -14,59 +14,41 @@
   {
    "kind": "risers",
    "time": "13:30",
-   "due": "2026-11-22T04:22:25.000Z",
-   "text": "楽天 #PR\n昨日からぐんぐん順位が上がってる\n1️⃣ハミングフレア 柔軟剤 つめかえ用 5,243円（26位UP）\n2️⃣アタックZERO 洗濯洗剤 詰替用 1460g 6個… 10,794円（24位UP）\n3️⃣リファ ストレートアイロン プロ STRAIGHT…（22位UP）\n👇\nhttps://kurotento.github.io/sidejob/\n#ハミングフレア #洗濯洗剤 #リファ",
-   "image": "https://kurotento.github.io/sidejob/social/2026-11-22-00-risers.png",
+   "due": "2026-11-23T04:38:20.000Z",
+   "text": "楽天 #PR\n今これ急に売れてる📈\n1️⃣ハイブリッド加湿器 大容量 5L（18位UP）\n2️⃣セラミックヒーター ファンヒーター 人感センサー（16位UP）\n3️⃣ピジョン 電動鼻吸い器 シュポット 12,870円（13位UP）\n👇\nhttps://kurotento.github.io/sidejob/\n#ハイブリッド加湿器 #セラミックヒーター #ピジョン",
+   "image": "https://kurotento.github.io/sidejob/social/2026-11-23-00-risers.png",
    "codes": [
-    "rakuten24:11148573",
-    "rakuten24:11128650",
-    "mtgec-beauty:10002142"
+    "liberesta:10000108",
+    "enterb:10000081",
+    "pigeon-shop:10002137"
    ]
   },
   {
    "kind": "single",
    "time": "18:00",
-   "due": "2026-11-22T09:11:58.000Z",
-   "text": "楽天 #PR\nレビュー1,000件超えの定番\n\nファミリーマート 1,000円\n1,000円、送料無料！（★4.1）\nこれは国内のファミリーマートでのお支払いに使える1,000円分のeギフトだよ。\n👇\nhttps://kurotento.github.io/sidejob/item-rakkenshop-10000083.html\n#ファミリーマート",
-   "image": "https://kurotento.github.io/sidejob/social/2026-11-22-01-single.jpg",
+   "due": "2026-11-23T09:02:17.000Z",
+   "text": "楽天 #PR\nレビュー3,000件超えの定番\n\nハイウエストショーツ 5枚セット\n1,191円、送料無料！（★4.7）\nMs.BONITAのハイウエストショーツは、お腹まですっぽり包み込む深履き設計の5枚セットだよ。\n👇\nhttps://kurotento.github.io/sidejob/item-duen1111-10000039.html\n#ハイウエストショーツ",
+   "image": "https://kurotento.github.io/sidejob/social/2026-11-23-01-single.jpg",
    "codes": [
-    "rakkenshop:10000083"
+    "duen1111:10000039"
    ]
   },
   {
-   "kind": "weekly",
-   "time": "11/22 19:10",
-   "due": "2026-11-22T09:58:14.000Z",
-   "text": "楽天 #PR\n保存版📌 今週の1000円台・送料無料 売れ筋TOP10\n買い回りの候補に使ってね\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #1000円台 #買い回り",
-   "image": "https://kurotento.github.io/sidejob/social/2026-11-22-weekly-budget.png",
-   "video": "",
+   "kind": "video",
+   "time": "11/23 20:30",
+   "due": "2026-11-23T11:10:02.000Z",
+   "text": "楽天 #PR\n🎬1位は1,780円〜｜推し活グッズ 人気TOP3【11/23】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#推し活 #推し活グッズ #痛バ #楽天購入品",
+   "image": "",
+   "video": "https://kurotento.github.io/sidejob/shorts/2026-11-23-oshikatsu.mp4",
    "codes": []
   },
   {
    "kind": "alert",
-   "time": "11/22 21:00",
-   "due": "2026-11-22T11:38:18.000Z",
-   "text": "楽天 #PR\nふるさと納税の人気返礼品も楽天ROOMで一覧にしてるよ🎁\nレビューが多い定番を中心に\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
+   "time": "11/23 21:00",
+   "due": "2026-11-23T12:05:01.000Z",
+   "text": "楽天 #PR\n楽天ROOMを更新したよ✨\n今日ランキングに入っていたものを追加しました\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
-   "codes": []
-  },
-  {
-   "kind": "weekly",
-   "time": "11/22 21:10",
-   "due": "2026-11-22T12:22:09.000Z",
-   "text": "楽天 #PR\n保存版📌 ふるさと納税 寄付1万円以下の人気返礼品TOP10\nレビューの多い定番から選べるよ\n👇\nhttps://kurotento.github.io/sidejob/furusato/price.html\n#ふるさと納税 #楽天ふるさと納税 #返礼品",
-   "image": "https://kurotento.github.io/sidejob/social/2026-11-22-weekly-furusato.png",
-   "video": "",
-   "codes": []
-  },
-  {
-   "kind": "video",
-   "time": "11/22 20:30",
-   "due": "2026-11-22T13:17:39.000Z",
-   "text": "楽天 #PR\n🎬楽天で買ってよかった 神商品あげてけ【11/22】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
-   "image": "",
-   "video": "https://kurotento.github.io/sidejob/shorts/2026-11-22-agete.mp4",
    "codes": []
   }
  ]
