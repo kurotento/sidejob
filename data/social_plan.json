@@ -12,7 +12,8 @@
     "itsube-souken:10000266",
     "tansu:10043927",
     "weiwei:10022083"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "alert",
@@ -21,7 +22,8 @@
    "text": "楽天 #PR\n今日の売れ筋、楽天ROOMにもまとめたよ🛍\n1000円台・送料無料の買い回り候補はこちら\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -30,7 +32,8 @@
    "text": "楽天 #PR\n🎬加湿器 安い vs 高い【11/24】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#加湿器 #比較 #買い物 #楽天購入品",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-11-24-vs.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   }
  ]
 }
