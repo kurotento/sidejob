@@ -1,45 +1,51 @@
-2026-11-23 model=gemini-3.5-flash-lite 新規9件 / 対象11件
-chirancha:10000313: ルール違反または不完全な出力のため不採用
-toucher-home:10002939: ルール違反または不完全な出力のため不採用
+2026-11-24 model=gemini-3.5-flash-lite 新規6件 / 対象6件
 
-2026-11-23 model=gemini-3.5-flash-lite 新規5件 / 対象7件
-e-up-eishin:10000112: ルール違反または不完全な出力のため不採用
-tirtir:10001051: ルール違反または不完全な出力のため不採用
-2026-11-23 model=gemini-3.5-flash-lite 新規1件 / 対象1件
+2026-11-24 model=gemini-3.5-flash-lite 新規8件 / 対象9件
+mitsuboshi-store:10000006: HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+
 [food] 30件
-[beauty] 30件
-[appliances] 29件
+[beauty] 29件
+[appliances] 30件
 [interior] 30件
-[daily] 30件
+[daily] 29件
 [baby] 30件
-[budget] 総合597件中 72件が条件に一致
+[budget] 総合597件中 63件が条件に一致
 [gemini] キーの確認: OK（gemini-3.5-flash-lite）
-[names] 短い名前 新規61件 / 対象72件
+[names] gemini-3.5-flash-lite 失敗: HTTP Error 503: Service Unavailable
+[names] gemini-3.8-flash 失敗: HTTP Error 503: Service Unavailable
+[names] 短い名前 新規15件 / 対象60件
 [furusato:meat] 30件
 [furusato:seafood] 30件
 [furusato:rice] 30件
 [furusato:fruit] 30件
 [furusato:sweets] 30件
 [furusato:daily] 30件
-[names] 短い名前 新規2件 / 対象2件
+[names] 短い名前 新規9件 / 対象9件
 [furusato] 69ページ
 [story] 素材 3件
 生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
-[shorts] 作り：まとめ（黒帯タイトルと順位一覧／画像は速報風）／声：No.7
-[shorts] shorts/2026-11-23-oshikatsu.mp4 36秒 推し活グッズ
-人気TOP3
-[shorts] shorts/2026-11-23-xmas-deco.mp4 34秒 クリスマスの
-飾りつけTOP3
-[shorts] shorts/2026-11-23-furusato-season.mp4 36秒 年末年始に
-ふるさと納税のかに
+[shorts] 作り：ポップ（らんくまのランキング）／声：ずんだもん
+[shorts] shorts/2026-11-24-vs.mp4 54秒 加湿器
+安い vs 高い
+[shorts] shorts/2026-11-24-xmas-kids.mp4 38秒 子どもへのクリスマス
+おもちゃ人気TOP3
+[shorts] shorts/2026-11-24-furusato-qty.mp4 53秒 ふるさと納税クイズ
+1万円で何kg届く？
 [shorts] 動画 3本
-[room] 説明を取って紹介文を作成: 6/16件
-[room] 今日の動画の商品 3件・1000円台 8件・ほかのジャンル 3件・ふるさと納税 0件
-[room] 投稿リスト 14件
-[threads] 投稿 6本
+[room] 説明を取って紹介文を作成: 10/21件
+[room] 今日の動画の商品 2件・1000円台 5件・ほかのジャンル 8件・ふるさと納税 0件
+[room] 投稿リスト 15件
+[threads] 投稿 4本
 [pinterest] RSS に 3件追加
 [sns] Instagram 予約表に 4件追加
-[sns] Threads・Instagram 計画 7件
-[names] 短い名前 新規11件 / 対象11件
+[sns] Threads・Instagram 計画 6件
+[names] 短い名前 新規14件 / 対象15件
 [replies] 質問 43件
 [report] テーマ 5件
