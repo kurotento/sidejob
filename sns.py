@@ -10,6 +10,8 @@ import re
 import shutil
 from pathlib import Path
 
+import afflink
+
 DATA = Path(__file__).resolve().parent / "data"
 SNS_PLAN = DATA / "sns_plan.json"
 JST = dt.timezone(dt.timedelta(hours=9))
@@ -134,7 +136,7 @@ def threads_posts(day, at, cfg=None, videos=None):
         if not url:
             continue
         x = item("threads", "threads", at(h, m), v["patterns"][0]["text"])
-        x["reply"] = f"{v['reply_lead']}👇\n{url}\n#PR"  # リンクは本文ではなく、自分への返信に入れる
+        x["reply"] = f"{v['reply_lead']}👇\n{afflink.tag(url, 'threads')}\n#PR"  # リンクは本文ではなく、自分への返信に入れる
         out.append(x)
     return out
 

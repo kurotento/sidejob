@@ -19,6 +19,7 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
+import afflink
 from articles import short_name, slug_of
 
 API = "https://api.buffer.com"
@@ -675,7 +676,7 @@ def theme_posts(cfg, videos, day):
             head = f"【{it['label']}】" if it.get("label") else ""
             price = ("寄付額" if v.get("theme") == "green" else "") + yen(it) + ("〜" if it.get("from") and yen(it) else "")
             lines = [hook, "", head + short_name(it["name"], limit), price] + ([fact] if fact else [])
-            text = finish(lines, it["url"], tags)
+            text = finish(lines, afflink.tag(it["url"], "x"), tags)
             if x_len(text) <= 280 or limit <= 10:
                 break
             if fact:

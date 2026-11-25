@@ -16,6 +16,7 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
+import afflink
 from articles import short_name
 from writer import BANNED, ENDPOINT, MODELS
 
@@ -176,7 +177,7 @@ def build(cfg, results, budget, fcats, descs, day, out_dir, videos=None):
         if not r:
             continue
         best, rest = r["patterns"][0], r["patterns"][1:]
-        reply = f"{r['reply_lead']}👇\n{it['url']}\n#PR"
+        reply = f"{r['reply_lead']}👇\n{afflink.tag(it['url'], 'threads')}\n#PR"
         bars = "".join(f"<span>{e(k)} {v}</span>" for k, v in best["scores"].items())
         others = "".join(f"""<details><summary>{e(p['type'])}案（{p['total']}点）</summary>
 <textarea readonly rows="6">{e(p['text'])}</textarea><button onclick="cp(this)">この案をコピー</button></details>""" for p in rest)

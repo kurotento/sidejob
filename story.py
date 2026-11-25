@@ -9,6 +9,7 @@ import html
 import json
 from pathlib import Path
 
+import afflink
 from articles import short_name
 
 DATA = Path(__file__).resolve().parent / "data"
@@ -84,7 +85,7 @@ def build_muse_page(cfg, items, day, out_dir):
         rows += (f'<li><h2>{n}. {e(short_name(it["name"], 40))}</h2>'
                  f'<p>素材URL: <a href="{e(url)}">{e(url)}</a>（画像）</p>'
                  f'<p class="link">リンクスタンプ: <b>商品を見る</b><br>'
-                 f'<a href="{e(it["url"])}">{e(it["url"])}</a></p></li>')
+                 f'<a href="{e(afflink.tag(it["url"], "igstory"))}">{e(afflink.tag(it["url"], "igstory"))}</a></p></li>')
     page = f"""<!doctype html>
 <html lang="ja"><head><meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow">
@@ -112,7 +113,7 @@ def build(cfg, budget, results, day, out_dir):
         cards += f"""<article class="c"><img src="{e(name)}" alt="">
 <h2>{n + 1}. {e(short_name(it['name'], 40))}</h2>
 <a class="b" href="{e(name)}" download="story-{day}-{n + 1}.jpg">① 画像を保存</a>
-<button class="b" data-u="{e(it['url'])}">② リンクをコピー</button>
+<button class="b" data-u="{e(afflink.tag(it['url'], 'igstory'))}">② リンクをコピー</button>
 <a class="b" href="instagram://story-camera">③ Instagram を開く</a></article>"""
     m, d = int(day[5:7]), int(day[8:10])
     page = f"""<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
