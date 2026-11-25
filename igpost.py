@@ -84,6 +84,7 @@ def run():
             continue
         if now - due > dt.timedelta(hours=6):  # 大きく遅れたものは出さない（夜のストーリーが翌朝に出るなどを防ぐ）
             ws.update(range_name=f"G{i}:I{i}", values=[["キャンセル", igsheet.now_text(), "予約時刻から6時間以上過ぎたため自動キャンセル"]])
+            log.append(f"{now:%m/%d %H:%M} {r['予約日時']} {r['種別']}: キャンセル 予約時刻から6時間以上過ぎたため")
             continue
         ws.update(range_name=f"G{i}:H{i}", values=[["投稿中", igsheet.now_text()]])
         try:
