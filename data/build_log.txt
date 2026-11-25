@@ -1,51 +1,41 @@
-2026-11-24 model=gemini-3.5-flash-lite 新規6件 / 対象6件
 
-2026-11-24 model=gemini-3.5-flash-lite 新規8件 / 対象9件
-mitsuboshi-store:10000006: HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
 
+2026-11-25 model=gemini-3.5-flash-lite 新規5件 / 対象5件
 
 [food] 30件
-[beauty] 29件
+[beauty] 30件
 [appliances] 30件
 [interior] 30件
-[daily] 29件
+[daily] 30件
 [baby] 30件
-[budget] 総合597件中 63件が条件に一致
+[budget] 総合593件中 57件が条件に一致
 [gemini] キーの確認: OK（gemini-3.5-flash-lite）
-[names] gemini-3.5-flash-lite 失敗: HTTP Error 503: Service Unavailable
-[names] gemini-3.8-flash 失敗: HTTP Error 503: Service Unavailable
-[names] 短い名前 新規15件 / 対象60件
+[names] 短い名前 新規37件 / 対象49件
 [furusato:meat] 30件
 [furusato:seafood] 30件
 [furusato:rice] 30件
 [furusato:fruit] 30件
 [furusato:sweets] 30件
 [furusato:daily] 30件
-[names] 短い名前 新規9件 / 対象9件
+[names] 短い名前 新規12件 / 対象14件
 [furusato] 69ページ
 [story] 素材 3件
 生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
-[shorts] 作り：ポップ（らんくまのランキング）／声：ずんだもん
-[shorts] shorts/2026-11-24-vs.mp4 54秒 加湿器
-安い vs 高い
-[shorts] shorts/2026-11-24-xmas-kids.mp4 38秒 子どもへのクリスマス
-おもちゃ人気TOP3
-[shorts] shorts/2026-11-24-furusato-qty.mp4 53秒 ふるさと納税クイズ
-1万円で何kg届く？
+[shorts] 作り：マガジン（写真と明朝体の特集ページ）／声：冥鳴ひまり
+[shorts] shorts/2026-11-25-fuku-cosme.mp4 37秒 コスメの福袋
+人気TOP3
+[shorts] shorts/2026-11-25-xmas-coffret.mp4 38秒 クリスマスコフレ
+人気TOP3
+[shorts] shorts/2026-11-25-furusato-deadline.mp4 44秒 ふるさと納税
+年内に届く返礼品
 [shorts] 動画 3本
-[room] 説明を取って紹介文を作成: 10/21件
-[room] 今日の動画の商品 2件・1000円台 5件・ほかのジャンル 8件・ふるさと納税 0件
-[room] 投稿リスト 15件
-[threads] 投稿 4本
+[room] 説明を取って紹介文を作成: 5/11件
+[room] 今日の動画の商品 3件・1000円台 0件・ほかのジャンル 2件・ふるさと納税 0件
+[room] 投稿リスト 5件
+[threads] 投稿 5本
 [pinterest] RSS に 3件追加
 [sns] Instagram 予約表に 4件追加
 [sns] Threads・Instagram 計画 6件
-[names] 短い名前 新規14件 / 対象15件
+[names] 短い名前 新規23件 / 対象25件
 [replies] 質問 43件
 [report] テーマ 5件
