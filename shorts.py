@@ -732,7 +732,7 @@ def anim_end(theme, line1, dur, out, mouth=(), text=""):
         paste_scaled(img, sprite.rotate(5 * math.sin(t * 5)), W // 2, 430 + bob, bounce(t / 0.4))
         d = ImageDraw.Draw(img)
         s = 1 + 0.05 * math.sin(t * 8)  # 文字が脈打つ
-        for y, (txt, sz) in zip((760, 900, 1040), (("楽天ROOMで", 90), ("「らんくま」と", 110), ("検索！", 110))):
+        for y, (txt, sz) in zip((760, 900, 1040), (("紹介した商品は", 90), ("プロフィールの", 110), ("リンクから！", 110))):
             d.text((W // 2, y), txt, font=font(int(sz * s)), fill=(255, 255, 255), anchor="mm", stroke_width=7,
                    stroke_fill=(90, 0, 10))
         d.text((W // 2, 1200), line1, font=font(48), fill=(255, 240, 240), anchor="mm")
@@ -1561,10 +1561,12 @@ def video_title(t, m, d):
     return out
 
 
-ROOM_CTA = {  # 動画の最後の読み上げ（型のしゃべり方に合わせる。ROOM は英字だと読み間違えるのでカタカナ）
-    "pop": "紹介した商品は、楽天ルームで、らんくま、と検索するのだ！",
-    "notebook": "紹介した商品は、楽天ルームで、らんくま、って検索してね！",
-    "": "紹介した商品は、楽天ルームで、らんくま、と検索してください。",
+# 動画の最後の読み上げ（型のしゃべり方に合わせる）。11/25 黒さま指示で「楽天ROOMで検索」→「プロフィールのリンクから」
+# （検索の手間で離れるため。YouTube・インスタともプロフィールに楽天ROOMのリンクがある）
+ROOM_CTA = {
+    "pop": "紹介した商品は、プロフィールのリンクから見られるのだ！",
+    "notebook": "紹介した商品は、プロフィールのリンクから見てね！",
+    "": "紹介した商品は、プロフィールのリンクからご覧ください。",
 }
 
 
@@ -1575,7 +1577,7 @@ def description(t, day, site):
         price = f"寄付額{price_text(it)}（{it['shop']}）" if t["theme"] == "green" else price_text(it)
         head = t.get("labels", {}).get(i + 1, f"{i + 1}位").replace("\n", "")
         lines.append(f"{head} {short_name(it['name'], 40)}｜{price}")
-    lines += ["", "▶紹介した商品は、楽天ROOMで「らんくま」と検索", site, "",
+    lines += ["", "▶紹介した商品は、プロフィールのリンク（楽天ROOM）から", site, "",
               "※価格・寄付額は動画作成時点のものです。最新情報は販売ページでご確認ください。",
               "※楽天アフィリエイトを利用しています（PR）", credit(), "",
               f"#Shorts #PR #楽天 #{t['tag']}" + (" #楽天ふるさと納税" if t["theme"] == "green" else " #楽天市場")]
@@ -1622,7 +1624,7 @@ def build(cfg, results, budget, fcats, day, out_dir, log):
                         tail = {"pop": "なのだ。", "notebook": "だよ！"}.get(PAT["key"], "です。")
                         body = [(r, t["say"][r].format(name=n, fact=t["fact"](t["items"][r - 1][0])) + tail)
                                 for r, n in ((r, spoken_name(t["items"][r - 1][0], reading)) for r, _ in body)]
-                    # 最後は必ず「楽天ROOMで、らんくまと検索」（ショートは説明欄のリンクを押せないので、ROOM のアプリ内検索で来てもらう）
+                    # 最後は必ず「プロフィールのリンクから」（ショートは説明欄のリンクを押せないので、プロフィールの楽天ROOMへ）
                     end_text = (t["end"] + " " if t.get("end") else "") + ROOM_CTA.get(PAT["key"], ROOM_CTA[""])
                     line1 = "楽天ランキング速報" if t["theme"] == "red" else "ふるさと納税 人気返礼品ランキング"
                     slides = []

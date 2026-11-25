@@ -153,7 +153,8 @@ def insta_posts(cfg, day, videos, at, out_dir=None):
                if cfg.get("ig_dm") and v.get("items") else "")
         # 曜日ごとのテーマ（推し活・猫など）の動画は、そのテーマの1行目とタグにする
         cap = (f"{v.get('lead') or INSTA_LEAD[kind]}\n{title}\n\n30秒でまとめて紹介しています。気になったら保存しておいてね\n{ask}"
-               f"商品はプロフィールのリンク（楽天ROOM）からまとめて見られます\n\n{v.get('tags') or INSTA_TAGS[kind]}")
+               f"商品はプロフィールのリンク（楽天ROOM）からまとめて見られます\n"
+               f"毎日ストーリーでも売れ筋を紹介中。フォローしておくと見逃さないよ\n\n{v.get('tags') or INSTA_TAGS[kind]}")
         out.append(item("instagram", "reel", at(h, m), cap, video=f"{base}/{v['file']}"))
     for (h, m), v in zip(INSTA_STORY_TIMES, videos or []):
         # DM の自動返信がオンなら、「プロフィールのリンクから」の帯を重ねた動画を使う

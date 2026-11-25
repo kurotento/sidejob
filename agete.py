@@ -208,7 +208,7 @@ def end_frames(dur, out):
         img = Image.new("RGB", (W, H), (15, 15, 25))
         d = ImageDraw.Draw(img)
         for y, (txt, sz, col) in zip((700, 860, 1000, 1200), (("ほかにもあったら", 80, (255, 255, 255)), ("コメントで教えて", 96, (255, 225, 60)),
-                                                               ("", 10, (0, 0, 0)), ("楽天ROOMで「らんくま」と検索", 58, (255, 255, 255)))):
+                                                               ("", 10, (0, 0, 0)), ("商品はプロフィールのリンクから", 58, (255, 255, 255)))):
             if txt:
                 d.text((W // 2, y), txt, font=font(sz), fill=col, anchor="mm", stroke_width=7, stroke_fill=(0, 0, 0))
         pr_badge(d)
@@ -224,7 +224,7 @@ def slides(t, spk, work, reading):
     sec = synth(f"楽天で買ってよかった、{'福袋' if t.get('fuku') else '神商品'}あげてけ。第6位から発表します。", spk, a) + 0.3
     head = (work / "a0", a, sec, title_frames(t, sec, work / "a0"))
     a9 = work / "a9.wav"
-    end_sec = synth("ほかにもあったら、コメントで教えてね。紹介した商品は、楽天ルームで、らんくま、と検索してください。", spk, a9) + 0.4
+    end_sec = synth("ほかにもあったら、コメントで教えてね。紹介した商品は、プロフィールのリンクからご覧ください。", spk, a9) + 0.4
     n = len(t["items"])
     voice, bub = {}, {}
     for i, (it, label) in enumerate(t["items"]):
