@@ -1,5 +1,5 @@
 {
-"day": "2026-11-25",
+"day": "2026-11-26",
 "words": [
 [
 "加湿器",
@@ -7,7 +7,7 @@
 {
 "name": "ハイブリッド加湿器 5L 大容量",
 "price": 6780,
-"reviews": 11916,
+"reviews": 11961,
 "rating": 4.29,
 "url": "https://item.rakuten.co.jp/liberesta/aqua-m1/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -19,7 +19,7 @@
 {
 "name": "加湿器 卓上 超音波 350ml 大容量",
 "price": 1880,
-"reviews": 9917,
+"reviews": 9945,
 "rating": 4.45,
 "url": "https://item.rakuten.co.jp/milicute-himawari/x06-1/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -31,7 +31,7 @@
 {
 "name": "超音波加湿器 大容量 卓上 小型",
 "price": 2499,
-"reviews": 6431,
+"reviews": 6459,
 "rating": 4.37,
 "url": "https://item.rakuten.co.jp/gracevally/grace-j1/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -43,7 +43,7 @@
 {
 "name": "加湿器 特許取得 大容量 6.5L ハイブリッド",
 "price": 12999,
-"reviews": 6147,
+"reviews": 6149,
 "rating": 4.36,
 "url": "https://item.rakuten.co.jp/dondon/jxh-002/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -111,7 +111,7 @@
 "ボディクリーム",
 [
 {
-"name": "オルナオーガニック ボディクリーム",
+"name": "オルナオーガニック ボディクリーム 200g",
 "price": 2280,
 "reviews": 423,
 "rating": 4.57,
@@ -147,7 +147,7 @@
 ]
 },
 {
-"name": "ULRUB ウルラブ ボディクリーム 120g",
+"name": "ULRUB ボディクリーム 120g",
 "price": 3980,
 "reviews": 324,
 "rating": 4.53,
@@ -166,7 +166,7 @@
 {
 "name": "れんげ化粧水 140cc",
 "price": 1200,
-"reviews": 9953,
+"reviews": 9956,
 "rating": 4.74,
 "url": "https://item.rakuten.co.jp/renngekesyousui/10000002/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -178,7 +178,7 @@
 {
 "name": "Anua 化粧水",
 "price": 2950,
-"reviews": 3168,
+"reviews": 3170,
 "rating": 4.72,
 "url": "https://item.rakuten.co.jp/anuajapan/anua00023/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -188,7 +188,19 @@
 ]
 },
 {
-"name": "オルナオーガニック化粧水 保湿化粧水",
+"name": "プリュ うるおい シルクローション 化粧水",
+"price": 2030,
+"reviews": 2963,
+"rating": 4.49,
+"url": "https://item.rakuten.co.jp/luire/plusls000/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
+"chips": [
+"セラミドやプラセンタなどの潤い成分を配合している",
+"香料や着色料など6つの刺激フリーで作られている",
+"300mlのボトルと500mlのパウチから選べる"
+]
+},
+{
+"name": "オルナオーガニック 化粧水 200ml",
 "price": 2300,
 "reviews": 1948,
 "rating": 4.58,
@@ -198,18 +210,6 @@
 "合成香料不使用の日本製化粧水",
 "しっとりとしたうるおいを与える保湿仕様"
 ]
-},
-{
-"name": "セラミド 化粧水 ミスト スプレー ローション",
-"price": 3280,
-"reviews": 1341,
-"rating": 4.55,
-"url": "https://item.rakuten.co.jp/norph/uj-l01/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
-"chips": [
-"顔や頭皮、全身に使えるスプレータイプ",
-"複数種類のヒト型セラミドと植物エキスを配合",
-"アルコールやオイルなどを含まない無添加仕様"
-]
 }
 ]
 ],
@@ -217,9 +217,9 @@
 "毛布",
 [
 {
-"name": "毛布 シングル 4層プレミアム マイクロファイバー",
+"name": "毛布 シングル 140×200cm",
 "price": 1580,
-"reviews": 11532,
+"reviews": 11537,
 "rating": 4.58,
 "url": "https://item.rakuten.co.jp/dondon/mf-003/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -231,7 +231,7 @@
 {
 "name": "毛布 bon moment",
 "price": 2640,
-"reviews": 9153,
+"reviews": 9154,
 "rating": 4.62,
 "url": "https://item.rakuten.co.jp/angers/111778/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -272,7 +272,7 @@
 {
 "name": "電気毛布 掛け敷き モコモコブランケット",
 "price": 12900,
-"reviews": 3993,
+"reviews": 4011,
 "rating": 4.56,
 "url": "https://item.rakuten.co.jp/hitidear/cozywave-g1/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -282,39 +282,39 @@
 ]
 },
 {
-"name": "EPEIOS 電気毛布",
-"price": 8900,
-"reviews": 3582,
-"rating": 4.63,
-"url": "https://item.rakuten.co.jp/mpowjapan/gfeb013000/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
+"name": "電気毛布 JBS401D_B JBS401G",
+"price": 2790,
+"reviews": 2365,
+"rating": 4.52,
+"url": "https://item.rakuten.co.jp/lifejoy-shop/jbs401/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
-"表面のラビットファー調と裏面のフランネルによるやわらかな肌触りだよ",
-"約2秒ですぐに温かくなる速暖機能と9段階の温度調節ができるよ",
-"コントローラーを外して本体を丸洗いできる抗菌防臭仕様だよ"
+"腰から足元を重点的に温める頭寒足熱配線を採用している",
+"ポリ袋に入れて強で運転することで簡単にダニ退治ができる",
+"スライド式のコントローラーで細かな温度調節が可能である"
 ]
 },
 {
-"name": "電気毛布 ふわとろ 電気ブランケット",
-"price": 7760,
-"reviews": 3335,
-"rating": 4.51,
-"url": "https://item.rakuten.co.jp/ennshopstore/bx88pj/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
+"name": "ふわとろ毛布 電気毛布 掛け敷き ブランケット",
+"price": 11980,
+"reviews": 1511,
+"rating": 4.62,
+"url": "https://item.rakuten.co.jp/kukuya/cozywave-r2-1/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
-"大判サイズでUSBやDC給電に対応",
-"65度までの速暖機能と3段階の温度調節",
-"抗菌除臭やダニ退治機能を搭載"
+"10段階の温度調節とダニ退治モードを搭載している",
+"電磁波を99％カットするポリエステル製の毛布",
+"MとLの2サイズ展開で丸洗いにも対応する"
 ]
 },
 {
-"name": "電気毛布 掛け敷き 洗える 電気ひざ掛け",
-"price": 9860,
-"reviews": 2711,
-"rating": 4.63,
-"url": "https://item.rakuten.co.jp/itsube-souken/ppr-blanket/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
+"name": "日本製 電気敷毛布 電気毛布 洗える ダニ退治",
+"price": 3480,
+"reviews": 1504,
+"rating": 4.42,
+"url": "https://item.rakuten.co.jp/townland/r-1805050630001/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
-"S・M・Lの3つのサイズから選べる",
-"細かな8段階の温度調節ができる",
-"丸洗いやダニ退治機能でお手入れできる"
+"39ショップ対象店",
+"丸洗い(洗濯OK)のホットブランケット",
+"国産だから安心の温もり"
 ]
 }
 ]
@@ -336,8 +336,8 @@
 },
 {
 "name": "充電式 蓄熱式湯たんぽ カバー付",
-"price": 3960,
-"reviews": 977,
+"price": 3560,
+"reviews": 978,
 "rating": 4.52,
 "url": "https://item.rakuten.co.jp/goodlifestyle/ts-gds-0085/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -349,7 +349,7 @@
 {
 "name": "蓄熱式湯たんぽ 充電式 コードレス カバー付き",
 "price": 1980,
-"reviews": 845,
+"reviews": 848,
 "rating": 4.52,
 "url": "https://item.rakuten.co.jp/creaswing/gds-311-0002/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -376,9 +376,9 @@
 "ヒーター",
 [
 {
-"name": "ヒーター 人感センサー 電気ストーブ 足元 オフィス",
+"name": "セラミックヒーター 人感センサー",
 "price": 6499,
-"reviews": 14765,
+"reviews": 14767,
 "rating": 4.4,
 "url": "https://item.rakuten.co.jp/dondon/mdht-001/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -388,21 +388,9 @@
 ]
 },
 {
-"name": "セラミックヒーター ファンヒーター",
-"price": 3277,
-"reviews": 7070,
-"rating": 4.36,
-"url": "https://item.rakuten.co.jp/enterb/hw-g1-1/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
-"chips": [
-"スイッチを入れるとわずか2秒で熱風が出る",
-"約708gの軽量でコンパクトな本体サイズ",
-"転倒時や過熱時に自動で電源が切れる機能"
-]
-},
-{
 "name": "パネルヒーター 足元ヒーター リモコン付き",
 "price": 8980,
-"reviews": 6778,
+"reviews": 6777,
 "rating": 4.5,
 "url": "https://item.rakuten.co.jp/auc-risecreation/y0721/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
@@ -414,13 +402,25 @@
 {
 "name": "山善 セラミックファンヒーター 電気ストーブ",
 "price": 6480,
-"reviews": 5877,
+"reviews": 5880,
 "rating": 4.32,
 "url": "https://item.rakuten.co.jp/e-kurashi/1484987/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
 "chips": [
 "電源を入れてすぐに温風が出る速暖仕様",
 "強弱の2段階で出力を切り替え可能",
 "転倒オフスイッチを搭載した設計"
+]
+},
+{
+"name": "アイリスオーヤマ セラミックヒーター",
+"price": 4980,
+"reviews": 4098,
+"rating": 4.35,
+"url": "https://item.rakuten.co.jp/kadenrand/561248/?rafcid=wsc_i_is_7f5d0d61-104d-4980-92ee-a004c6c60d90",
+"chips": [
+"スイッチを入れてから素早く温風が出る仕様",
+"重さ約2kgで持ち運びしやすい軽量設計",
+"安全装置として温度ヒューズや転倒スイッチ等を搭載"
 ]
 }
 ]

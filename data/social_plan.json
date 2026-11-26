@@ -1,35 +1,36 @@
 {
- "day": "2026-11-25",
+ "day": "2026-11-26",
  "sale": [],
  "posts": [
   {
-   "kind": "event",
+   "kind": "risers",
    "time": "18:00",
-   "due": "2026-11-25T08:19:03.000Z",
-   "text": "楽天 #PR\n今日は5と0のつく日！\n楽天カードで買う人はエントリーを忘れずに✍️\n（条件は楽天の公式ページで確認してね）\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html",
-   "image": "",
-   "codes": [],
-   "scheduled": true
-  },
-  {
-   "kind": "alert",
-   "time": "11/25 21:00",
-   "due": "2026-11-25T11:55:47.000Z",
-   "text": "楽天 #PR\n収納・日用品の人気どころを楽天ROOMに集めてます📦\n寝る前のお買い物チェックにどうぞ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
-   "image": "",
-   "video": "",
-   "codes": [],
-   "scheduled": true
+   "due": "2026-11-26T09:32:10.000Z",
+   "text": "楽天 #PR\n今これ急に売れてる📈\n1️⃣ハロー ソフトパックティシュ 150組×16個 ハロ… 1,280円（15位UP）\n2️⃣マットレス 高級 極厚 21cm ポケットコイル（14位UP）\n3️⃣トゥベール ナノエマルジョン 3,610円（11位UP）\n👇\nhttps://kurotento.github.io/sidejob/\n#ソフトパックティシュ #マットレス #トゥベール",
+   "image": "https://kurotento.github.io/sidejob/social/2026-11-26-00-risers.png",
+   "codes": [
+    "rakuten24:11304301",
+    "itsube-souken:10000309",
+    "tvert:10000064"
+   ]
   },
   {
    "kind": "video",
-   "time": "11/25 20:30",
-   "due": "2026-11-25T12:41:50.000Z",
-   "text": "楽天 #PR\n🎬1位は15,400円｜コスメの福袋 人気TOP3【11/25】\nらんくまが30秒で紹介するよ\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#福袋 #福袋2027 #福袋予約 #楽天購入品",
+   "time": "11/26 20:30",
+   "due": "2026-11-26T11:34:37.000Z",
+   "text": "楽天 #PR\n🎬楽天で買ってよかった 神商品あげてけ【11/26】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
-   "video": "https://kurotento.github.io/sidejob/shorts/2026-11-25-fuku-cosme.mp4",
-   "codes": [],
-   "scheduled": true
+   "video": "https://kurotento.github.io/sidejob/shorts/2026-11-26-agete.mp4",
+   "codes": []
+  },
+  {
+   "kind": "alert",
+   "time": "11/26 21:00",
+   "due": "2026-11-26T12:16:22.000Z",
+   "text": "楽天 #PR\nふるさと納税の人気返礼品も楽天ROOMで一覧にしてるよ🎁\nレビューが多い定番を中心に\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
+   "image": "",
+   "video": "",
+   "codes": []
   }
  ]
 }
