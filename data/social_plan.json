@@ -12,7 +12,8 @@
     "rakuten24:11304301",
     "itsube-souken:10000309",
     "tvert:10000064"
-   ]
+   ],
+   "scheduled": true
   },
   {
    "kind": "video",
@@ -21,7 +22,8 @@
    "text": "楽天 #PR\n🎬楽天で買ってよかった 神商品あげてけ【11/26】\nらんくまが30秒で紹介するよ\n👇\nhttps://kurotento.github.io/sidejob/kaimawari-1000yen.html\n#楽天 #楽天市場 #買い回り",
    "image": "",
    "video": "https://kurotento.github.io/sidejob/shorts/2026-11-26-agete.mp4",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   },
   {
    "kind": "alert",
@@ -30,7 +32,8 @@
    "text": "楽天 #PR\nふるさと納税の人気返礼品も楽天ROOMで一覧にしてるよ🎁\nレビューが多い定番を中心に\n👇\nhttps://room.rakuten.co.jp/room_92556e8f2c/items\n#楽天ROOM #楽天ルーム #買い回り",
    "image": "",
    "video": "",
-   "codes": []
+   "codes": [],
+   "scheduled": true
   }
  ]
 }
