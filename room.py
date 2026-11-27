@@ -27,6 +27,16 @@ NICHE_PER_GENRE = 5    # ROOM の中心層（30〜40代女性）に強いジャ�
 NICHE_GENRES = ("interior", "daily")  # インテリア・収納 / 日用品
 # 1000円台がもう出しきって足りない日は、ROOM の中心層（30〜40代女性）に強いほかのジャンルからも足す
 MORE_GENRES = ("beauty", "food", "baby", "appliances")
+# 上のジャンルの上位30件は1か月で出しきった（11/27 はリストが4件）。ROOM 用にだけ、ほかのジャンルと31位より下も取る。
+# サイトのジャンルのページは増やさない。男性向けは別のフォロワーを取るため（11/28 黒さま）。1日 MEN_MAX 件まで
+DEEP_PAGES = (2, 3)  # 上の6ジャンルの 31〜90位
+EXTRA_GENRES = {  # 名前: (楽天のジャンルID, 男性向けか)
+    "sweets": (551167, False), "bag": (216131, False), "kitchen": (558944, False), "pet": (101213, False),
+    "mens": (551177, True), "pc": (100026, True), "car": (101114, True), "outdoor": (101070, True),
+    "liquor": (510915, True),
+}
+EXTRA_PAGES = (1, 2, 3)
+MEN_MAX = 5
 TARGET = 22            # ふるさと納税以外で、1日に出したい件数
 FURUSATO_PER_DAY = 5
 REPEAT_DAYS = 3  # room_list.json に残す日数（もう一度出さないかどうかは room_posted.json で決める）
@@ -139,7 +149,7 @@ def more_descs(items, cfg, day, limit=30):
         return {}
     base = cfg["base_url"].rstrip("/")
     search = "https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20260701"
-    full = []
+    full, miss, err = [], 0, 0
     for it in items[:limit]:
         params = {"applicationId": os.environ["RAKUTEN_APP_ID"], "accessKey": os.environ.get("RAKUTEN_ACCESS_KEY", ""),
                   "itemCode": it["code"], "formatVersion": 2}
@@ -150,13 +160,42 @@ def more_descs(items, cfg, day, limit=30):
             with urllib.request.urlopen(req, timeout=30) as res:
                 found = json.load(res).get("Items", [])
             raw = found[0].get("Item", found[0]) if found else {}
+            if not (raw.get("itemCaption") or raw.get("catchcopy")):
+                miss += 1  # 見つからない・説明が空
             full.append({**it, "caption": raw.get("itemCaption", ""), "catch": raw.get("catchcopy", "")})
-        except Exception:  # noqa: BLE001
-            pass
+        except Exception as ex:  # noqa: BLE001
+            err += 1
+            if err <= 3:
+                print(f"[room] 商品検索の失敗 {it['code']}: {ex}")
         time.sleep(1)  # 商品検索の毎秒の上限を避ける
     got = writer.describe(full, day, limit=limit)
-    print(f"[room] 説明を取って紹介文を作成: {sum(1 for it in full if got.get(it['code']))}/{len(items)}件")
+    print(f"[room] 説明を取って紹介文を作成: {sum(1 for it in full if got.get(it['code']))}/{len(items[:limit])}件"
+          f"（検索の失敗 {err}件・説明なし {miss}件・残りは紹介文の検査で不採用）")
     return got
+
+
+def more_pools(cfg, fresh):
+    """ROOM 用の追加の候補。[(商品リスト, 男性向けか)]。取れなかったジャンルは飛ばす."""
+    import time
+
+    from build import fetch_ranking
+    out = []
+    jobs = [(g, gid, False, DEEP_PAGES) for g, gid in
+            ((x["slug"], x["genreId"]) for x in cfg["genres"]) if g in NICHE_GENRES + MORE_GENRES]
+    jobs += [(g, gid, is_men, EXTRA_PAGES) for g, (gid, is_men) in EXTRA_GENRES.items()]
+    got = {}
+    for g, gid, is_men, pages in jobs:
+        items = []
+        for page in pages:
+            try:
+                items += fetch_ranking(gid, cfg["base_url"], page=page)
+            except Exception as ex:  # noqa: BLE001
+                print(f"[room] {g} {page}ページ目: 取得失敗 {ex}")
+            time.sleep(1)
+        got[g] = len(items)
+        out.append(([it for it in items if fresh(it)], is_men))
+    print("[room] 追加の候補: " + "・".join(f"{g} {n}件" for g, n in got.items()))
+    return out
 
 
 def build(cfg, budget, descs, day, out_dir, save=True, fcats=None, fdescs=None, results=None, videos=None):
@@ -181,17 +220,36 @@ def build(cfg, budget, descs, day, out_dir, save=True, fcats=None, fdescs=None, 
     cands = theme + [it for it in cands if not any(similar(it, t) for t in theme)]
     budget_codes &= {it["code"] for it in cands}
     pools = [[it for it in (results or {}).get(g, []) if fresh(it)] for g in NICHE_GENRES + MORE_GENRES]
-    k = 0
-    while len(cands) < TARGET + 12 and any(pools):  # ジャンルを順番に1つずつ（インテリア・日用品を先に）
+    men = set()
+    if save:  # ほかのジャンルと31位より下（紹介文が作れない商品もあるので、目標の2倍まで集める）
+        extra = more_pools(cfg, fresh)
+        for code_pool, is_men in extra:
+            if is_men:
+                men |= {it["code"] for it in code_pool}
+        pools += [pl for pl, _ in extra]
+    k = n_men = 0
+    while len(cands) < TARGET * 2 + 10 and any(pools):  # ジャンルを順番に1つずつ（インテリア・日用品を先に）
         pool = pools[k % len(pools)]
         k += 1
         while pool:
             it = pool.pop(0)
+            if it["code"] in men and n_men >= MEN_MAX + 3:
+                pool.clear()
+                break
             if not any(similar(it, o) for o in cands):
                 cands.append(it)
+                n_men += it["code"] in men
                 break
-    descs = {**descs, **more_descs([it for it in cands if not descs.get(it["code"])], cfg, day)}
-    picks = [it for it in cands if descs.get(it["code"])][:TARGET]
+    descs = {**descs, **more_descs([it for it in cands if not descs.get(it["code"])], cfg, day, limit=TARGET * 2 + 10)}
+    picks, n_men = [], 0
+    for it in cands:  # 紹介文が作れた商品だけ。男性向けは1日 MEN_MAX 件まで
+        if len(picks) >= TARGET or not descs.get(it["code"]):
+            continue
+        if it["code"] in men:
+            if n_men >= MEN_MAX:
+                continue
+            n_men += 1
+        picks.append(it)
     budget_codes = budget_codes & {it["code"] for it in picks}
     # ふるさと納税の返礼品を3件（各ジャンル上位から順に）
     fdescs = fdescs or {}
@@ -217,6 +275,7 @@ def build(cfg, budget, descs, day, out_dir, save=True, fcats=None, fdescs=None, 
     manual = json.loads(MANUAL.read_text(encoding="utf-8")) if MANUAL.exists() else {}
     bodies = {**bodies, **manual}  # 手で書いたコメントがあればそれを優先
     nt = len(theme_codes & {it["code"] for it in picks})
+    print(f"[room] 男性向け {n_men}件")
     print(f"[room] 今日の動画の商品 {nt}件・1000円台 {len(budget_codes)}件・ほかのジャンル {len(picks) - nt - len(budget_codes) - len(furusato_codes)}件・ふるさと納税 {len(furusato_codes)}件")
     rows = []
     for n, it in enumerate(picks):
