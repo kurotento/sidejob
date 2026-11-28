@@ -1,41 +1,48 @@
-2026-11-27 model=gemini-3.5-flash-lite 新規3件 / 対象3件
+2026-11-28 model=gemini-3.5-flash-lite 新規6件 / 対象6件
 
-2026-11-27 model=gemini-3.5-flash-lite 新規3件 / 対象3件
-2026-11-27 model=gemini-3.5-flash-lite 新規1件 / 対象1件
+2026-11-28 model=gemini-3.5-flash-lite 新規39件 / 対象41件
+cheeryshop:10000070: ルール違反または不完全な出力のため不採用
+penport:10074621: ルール違反または不完全な出力のため不採用
+2026-11-28 model=gemini-3.5-flash-lite 新規1件 / 対象1件
 [food] 30件
-[beauty] 29件
-[appliances] 28件
+[beauty] 30件
+[appliances] 30件
 [interior] 30件
 [daily] 30件
 [baby] 30件
-[budget] 総合593件中 62件が条件に一致
+[budget] 総合599件中 51件が条件に一致
 [gemini] キーの確認: OK（gemini-3.5-flash-lite）
-[names] 短い名前 新規61件 / 対象75件
+[names] 短い名前 新規74件 / 対象84件
 [furusato:meat] 30件
 [furusato:seafood] 30件
 [furusato:rice] 30件
 [furusato:fruit] 30件
 [furusato:sweets] 30件
 [furusato:daily] 30件
-[names] 短い名前 新規7件 / 対象8件
+[names] 短い名前 新規4件 / 対象6件
 [furusato] 69ページ
 [story] 素材 3件
 生成完了: /home/runner/work/sidejob/sidejob/public（失敗ジャンル 0件）
-[shorts] 作り：まとめ（黒帯タイトルと順位一覧／画像は速報風）／声：No.7
-[shorts] shorts/2026-11-27-furusato-qty.mp4 45秒 ふるさと納税クイズ
-1万円で何kg届く？
-[shorts] shorts/2026-11-27-xmas-gift-him.mp4 36秒 男性へのクリスマス
-プレゼントTOP3
-[shorts] shorts/2026-11-27-furusato-deadline.mp4 40秒 ふるさと納税
+[shorts] 作り：ポップ（らんくまのランキング）／声：ずんだもん
+[shorts] shorts/2026-11-28-agete.mp4 57秒 楽天で買ってよかった
+神商品あげてけ
+[shorts] shorts/2026-11-28-xmas-deco.mp4 40秒 クリスマスの
+飾りつけTOP3
+[shorts] shorts/2026-11-28-furusato-deadline.mp4 48秒 ふるさと納税
 年内に届く返礼品
 [shorts] 動画 3本
-[room] 説明を取って紹介文を作成: 3/10件
-[room] 今日の動画の商品 1件・1000円台 1件・ほかのジャンル 2件・ふるさと納税 0件
-[room] 投稿リスト 4件
+[room] car 1ページ目: 取得失敗 HTTP Error 400: Bad Request
+[room] car 2ページ目: 取得失敗 HTTP Error 400: Bad Request
+[room] car 3ページ目: 取得失敗 HTTP Error 400: Bad Request
+[room] 追加の候補: food 60件・beauty 60件・appliances 60件・interior 60件・daily 60件・baby 59件・sweets 89件・bag 90件・kitchen 90件・pet 90件・mens 90件・pc 89件・car 0件・outdoor 90件・liquor 90件
+[room] 説明を取って紹介文を作成: 39/52件（検索の失敗 0件・説明なし 11件・残りは紹介文の検査で不採用）
+[room] 男性向け 2件
+[room] 今日の動画の商品 3件・1000円台 2件・ほかのジャンル 17件・ふるさと納税 0件
+[room] 投稿リスト 22件
 [threads] 投稿 6本
 [pinterest] RSS に 3件追加
 [sns] Instagram 予約表に 4件追加
 [sns] Threads・Instagram 計画 6件
-[names] 短い名前 新規16件 / 対象26件
+[names] 短い名前 新規24件 / 対象25件
 [replies] 質問 43件
 [report] テーマ 5件
