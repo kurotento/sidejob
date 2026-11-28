@@ -13,3 +13,7 @@
 11/28 17:30 short: 予約（API t2_WF4djyak） / 589文字
 11/28 19:00 short: 予約（API gBfJx8meRXs） / 612文字
 11/28 20:30 short: 予約（API mTwwuVQYBF8） / 516文字
+--- 23:20 予約処理[x]: 空き枠 10 / 未予約 0
+--- 23:20 予約処理[threads]: 空き枠 10 / 未予約 0
+--- 23:20 予約処理[instagram]: 空き枠 10 / 未予約 0
+--- 23:20 予約処理[youtube]: API / 未予約 0
